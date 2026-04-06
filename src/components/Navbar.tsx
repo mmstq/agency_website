@@ -2,8 +2,8 @@ import React from 'react';
 
 export default function Navbar() {
     return (
-        <nav className="sticky top-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5 transition-all duration-300">
-            <div className="flex justify-between items-center px-6 md:px-8 py-4 w-full max-w-7xl mx-auto">
+        <div className="sticky top-6 z-50 w-full flex justify-center px-4 md:px-8 pointer-events-none">
+            <nav className="pointer-events-auto flex justify-between items-center px-6 md:px-8 py-3.5 w-full max-w-7xl bg-[#0a0a0a]/80 backdrop-blur-xl border border-white/10 rounded-full transition-all duration-300 shadow-2xl">
 
                 {/* Brand Identity */}
                 <div className="flex items-center gap-3">
@@ -46,7 +46,7 @@ export default function Navbar() {
                     </button>
                 </div>
 
-            </div>
-        </nav>
+            </nav>
+        </div>
     );
 }
