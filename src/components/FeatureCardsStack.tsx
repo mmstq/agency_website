@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 // Reusable Modall logo SVG
 const ModallIcon = ({ className = "" }: { className?: string }) => (
@@ -11,6 +11,92 @@ const ModallIcon = ({ className = "" }: { className?: string }) => (
 
 export default function FeatureCardsStack() {
     const [isToggled, setIsToggled] = useState(false);
+
+    // --- Animation Physics Logic ---
+    const isHovered = useRef(false);
+    const speedRef = useRef(0);
+    const targetSpeedRef = useRef(0);
+    
+    // Angles for the rings
+    const angle1Ref = useRef(0);
+    const angle2Ref = useRef(0);
+    
+    const outerRingRef = useRef<HTMLDivElement>(null);
+    const innerRingRef = useRef<HTMLDivElement>(null);
+    const appRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+    const requestRef = useRef<number | null>(null);
+    const lastTimeRef = useRef<number | null>(null);
+    
+    // Ecosystem spins a bit slower since it covers a larger visual area
+    const FAST_SPEED = 180;     
+    const SLOW_SPEED = 20;      
+    const DECELERATION = 90;   
+
+    useEffect(() => {
+        return () => {
+            if (requestRef.current !== null) {
+                cancelAnimationFrame(requestRef.current);
+            }
+        };
+    }, []);
+
+    const animate = (time: number) => {
+        if (lastTimeRef.current !== null) {
+            const deltaTime = (time - lastTimeRef.current) / 1000;
+            
+            if (speedRef.current > targetSpeedRef.current) {
+                speedRef.current -= DECELERATION * deltaTime;
+                if (speedRef.current < targetSpeedRef.current) speedRef.current = targetSpeedRef.current;
+            } else if (speedRef.current < targetSpeedRef.current) {
+                 speedRef.current += DECELERATION * deltaTime;
+                 if (speedRef.current > targetSpeedRef.current) speedRef.current = targetSpeedRef.current;
+            }
+
+            if (speedRef.current > 0) {
+                // Outer ring spins forward
+                angle1Ref.current += speedRef.current * deltaTime;
+                // Inner ring spins backward
+                angle2Ref.current -= (speedRef.current * 0.7) * deltaTime;
+                
+                if (outerRingRef.current) outerRingRef.current.style.transform = `rotate(${angle1Ref.current}deg)`;
+                if (innerRingRef.current) innerRingRef.current.style.transform = `rotate(${angle2Ref.current}deg)`;
+                
+                // Counter-rotate the apps so they stay upright while orbiting!
+                appRefs.current.forEach(app => {
+                    if (app) app.style.transform = `rotate(${-angle2Ref.current}deg)`;
+                });
+            }
+        }
+        lastTimeRef.current = time;
+
+        if (speedRef.current > 0 || isHovered.current) {
+            requestRef.current = requestAnimationFrame(animate);
+        } else {
+            requestRef.current = null;
+            lastTimeRef.current = null;
+        }
+    };
+
+    const handleMouseEnter = () => {
+        isHovered.current = true;
+        speedRef.current = FAST_SPEED;
+        targetSpeedRef.current = SLOW_SPEED;
+        
+        if (!requestRef.current) {
+            lastTimeRef.current = performance.now();
+            requestRef.current = requestAnimationFrame(animate);
+        }
+    };
+
+    const handleMouseLeave = () => {
+        isHovered.current = false;
+        targetSpeedRef.current = 0;
+    };
+
+    const setAppRef = (idx: number) => (el: HTMLDivElement | null) => {
+        appRefs.current[idx] = el;
+    };
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full h-full min-h-[500px]">
@@ -40,7 +126,11 @@ export default function FeatureCardsStack() {
             <div className="flex flex-col gap-4 h-full">
 
                 {/* Top Card: Large Ecosystem Card */}
-                <div className="flex-[3] bg-[#1a1a1b] border border-white/5 shadow-xl rounded-3xl p-8 relative flex flex-col items-center justify-between overflow-hidden group hover:bg-[#202022] transition-colors duration-300">
+                <div 
+                    className="flex-[3] bg-[#1a1a1b] border border-white/5 shadow-xl rounded-3xl p-8 relative flex flex-col items-center justify-between overflow-hidden group hover:bg-[#202022] transition-colors duration-300 w-full min-h-[350px]"
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                >
                     
                     {/* Top Label */}
                     <span className="text-[#a1a1a1] uppercase text-[11px] font-bold tracking-[0.2em] mt-2 relative z-10">
@@ -48,38 +138,51 @@ export default function FeatureCardsStack() {
                     </span>
 
                     {/* Concentric rings background */}
-                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-80 mt-10">
-                        <div className="w-[18rem] h-[18rem] border border-white/10 rounded-full flex items-center justify-center border-dashed">
-                            <div className="w-[12rem] h-[12rem] border border-white/10 rounded-full flex items-center justify-center relative bg-white/[0.01]">
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-80 mt-10 overflow-visible">
+                        <div ref={outerRingRef} className="w-[18rem] h-[18rem] border border-white/10 rounded-full flex items-center justify-center border-dashed">
+                            
+                            <div ref={innerRingRef} className="w-[12rem] h-[12rem] border border-white/10 rounded-full flex items-center justify-center relative bg-white/[0.01]">
                                 {/* The center logo */}
                                 <div className="w-16 h-16 bg-[#1a1a1b] rounded-full flex items-center justify-center border border-white/10 shadow-xl group-hover:scale-110 transition-transform duration-500 z-20">
-                                    <svg viewBox="0 0 24 24" width="24" height="24" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className="opacity-80">
-                                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
-                                    </svg>
+                                    <div ref={setAppRef(0)} className="w-full h-full flex items-center justify-center">
+                                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="white" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className="opacity-80">
+                                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                                        </svg>
+                                    </div>
                                 </div>
 
                                 {/* Floating App Logos */}
                                 <div className="absolute -top-1 left-2 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center bg-[#1a1a1b] shadow-lg transition-transform duration-500 group-hover:-translate-y-1">
-                                    <svg viewBox="0 0 24 24" className="w-[18px] h-[18px] text-red-500" fill="currentColor"><path d="M3 6L12 12L21 6V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6Z" opacity="0.8"/><path fill="#fff" d="M12 13.5L3 7v1.5L12 15l9-6.5V7l-9 6.5z"/></svg>
+                                    <div ref={setAppRef(1)} className="w-full h-full flex items-center justify-center">
+                                        <svg viewBox="0 0 24 24" className="w-[18px] h-[18px] text-red-500" fill="currentColor"><path d="M3 6L12 12L21 6V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6Z" opacity="0.8"/><path fill="#fff" d="M12 13.5L3 7v1.5L12 15l9-6.5V7l-9 6.5z"/></svg>
+                                    </div>
                                 </div>
                                 <div className="absolute top-2 -right-4 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center bg-[#1a1a1b] shadow-lg transition-transform duration-500 group-hover:translate-x-1">
-                                    <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.5 13H7A1.5 1.5 0 0 1 7 10h1.5v3Zm0-4.5V7A1.5 1.5 0 0 1 11.5 7v1.5h-3Zm7 4.5h1.5a1.5 1.5 0 0 0 0-3h-1.5v3Zm0 4.5V19a1.5 1.5 0 0 0-3 0v-1.5h3Z" fill="#36C5F0"/><path d="M10 15v1.5a1.5 1.5 0 0 0 3 0V15h-3Zm-4.5-5H4A1.5 1.5 0 0 0 4 13h1.5v-3Zm4.5-4V4.5a1.5 1.5 0 0 1 3 0V6h-3Zm7 4h-1.5A1.5 1.5 0 0 0 14 13h3a1.5 1.5 0 0 0 0-3Z" fill="#2EB67D"/><path d="M11.5 11.5h-3V10A1.5 1.5 0 0 1 11.5 10v1.5Z" fill="#E01E5A"/><path d="M11.5 11.5V14.5A1.5 1.5 0 0 1 10 14.5v-3h1.5Z" fill="#E01E5A"/><path d="M14 11.5h3A1.5 1.5 0 0 1 17 13h-3v-1.5Z" fill="#ECB22E"/><path d="M14 11.5v-3A1.5 1.5 0 0 1 15.5 10v1.5h-1.5Z" fill="#ECB22E"/></svg>
+                                    <div ref={setAppRef(2)} className="w-full h-full flex items-center justify-center">
+                                        <svg viewBox="0 0 24 24" className="w-[18px] h-[18px]" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8.5 13H7A1.5 1.5 0 0 1 7 10h1.5v3Zm0-4.5V7A1.5 1.5 0 0 1 11.5 7v1.5h-3Zm7 4.5h1.5a1.5 1.5 0 0 0 0-3h-1.5v3Zm0 4.5V19a1.5 1.5 0 0 0-3 0v-1.5h3Z" fill="#36C5F0"/><path d="M10 15v1.5a1.5 1.5 0 0 0 3 0V15h-3Zm-4.5-5H4A1.5 1.5 0 0 0 4 13h1.5v-3Zm4.5-4V4.5a1.5 1.5 0 0 1 3 0V6h-3Zm7 4h-1.5A1.5 1.5 0 0 0 14 13h3a1.5 1.5 0 0 0 0-3Z" fill="#2EB67D"/><path d="M11.5 11.5h-3V10A1.5 1.5 0 0 1 11.5 10v1.5Z" fill="#E01E5A"/><path d="M11.5 11.5V14.5A1.5 1.5 0 0 1 10 14.5v-3h1.5Z" fill="#E01E5A"/><path d="M14 11.5h3A1.5 1.5 0 0 1 17 13h-3v-1.5Z" fill="#ECB22E"/><path d="M14 11.5v-3A1.5 1.5 0 0 1 15.5 10v1.5h-1.5Z" fill="#ECB22E"/></svg>
+                                    </div>
                                 </div>
                                 <div className="absolute top-1/2 -right-12 translate-y-1 w-9 h-9 rounded-full border border-white/10 flex items-center justify-center bg-[#1a1a1b] shadow-lg transition-transform duration-500 group-hover:translate-x-1">
-                                    <svg viewBox="0 0 24 24" className="w-[18px] h-[18px] text-[#ff4a00]" fill="currentColor"><path d="M16.5 2H5l3.5 9H4l15 11-4-10h4z"/></svg>
+                                    <div ref={setAppRef(3)} className="w-full h-full flex items-center justify-center">
+                                        <svg viewBox="0 0 24 24" className="w-[18px] h-[18px] text-[#ff4a00]" fill="currentColor"><path d="M16.5 2H5l3.5 9H4l15 11-4-10h4z"/></svg>
+                                    </div>
                                 </div>
                                 <div className="absolute -bottom-6 right-8 w-10 h-10 rounded-full border border-white/10 flex items-center justify-center bg-[#1a1a1b] shadow-lg transition-transform duration-500 group-hover:translate-y-1">
-                                    <svg viewBox="0 0 24 24" className="w-[18px] h-[18px] text-[#241c15]" fill="currentColor"><circle cx="12" cy="12" r="10" fill="#FFE01B"/><path d="M12 7c-2.5 0-4 1.5-4 4s1.5 5 4 5s4-1.5 4-5s-1.5-4-4-4zm-1.5 5.5a1 1 0 1 1 0-2a1 1 0 0 1 0 2zm3 0a1 1 0 1 1 0-2a1 1 0 0 1 0 2z" fill="#000"/></svg>
+                                    <div ref={setAppRef(4)} className="w-full h-full flex items-center justify-center">
+                                        <svg viewBox="0 0 24 24" className="w-[18px] h-[18px] text-[#241c15]" fill="currentColor"><circle cx="12" cy="12" r="10" fill="#FFE01B"/><path d="M12 7c-2.5 0-4 1.5-4 4s1.5 5 4 5s4-1.5 4-5s-1.5-4-4-4zm-1.5 5.5a1 1 0 1 1 0-2a1 1 0 0 1 0 2zm3 0a1 1 0 1 1 0-2a1 1 0 0 1 0 2z" fill="#000"/></svg>
+                                    </div>
                                 </div>
                                 <div className="absolute top-1/2 -left-8 translate-y-6 w-9 h-9 rounded-full border border-white/10 flex items-center justify-center bg-[#1a1a1b] shadow-lg transition-transform duration-500 group-hover:-translate-x-1">
-                                    <svg viewBox="0 0 24 24" className="w-[16px] h-[16px] text-[#0f9d58]" fill="currentColor"><rect x="3" y="2" width="18" height="20" rx="3"/><path d="M7 7h10M7 11h10M7 15h6" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/></svg>
+                                    <div ref={setAppRef(5)} className="w-full h-full flex items-center justify-center">
+                                        <svg viewBox="0 0 24 24" className="w-[16px] h-[16px] text-[#0f9d58]" fill="currentColor"><rect x="3" y="2" width="18" height="20" rx="3"/><path d="M7 7h10M7 11h10M7 15h6" stroke="#fff" strokeWidth="2.5" strokeLinecap="round"/></svg>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div className="text-center px-4 w-full relative z-10">
-                        <h2 className="font-bold font-serif text-white text-[28px] tracking-tight leading-tight">
+                        <h2 className="font-bold font-serif text-white text-[28px] tracking-tight leading-tight shrink-0 mt-4 md:mt-24">
                             Any integration you can imagine.
                         </h2>
                     </div>

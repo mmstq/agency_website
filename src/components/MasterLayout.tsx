@@ -9,7 +9,7 @@ export default function MasterLayout({ children }: { children: React.ReactNode }
       <CanvasGrid />
 
       {/* Transparent Content Container */}
-      <div className="relative z-20 max-w-7xl mx-auto px-6 py-12 flex flex-col gap-16 bg-transparent">
+      <div className="relative z-20 max-w-7xl mx-auto px-6 pb-12 bg-transparent">
         {children}
       </div>
     </div>
