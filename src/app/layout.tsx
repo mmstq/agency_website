@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
 import MasterLayout from "../components/MasterLayout";
+import StyledJsxRegistry from "./registry";
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
@@ -23,11 +24,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${manrope.variable} font-inter antialiased bg-[#131313] text-[#e2e2e2]`}
       >
-        <MasterLayout>{children}</MasterLayout>
+        <StyledJsxRegistry>
+          <MasterLayout>{children}</MasterLayout>
+        </StyledJsxRegistry>
       </body>
     </html>
   );

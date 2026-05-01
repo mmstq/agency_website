@@ -1,34 +1,42 @@
+# AGENTS.md
+
+This file provides guidance to agents when working with code in this repository.
+
 <!-- BEGIN:nextjs-agent-rules -->
 # This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
-<!-- code-review-graph MCP tools -->
+## Non-Obvious Project Rules
+
+- **No Framer Motion / Three.js** — all animations use `requestAnimationFrame` + `useRef` DOM mutation (see [`AnalyticsCard.tsx`](src/components/AnalyticsCard.tsx:6), [`FeatureCardsStack.tsx`](src/components/FeatureCardsStack.tsx:6), [`CanvasGrid.tsx`](src/components/CanvasGrid.tsx:4)). Do NOT install animation libraries.
+- **`GlassSurface`** ([`src/components/GlassSurface.jsx`](src/components/GlassSurface.jsx)) is the universal card wrapper — all major containers use it with `borderRadius={24}`, `backgroundOpacity={0.08}`, `saturation={1.55}`, `distortionScale={-110}`. Do NOT create new card wrappers.
+- **No 1px solid borders** — per [`DESIGN.md`](DESIGN.md:28) "No-Line Rule". Sectioning uses background shifts + vertical spacing only. Ghost borders at 10% opacity are allowed.
+- **`cursor: none` on `<html>`** — custom canvas cursor in [`CanvasGrid.tsx`](src/components/CanvasGrid.tsx). Breaks touch devices; must feature-detect.
+- **Static export** — [`next.config.ts`](next.config.ts:4) has `output: 'export'`. No server routes, no `getServerSideProps`, no API routes that need a server (newsletter API is a stub).
+- **`recharts` is installed but unused** — [`package.json`](package.json:19) lists it as a dependency but no component imports it. Either use it or remove it.
+- **`@base-ui/react`** — shadcn/ui buttons and inputs use `@base-ui/react` primitives (not Radix). See [`button.tsx`](src/components/ui/button.tsx:3), [`input.tsx`](src/components/ui/input.tsx:2).
+- **`styled-jsx` registry** — [`registry.tsx`](src/app/registry.tsx) wraps the app for styled-jsx SSR support. New pages must be inside `<StyledJsxRegistry>`.
+- **Nav links are broken** — all [`Navbar.tsx`](src/components/Navbar.tsx:57) links point to `#industries`, `#case-studies`, `#about`, `#blog` anchor IDs that don't exist yet.
+- **Design tokens** — bg `#131313`, text `#e2e2e2`, Manrope for headings, Inter for body. All radii use `xl` (24px). See [`DESIGN.md`](DESIGN.md).
+
+## Commands
+
+```bash
+npm run dev      # Next.js dev server
+npm run build    # Static export to out/
+npm run lint     # ESLint (next/core-web-vitals + typescript configs)
+```
+
 ## MCP Tools: code-review-graph
 
-**IMPORTANT: This project has a knowledge graph. ALWAYS use the
-code-review-graph MCP tools BEFORE using Grep/Glob/Read to explore
-the codebase.** The graph is faster, cheaper (fewer tokens), and gives
-you structural context (callers, dependents, test coverage) that file
-scanning cannot.
-
-### When to use graph tools FIRST
-
-- **Exploring code**: `semantic_search_nodes` or `query_graph` instead of Grep
-- **Understanding impact**: `get_impact_radius` instead of manually tracing imports
-- **Code review**: `detect_changes` + `get_review_context` instead of reading entire files
-- **Finding relationships**: `query_graph` with callers_of/callees_of/imports_of/tests_for
-- **Architecture questions**: `get_architecture_overview` + `list_communities`
-
-Fall back to Grep/Glob/Read **only** when the graph doesn't cover what you need.
-
-### Key Tools
+**Always use code-review-graph MCP tools BEFORE Grep/Glob/Read.** The graph auto-updates on file changes.
 
 | Tool | Use when |
 |------|----------|
-| `detect_changes` | Reviewing code changes — gives risk-scored analysis |
-| `get_review_context` | Need source snippets for review — token-efficient |
+| `detect_changes` | Reviewing code changes — risk-scored analysis |
+| `get_review_context` | Need source snippets for review |
 | `get_impact_radius` | Understanding blast radius of a change |
 | `get_affected_flows` | Finding which execution paths are impacted |
 | `query_graph` | Tracing callers, callees, imports, tests, dependencies |
@@ -38,7 +46,7 @@ Fall back to Grep/Glob/Read **only** when the graph doesn't cover what you need.
 
 ### Workflow
 
-1. The graph auto-updates on file changes (via hooks).
+1. Graph auto-updates on file changes (via hooks).
 2. Use `detect_changes` for code review.
 3. Use `get_affected_flows` to understand impact.
 4. Use `query_graph` pattern="tests_for" to check coverage.

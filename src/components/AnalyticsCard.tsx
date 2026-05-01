@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import GlassSurface from './GlassSurface';
 
 export default function AnalyticsCard() {
     const isHovered = useRef(false);
@@ -75,7 +76,7 @@ export default function AnalyticsCard() {
         
         if (!requestRef.current) {
             // Kickstart loop
-            lastTimeRef.current = performance.now();
+            lastTimeRef.current = null;
             requestRef.current = requestAnimationFrame(animate);
         }
     };
@@ -86,8 +87,17 @@ export default function AnalyticsCard() {
     };
 
     return (
-        <div 
-            className="w-full h-full min-h-[500px] p-6 bg-[#1a1a1a] rounded-3xl border border-white/5 shadow-2xl flex flex-col justify-between group hover:bg-[#202022] transition-colors duration-300"
+        <GlassSurface
+            width="100%"
+            height="100%"
+            borderRadius={24}
+            backgroundOpacity={0.16}
+            saturation={1.55}
+            distortionScale={-110}
+            className="min-h-[500px] glass-surface--flush glass-surface--soft-hover group"
+        >
+        <div
+            className="flex h-full w-full flex-col justify-between rounded-3xl p-6"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
         >
@@ -137,7 +147,7 @@ export default function AnalyticsCard() {
                 <div className="flex items-center gap-2 group/btn cursor-default">
                     <span className="text-white text-base font-semibold tracking-tight">Not your average bar chart</span>
                     <div className="w-6 h-6 rounded-full bg-white/5 border border-white/10 flex items-center justify-center overflow-hidden">
-                        <svg className="h-3.5 w-3.5 text-white transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <svg suppressHydrationWarning className="h-3.5 w-3.5 text-white transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path d="M7 17L17 7M17 7H7M17 7V17" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5"></path>
                         </svg>
                     </div>
@@ -147,5 +157,6 @@ export default function AnalyticsCard() {
                 </p>
             </footer>
         </div>
+        </GlassSurface>
     );
 }
