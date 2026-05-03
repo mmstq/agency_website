@@ -80,7 +80,7 @@ export default function Navbar() {
 
     return (
         <>
-            <div className="sticky top-6 z-50 w-full flex justify-center px-4 md:px-12 pointer-events-none">
+            <div className="sticky top-6 z-50 w-full flex justify-center px-6 md:px-20 pointer-events-none">
                 <GlassSurface
                     width="100%"
                     height={72}
@@ -92,9 +92,8 @@ export default function Navbar() {
                     brightness={58}
                     opacity={0.88}
                     className="pointer-events-auto w-full"
-                    simplified
                 >
-                <nav className="flex h-full w-full items-center justify-between px-5 md:px-7">
+                <nav className="flex h-full w-full items-center justify-between px-8 md:px-12">
 
                     {/* Brand Identity */}
                     <Link href="/" className="flex items-center gap-3 group" onClick={closeAll}>

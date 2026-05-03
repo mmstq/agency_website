@@ -19,10 +19,10 @@ export default function LogoMarquee() {
                 Engineering infrastructure for industry leaders
             </p>
 
-            <div className="flex overflow-hidden group">
-                <div className="flex animate-marquee group-hover:[animation-play-state:paused] whitespace-nowrap">
-                    {[...Array(2)].map((_, i) => (
-                        <div key={i} className="flex items-center gap-16 md:gap-24 px-8 md:px-12">
+            <div className="flex overflow-hidden">
+                <div className="flex animate-marquee whitespace-nowrap">
+                    {[...Array(4)].map((_, i) => (
+                        <div key={i} className="flex items-center gap-16 md:gap-24 px-8 md:px-12 shrink-0">
                             {LOGOS.map((logo) => (
                                 <div key={logo.name} className="flex items-center gap-3 opacity-30 hover:opacity-100 transition-opacity grayscale hover:grayscale-0">
                                     <svg
@@ -47,6 +47,7 @@ export default function LogoMarquee() {
                 }
                 .animate-marquee {
                     animation: marquee 30s linear infinite;
+                    will-change: transform;
                 }
             `}</style>
         </section>

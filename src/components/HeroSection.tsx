@@ -14,12 +14,8 @@ import {
 } from 'lucide-react';
 import GlassSurface from './GlassSurface';
 import ScrollReveal from './ScrollReveal';
+import WordReveal from './WordReveal';
 
-const proofMetrics = [
-    { value: '98', label: 'avg. Lighthouse' },
-    { value: '1.2s', label: 'hero load target' },
-    { value: '42%', label: 'lead lift focus' },
-];
 
 const craftSignals = [
     { icon: Code2, label: 'Next.js systems' },
@@ -75,7 +71,7 @@ export default function HeroSection() {
 
             <div className="flex min-h-[calc(100vh-11rem)] items-center justify-center">
                 <div className="relative z-10 w-full px-6 md:px-12 flex flex-col items-center text-center">
-                    <ScrollReveal triggerOnce>
+                    <ScrollReveal>
                         <GlassSurface
                             width="auto"
                             height={42}
@@ -92,19 +88,24 @@ export default function HeroSection() {
                         </GlassSurface>
                     </ScrollReveal>
 
-                    <ScrollReveal variant="zoom-in" triggerOnce delay="delay-100">
+                    <ScrollReveal variant="zoom-in" delay="delay-100">
                         <h1 className="w-full text-center text-5xl font-black leading-[0.95] tracking-normal text-white sm:text-6xl md:text-7xl lg:text-8xl xl:text-[7rem]">
-                            Build a website that feels like your best sales call.
+                            <WordReveal 
+                                text="Build a website that feels like your best sales call." 
+                                delay={600}
+                                wordDelay={80}
+                                staticWordsCount={2}
+                            />
                         </h1>
                     </ScrollReveal>
 
-                    <ScrollReveal triggerOnce delay="delay-200">
+                    <ScrollReveal delay="delay-200">
                         <p className="mt-7 max-w-3xl text-center text-base leading-8 text-white/62 md:text-xl">
                             Modall designs and ships high-performance React websites with sharp storytelling, elegant motion, and conversion systems clients can feel immediately.
                         </p>
                     </ScrollReveal>
 
-                    <ScrollReveal triggerOnce delay="delay-300">
+                    <ScrollReveal delay="delay-300">
                         <div className="mt-8 flex w-full flex-col justify-center gap-3 sm:w-auto sm:flex-row">
                             <GlassSurface
                                 width="100%"
@@ -141,28 +142,6 @@ export default function HeroSection() {
                                 </a>
                             </GlassSurface>
                         </div>
-                    </ScrollReveal>
-
-                    <ScrollReveal variant="zoom-in" triggerOnce delay="delay-400">
-                        <GlassSurface
-                            width="100%"
-                            height="auto"
-                            borderRadius={20}
-                            backgroundOpacity={0.15}
-                            saturation={1.45}
-                            distortionScale={-90}
-                            className="mt-10 w-full max-w-3xl glass-surface--flush"
-                            simplified
-                        >
-                            <div className="grid w-full grid-cols-1 overflow-hidden rounded-[20px] sm:grid-cols-3">
-                                {proofMetrics.map((metric) => (
-                                    <div key={metric.label} className="border-b border-white/10 px-4 py-4 last:border-b-0 sm:border-b-0 sm:border-r sm:last:border-r-0">
-                                        <div className="text-2xl font-black text-white md:text-3xl">{metric.value}</div>
-                                        <div className="mt-1 text-[0.65rem] font-semibold uppercase tracking-[0.12em] text-white/42">{metric.label}</div>
-                                    </div>
-                                ))}
-                            </div>
-                        </GlassSurface>
                     </ScrollReveal>
 
                     <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
