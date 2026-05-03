@@ -10,7 +10,7 @@ interface ScrollRevealProps {
   delay?: 'delay-100' | 'delay-200' | 'delay-300' | 'delay-400' | 'delay-500' | '';
   threshold?: number;
   triggerOnce?: boolean;
-  tag?: keyof JSX.IntrinsicElements;
+  tag?: React.ElementType;
 }
 
 export default function ScrollReveal({
