@@ -14,8 +14,24 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Digital Monolith",
-  description: "High-end B2B infrastructure platform",
+  metadataBase: new URL('https://modall.agency'),
+  title: {
+    default: "Modall | Digital Monolith Infrastructure",
+    template: "%s | Modall"
+  },
+  description: "High-end B2B technology infrastructure agency building custom web applications, mobile solutions, and AI integrations.",
+  openGraph: {
+    title: "Modall | Digital Monolith Infrastructure",
+    description: "High-end B2B technology infrastructure agency.",
+    url: "https://modall.agency",
+    siteName: "Modall",
+    locale: "en_US",
+    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

@@ -25,6 +25,7 @@ import './GlassSurface.css';
  *   mixBlendMode?: string;
  *   className?: string;
  *   style?: import('react').CSSProperties;
+ *   simplified?: boolean;
  * }} props
  */
 const GlassSurface = ({
@@ -47,7 +48,8 @@ const GlassSurface = ({
   yChannel = 'G',
   mixBlendMode = 'difference',
   className = '',
-  style = {}
+  style = {},
+  simplified = false
 }) => {
   const uniqueId = useId().replace(/:/g, '-');
   const filterId = `glass-filter-${uniqueId}`;
@@ -55,6 +57,7 @@ const GlassSurface = ({
   const blueGradId = `blue-grad-${uniqueId}`;
 
   const [svgSupported, setSvgSupported] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const containerRef = useRef(null);
   const feImageRef = useRef(null);
@@ -114,6 +117,13 @@ const GlassSurface = ({
   }, [filterId]);
 
   useEffect(() => {
+    setIsMobile(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
+  }, []);
+
+  const useSimplified = simplified || isMobile;
+
+  useEffect(() => {
+    if (useSimplified) return;
     updateDisplacementMap();
     [
       { ref: redChannelRef, offset: redOffset },
@@ -136,11 +146,12 @@ const GlassSurface = ({
     blueOffset,
     xChannel,
     yChannel,
-    updateDisplacementMap
+    updateDisplacementMap,
+    useSimplified
   ]);
 
   useEffect(() => {
-    if (!containerRef.current) return;
+    if (useSimplified || !containerRef.current) return;
 
     const resizeObserver = new ResizeObserver(() => {
       setTimeout(updateDisplacementMap, 0);
@@ -151,15 +162,21 @@ const GlassSurface = ({
     return () => {
       resizeObserver.disconnect();
     };
-  }, [updateDisplacementMap]);
+  }, [updateDisplacementMap, useSimplified]);
 
   useEffect(() => {
-    setTimeout(updateDisplacementMap, 0);
-  }, [width, height, updateDisplacementMap]);
+    if (!useSimplified) {
+      setTimeout(updateDisplacementMap, 0);
+    }
+  }, [width, height, updateDisplacementMap, useSimplified]);
 
   useEffect(() => {
-    setSvgSupported(supportsSVGFilters());
-  }, [supportsSVGFilters]);
+    if (useSimplified) {
+      setSvgSupported(false);
+    } else {
+      setSvgSupported(supportsSVGFilters());
+    }
+  }, [supportsSVGFilters, useSimplified]);
 
   const containerStyle = {
     ...style,
@@ -177,56 +194,58 @@ const GlassSurface = ({
       className={`glass-surface ${svgSupported ? 'glass-surface--svg' : 'glass-surface--fallback'} ${className}`}
       style={containerStyle}
     >
-      <svg className="glass-surface__filter" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <filter id={filterId} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
-            <feImage ref={feImageRef} x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map" />
+      {!useSimplified && (
+        <svg className="glass-surface__filter" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <filter id={filterId} colorInterpolationFilters="sRGB" x="0%" y="0%" width="100%" height="100%">
+              <feImage ref={feImageRef} x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map" />
 
-            <feDisplacementMap ref={redChannelRef} in="SourceGraphic" in2="map" id="redchannel" result="dispRed" />
-            <feColorMatrix
-              in="dispRed"
-              type="matrix"
-              values="1 0 0 0 0
-                      0 0 0 0 0
-                      0 0 0 0 0
-                      0 0 0 1 0"
-              result="red"
-            />
+              <feDisplacementMap ref={redChannelRef} in="SourceGraphic" in2="map" id="redchannel" result="dispRed" />
+              <feColorMatrix
+                in="dispRed"
+                type="matrix"
+                values="1 0 0 0 0
+                        0 0 0 0 0
+                        0 0 0 0 0
+                        0 0 0 1 0"
+                result="red"
+              />
 
-            <feDisplacementMap
-              ref={greenChannelRef}
-              in="SourceGraphic"
-              in2="map"
-              id="greenchannel"
-              result="dispGreen"
-            />
-            <feColorMatrix
-              in="dispGreen"
-              type="matrix"
-              values="0 0 0 0 0
-                      0 1 0 0 0
-                      0 0 0 0 0
-                      0 0 0 1 0"
-              result="green"
-            />
+              <feDisplacementMap
+                ref={greenChannelRef}
+                in="SourceGraphic"
+                in2="map"
+                id="greenchannel"
+                result="dispGreen"
+              />
+              <feColorMatrix
+                in="dispGreen"
+                type="matrix"
+                values="0 0 0 0 0
+                        0 1 0 0 0
+                        0 0 0 0 0
+                        0 0 0 1 0"
+                result="green"
+              />
 
-            <feDisplacementMap ref={blueChannelRef} in="SourceGraphic" in2="map" id="bluechannel" result="dispBlue" />
-            <feColorMatrix
-              in="dispBlue"
-              type="matrix"
-              values="0 0 0 0 0
-                      0 0 0 0 0
-                      0 0 1 0 0
-                      0 0 0 1 0"
-              result="blue"
-            />
+              <feDisplacementMap ref={blueChannelRef} in="SourceGraphic" in2="map" id="bluechannel" result="dispBlue" />
+              <feColorMatrix
+                in="dispBlue"
+                type="matrix"
+                values="0 0 0 0 0
+                        0 0 0 0 0
+                        0 0 1 0 0
+                        0 0 0 1 0"
+                result="blue"
+              />
 
-            <feBlend in="red" in2="green" mode="screen" result="rg" />
-            <feBlend in="rg" in2="blue" mode="screen" result="output" />
-            <feGaussianBlur ref={gaussianBlurRef} in="output" stdDeviation="0.7" />
-          </filter>
-        </defs>
-      </svg>
+              <feBlend in="red" in2="green" mode="screen" result="rg" />
+              <feBlend in="rg" in2="blue" mode="screen" result="output" />
+              <feGaussianBlur ref={gaussianBlurRef} in="output" stdDeviation="0.7" />
+            </filter>
+          </defs>
+        </svg>
+      )}
 
       <div className="glass-surface__content">{children}</div>
     </div>

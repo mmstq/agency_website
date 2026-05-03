@@ -1,5 +1,7 @@
 'use client';
 import CanvasGrid from './CanvasGrid';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
 export default function MasterLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -8,10 +10,17 @@ export default function MasterLayout({ children }: { children: React.ReactNode }
       {/* Dynamic Cursor Hover Canvas Grid */}
       <CanvasGrid />
 
+      {/* Top Navigation */}
+      <Navbar />
+
       {/* Transparent Content Container */}
-      <div className="relative z-20 max-w-7xl mx-auto px-6 pb-12 bg-transparent">
+      <main className="relative z-20 w-full pb-12 bg-transparent">
         {children}
-      </div>
+      </main>
+
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 }

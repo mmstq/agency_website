@@ -1,10 +1,15 @@
 'use client';
 import React, { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import GlassSurface from './GlassSurface';
+
+import { services } from '@/lib/data/services';
 
 export default function Navbar() {
     const [servicesOpen, setServicesOpen] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
+    const pathname = usePathname();
     const dropdownRef = useRef<HTMLDivElement>(null);
     const mobileMenuRef = useRef<HTMLDivElement>(null);
 
@@ -54,27 +59,28 @@ export default function Navbar() {
     }, [mobileOpen]);
 
     const navLinks = [
-        { label: 'Industries', href: '#industries' },
-        { label: 'Case studies', href: '#case-studies' },
-        { label: 'About us', href: '#about' },
-        { label: 'Blog', href: '#blog' },
+        { label: 'Industries', href: '/#industries' },
+        { label: 'Case studies', href: '/portfolio' },
+        { label: 'About us', href: '/about' },
+        { label: 'Blog', href: '/blog' },
     ];
 
-    const services = [
-        { label: 'Web Applications', desc: 'Custom full-stack platforms' },
-        { label: 'Mobile Solutions', desc: 'iOS & Android development' },
-        { label: 'AI Integration', desc: 'LLM-powered workflows' },
-        { label: 'SaaS Development', desc: 'End-to-end product builds' },
-    ];
+    const displayServices = services.slice(0, 4);
 
     const closeAll = () => {
         setServicesOpen(false);
         setMobileOpen(false);
     };
 
+    const isActive = (path: string) => {
+        if (path === '/' && pathname === '/') return true;
+        if (path !== '/' && pathname?.startsWith(path)) return true;
+        return false;
+    };
+
     return (
         <>
-            <div className="sticky top-6 z-50 w-full flex justify-center px-4 md:px-8 pointer-events-none">
+            <div className="sticky top-6 z-50 w-full flex justify-center px-4 md:px-12 pointer-events-none">
                 <GlassSurface
                     width="100%"
                     height={72}
@@ -85,36 +91,37 @@ export default function Navbar() {
                     blur={12}
                     brightness={58}
                     opacity={0.88}
-                    className="pointer-events-auto w-full max-w-7xl"
+                    className="pointer-events-auto w-full"
+                    simplified
                 >
                 <nav className="flex h-full w-full items-center justify-between px-5 md:px-7">
 
                     {/* Brand Identity */}
-                    <div className="flex items-center gap-3">
-                        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+                    <Link href="/" className="flex items-center gap-3 group" onClick={closeAll}>
+                        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
                             <svg suppressHydrationWarning xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1a1c1c" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                                 <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
                                 <line x1="4" y1="22" x2="4" y2="15"></line>
                             </svg>
                         </div>
                         <span className="text-xl font-bold tracking-tighter text-white">Modall</span>
-                    </div>
+                    </Link>
 
                     {/* Desktop Navigation Links */}
                     <div className="hidden md:flex items-center gap-8">
                         {navLinks.map(link => (
-                            <a
+                            <Link
                                 key={link.label}
-                                className="text-white/60 font-medium hover:text-white transition-colors text-[0.6875rem] uppercase tracking-widest"
+                                className={`font-medium transition-colors text-[0.6875rem] uppercase tracking-widest ${isActive(link.href) ? 'text-white' : 'text-white/60 hover:text-white'}`}
                                 href={link.href}
                             >
                                 {link.label}
-                            </a>
+                            </Link>
                         ))}
                         <div className="relative" ref={dropdownRef}>
                             <button
                                 onClick={() => setServicesOpen(o => !o)}
-                                className="flex items-center gap-1 text-white/60 font-medium hover:text-white transition-colors text-[0.6875rem] uppercase tracking-widest"
+                                className={`flex items-center gap-1 font-medium transition-colors text-[0.6875rem] uppercase tracking-widest ${pathname?.startsWith('/services') ? 'text-white' : 'text-white/60 hover:text-white'}`}
                             >
                                 Services
                                 <svg suppressHydrationWarning xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-200 ${servicesOpen ? 'rotate-180' : ''}`}>
@@ -132,17 +139,25 @@ export default function Navbar() {
                                     className="absolute top-full left-1/2 mt-3 -translate-x-1/2 glass-surface--flush"
                                 >
                                     <div className="w-full overflow-hidden rounded-[18px]">
-                                        {services.map((item) => (
-                                            <a
-                                                key={item.label}
-                                                href="#services"
+                                        {displayServices.map((item) => (
+                                            <Link
+                                                key={item.id}
+                                                href={`/services#${item.slug}`}
                                                 onClick={() => setServicesOpen(false)}
                                                 className="flex flex-col px-4 py-3 hover:bg-white/5 transition-colors border-b border-white/5 last:border-0"
                                             >
-                                                <span className="text-white text-xs font-semibold">{item.label}</span>
-                                                <span className="text-white/40 text-[11px] mt-0.5">{item.desc}</span>
-                                            </a>
+                                                <span className="text-white text-xs font-semibold">{item.title}</span>
+                                                <span className="text-white/40 text-[11px] mt-0.5">{item.description}</span>
+                                            </Link>
                                         ))}
+                                        <Link
+
+                                            href="/services"
+                                            onClick={() => setServicesOpen(false)}
+                                            className="flex items-center justify-center px-4 py-2 bg-white/5 hover:bg-white/10 transition-colors text-[10px] text-white/60 uppercase tracking-widest font-bold"
+                                        >
+                                            View all services
+                                        </Link>
                                     </div>
                                 </GlassSurface>
                             )}
@@ -151,15 +166,17 @@ export default function Navbar() {
 
                     {/* Desktop CTA + Mobile Hamburger */}
                     <div className="flex items-center gap-3">
-                        <GlassSurface width={154} height={48} borderRadius={999} backgroundOpacity={0.20} distortionScale={-95} className="hidden md:flex glass-surface--flush glass-surface--soft-hover">
-                            <button className="flex h-full w-full bg-white/90 text-[#1a1c1c] px-6 py-2.5 rounded-full font-bold text-sm items-center justify-center gap-2 hover:bg-[#e2e2e2] transition-all duration-300 active:scale-95">
-                                Get started
-                                <svg suppressHydrationWarning xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M5 12h14"></path>
-                                    <path d="m12 5 7 7-7 7"></path>
-                                </svg>
-                            </button>
-                        </GlassSurface>
+                        <Link href="/contact" className="hidden md:block" onClick={closeAll}>
+                            <GlassSurface width={154} height={48} borderRadius={999} backgroundOpacity={0.20} distortionScale={-95} className="glass-surface--flush glass-surface--soft-hover">
+                                <div className="flex h-full w-full bg-white/90 text-[#1a1c1c] px-6 py-2.5 rounded-full font-bold text-sm items-center justify-center gap-2 hover:bg-[#e2e2e2] transition-all duration-300 active:scale-95">
+                                    Get started
+                                    <svg suppressHydrationWarning xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <path d="M5 12h14"></path>
+                                        <path d="m12 5 7 7-7 7"></path>
+                                    </svg>
+                                </div>
+                            </GlassSurface>
+                        </Link>
 
                         {/* Mobile Hamburger */}
                         <button
@@ -195,7 +212,7 @@ export default function Navbar() {
             {mobileOpen && (
                 <>
                     {/* Backdrop */}
-                    <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden" />
+                    <div className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden" onClick={closeAll} />
 
                     {/* Drawer */}
                     <GlassSurface
@@ -233,44 +250,53 @@ export default function Navbar() {
                         {/* Nav Links */}
                         <div className="flex-1 overflow-y-auto px-6 py-6 space-y-1">
                             {navLinks.map(link => (
-                                <a
+                                <Link
                                     key={link.label}
                                     href={link.href}
                                     onClick={closeAll}
-                                    className="block px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 rounded-xl transition-all text-sm font-medium"
+                                    className={`block px-4 py-3 rounded-xl transition-all text-sm font-medium ${isActive(link.href) ? 'text-white bg-white/10' : 'text-white/70 hover:text-white hover:bg-white/5'}`}
                                 >
                                     {link.label}
-                                </a>
+                                </Link>
                             ))}
 
                             {/* Services Section in Mobile */}
                             <div className="pt-4">
                                 <p className="px-4 text-[0.6875rem] uppercase tracking-widest text-white/40 font-semibold mb-2">Services</p>
-                                {services.map(item => (
-                                    <a
-                                        key={item.label}
-                                        href="#services"
+                                {displayServices.map(item => (
+                                    <Link
+                                        key={item.id}
+                                        href={`/services#${item.slug}`}
                                         onClick={closeAll}
                                         className="flex flex-col px-4 py-3 hover:bg-white/5 rounded-xl transition-colors"
                                     >
-                                        <span className="text-white text-sm font-semibold">{item.label}</span>
-                                        <span className="text-white/40 text-[11px] mt-0.5">{item.desc}</span>
-                                    </a>
+                                        <span className="text-white text-sm font-semibold">{item.title}</span>
+                                        <span className="text-white/40 text-[11px] mt-0.5">{item.description}</span>
+                                    </Link>
                                 ))}
+                                <Link
+                                    href="/services"
+                                    onClick={closeAll}
+                                    className="block px-4 py-3 mt-2 text-center text-[10px] text-white/60 uppercase tracking-widest font-bold bg-white/5 rounded-xl hover:bg-white/10 transition-all"
+                                >
+                                    View all services
+                                </Link>
                             </div>
                         </div>
 
                         {/* Drawer Footer CTA */}
                         <div className="px-6 py-5 border-t border-white/5">
-                            <GlassSurface width="100%" height={48} borderRadius={999} backgroundOpacity={0.20} distortionScale={-95} className="glass-surface--flush">
-                                <button className="w-full h-full bg-white/90 text-[#1a1c1c] rounded-full font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#e2e2e2] transition-all duration-300 active:scale-95">
-                                    Get started
-                                    <svg suppressHydrationWarning xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                        <path d="M5 12h14"></path>
-                                        <path d="m12 5 7 7-7 7"></path>
-                                    </svg>
-                                </button>
-                            </GlassSurface>
+                            <Link href="/contact" onClick={closeAll}>
+                                <GlassSurface width="100%" height={48} borderRadius={999} backgroundOpacity={0.20} distortionScale={-95} className="glass-surface--flush">
+                                    <div className="w-full h-full bg-white/90 text-[#1a1c1c] rounded-full font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#e2e2e2] transition-all duration-300 active:scale-95">
+                                        Get started
+                                        <svg suppressHydrationWarning xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                            <path d="M5 12h14"></path>
+                                            <path d="m12 5 7 7-7 7"></path>
+                                        </svg>
+                                    </div>
+                                </GlassSurface>
+                            </Link>
                         </div>
                     </div>
                     </GlassSurface>

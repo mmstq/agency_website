@@ -116,3 +116,16 @@
   outline: 2px solid light-dark(#007aff, #0a84ff);
   outline-offset: 2px;
 }
+
+.monolith-card {
+  background: #1f1f1f;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 24px;
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.monolith-card:hover {
+  background: #252525;
+  border-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}

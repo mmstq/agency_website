@@ -12,6 +12,13 @@ export default function CanvasGrid() {
   const exitProgressRef = useRef<number>(1); // 0 = just stopped, 1 = fully gone
 
   useEffect(() => {
+    // Disable on touch devices
+    const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    if (isTouch) {
+      document.documentElement.style.cursor = 'auto';
+      return;
+    }
+
     const gridCanvas = gridCanvasRef.current;
     const cursorCanvas = cursorCanvasRef.current;
     if (!gridCanvas || !cursorCanvas) return;
