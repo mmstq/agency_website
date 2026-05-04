@@ -1,3 +1,6 @@
+import { projects } from './projects';
+import { StaticImageData } from 'next/image';
+
 export interface CaseStudy {
     id: string;
     title: string;
@@ -8,44 +11,20 @@ export interface CaseStudy {
     metricLabel: string;
     image: string;
     href: string;
+    screenshots: StaticImageData[];
     featured?: boolean;
 }
 
-export const caseStudies: CaseStudy[] = [
-    {
-        id: '1',
-        title: 'Architecting the Future of Global FinTech',
-        client: 'Nebula Pay',
-        category: 'Infrastucture',
-        description: 'Building a high-performance payment engine capable of processing 10k transactions per second with sub-50ms latency.',
-        metric: '99.99%',
-        metricLabel: 'Uptime achieved',
-        image: 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2832&auto=format&fit=crop',
-        href: '/portfolio/nebula-pay',
-        featured: true,
-    },
-    {
-        id: '2',
-        title: 'Scaling AI-Powered Supply Chain Logistics',
-        client: 'LogiFlow',
-        category: 'AI Integration',
-        description: 'Implementing a custom LLM orchestration layer to automate multi-modal logistics routing across 4 continents.',
-        metric: '42%',
-        metricLabel: 'Ops efficiency lift',
-        image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2940&auto=format&fit=crop',
-        href: '/portfolio/logiflow',
-        featured: true,
-    },
-    {
-        id: '3',
-        title: 'A New Standard for Digital Health Records',
-        client: 'Vitalis',
-        category: 'HealthTech',
-        description: 'A secure, HIPAA-compliant patient management system with real-time biometric synchronization.',
-        metric: '1.2s',
-        metricLabel: 'Data retrieval speed',
-        image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=2940&auto=format&fit=crop',
-        href: '/portfolio/vitalis',
-        featured: true,
-    },
-];
+export const caseStudies: CaseStudy[] = projects.map(p => ({
+    id: p.id,
+    title: p.title,
+    client: p.title,
+    category: p.tech[0],
+    description: p.description,
+    metric: p.id === 'koor' ? '10K+' : (p.id === 'ssc_ai' ? 'AI' : 'Live'),
+    metricLabel: p.id === 'koor' ? 'Downloads' : (p.id === 'ssc_ai' ? 'Powered' : 'Bidding'),
+    image: p.screenshotPaths[0].src,
+    screenshots: p.screenshotPaths,
+    href: `/portfolio#${p.id}`,
+    featured: true
+}));

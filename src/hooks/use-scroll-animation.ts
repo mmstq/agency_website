@@ -17,7 +17,7 @@ export function useScrollAnimation(options: ScrollAnimationOptions = {}) {
       ([entry]) => {
         if (entry.isIntersecting) {
           el.classList.add('scroll-visible');
-        } else if (!options.triggerOnce) {
+        } else {
           el.classList.remove('scroll-visible');
         }
       },
