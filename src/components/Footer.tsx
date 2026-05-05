@@ -9,10 +9,10 @@ export default function Footer() {
         {
             title: 'Solutions',
             links: [
-                { label: 'Web Applications', href: '/services/web-apps' },
-                { label: 'Mobile Solutions', href: '/services/mobile' },
-                { label: 'AI Integration', href: '/services/ai' },
-                { label: 'SaaS Development', href: '/services/saas' },
+                { label: 'Web Applications', href: '/services#web-apps' },
+                { label: 'Mobile Solutions', href: '/services#mobile' },
+                { label: 'AI Integration', href: '/services#ai' },
+                { label: 'SaaS Development', href: '/services#saas' },
             ],
         },
         {

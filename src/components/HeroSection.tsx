@@ -84,7 +84,7 @@ export default function HeroSection() {
                                 className="glass-surface--flush glass-surface--soft-hover sm:w-[176px]"
                             >
                                 <a
-                                    href="#services"
+                                    href="/services"
                                     className="inline-flex h-full w-full items-center justify-center gap-2 rounded-full px-6 text-sm font-bold text-white transition duration-300 active:scale-[0.98]"
                                 >
                                     <MousePointer2 className="size-4 text-sky-200" aria-hidden="true" />

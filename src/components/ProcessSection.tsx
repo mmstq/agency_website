@@ -27,7 +27,7 @@ const STEPS = [
 
 export default function ProcessSection() {
     return (
-        <section className="py-24 relative overflow-hidden">
+        <section id="process" className="py-24 relative overflow-hidden scroll-mt-24">
             <div className="w-full px-6 md:px-12">
                 <div className="flex flex-col lg:flex-row gap-16 items-start">
                     <div className="lg:sticky lg:top-32 lg:w-1/3">

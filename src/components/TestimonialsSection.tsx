@@ -8,7 +8,7 @@ import ScrollReveal from './ScrollReveal';
 
 export default function TestimonialsSection() {
     return (
-        <section className="py-24 relative overflow-hidden">
+        <section id="testimonials" className="py-24 relative overflow-hidden scroll-mt-24">
             <div className="w-full px-6 md:px-12 mb-16">
                 <ScrollReveal>
                     <div className="text-center">

@@ -30,7 +30,7 @@ export default function ServicesPage() {
                 {/* Services Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
                     {services.map((service) => (
-                        <div key={service.id} className="monolith-card group p-10 flex flex-col">
+                        <div key={service.id} id={service.slug} className="monolith-card group p-10 flex flex-col scroll-mt-32">
                             <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-8 transition-transform group-hover:scale-110 group-hover:bg-white/10">
                                 <service.icon className="w-7 h-7 text-white" />
                             </div>
