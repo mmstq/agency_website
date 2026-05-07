@@ -47,10 +47,10 @@ export default function WordReveal({
         return (
           <span
             key={i}
-            className="inline-block mr-[0.25em] last:mr-0 transition-all duration-500 ease-out"
+            className="inline-block mr-[0.25em] last:mr-0 transition-[opacity,transform] duration-500 ease-out will-change-[opacity,transform]"
             style={{
               opacity: isStatic || started ? 1 : 0,
-              transform: isStatic || started ? 'translateY(0)' : 'translateY(-20px)',
+              transform: isStatic || started ? 'translateY(0)' : 'translateY(-12px)',
               transitionDelay: isStatic ? '0ms' : `${(i - staticWordsCount) * wordDelay}ms`,
             }}
           >

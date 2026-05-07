@@ -40,25 +40,32 @@ export default function CanvasGrid() {
       mouseRef.current = { x: e.clientX, y: e.clientY };
       trailRef.current.push({ x: e.clientX, y: e.clientY, age: 0 });
       lastMoveRef.current = performance.now();
+
+      const target = e.target as HTMLElement;
+      const isOverInteractive = !!target.closest('.card-interactive, .monolith-card, a, button');
+      if (isOverInteractive) {
+        snakeTrailRef.current = [];
+      }
     };
     window.addEventListener('mousemove', handleMouseMove);
 
     let animationFrameId: number;
 
-    const gridSize = 24;
-    const glowRadius = 150;
-    const repulsionRadius = 90;
-    const maxDisplacement = 28;
+    const gridSize = 32;
+    const glowRadius = 160;
+    const repulsionRadius = 100;
+    const repulsionRadiusSq = repulsionRadius * repulsionRadius;
+    const maxDisplacement = 30;
     const baseRadius = 0.8;
-    const activeRadius = 2.5;
-    const baseOpacity = 0.25;
-    const activeOpacity = 0.8;
-    const maxTrailAge = 40;
+    const activeRadius = 2.8;
+    const baseOpacity = 0.22;
+    const activeOpacity = 0.75;
+    const maxTrailAge = 35;
 
     // Cursor snake: keep last N sampled points for the worm visual
     const snakeMaxLen = 8;
-    const snakeMinDist = 4;   // tighter sampling for smoother curve
-    const maxSnakePixels = 120; // Cap total visual length for fast movement
+    const snakeMinDist = 5;   
+    const maxSnakePixels = 130; 
     const idleThreshold = 120;
 
     const render = () => {
@@ -74,32 +81,29 @@ export default function CanvasGrid() {
       const { x: mx, y: my } = mouseRef.current;
       const isMoving = performance.now() - lastMoveRef.current < idleThreshold;
 
-      // Clear stale trail the moment user resumes after being idle
+      // Check if mouse is over interactive element or Selected Work section to hide snake trail
+      const target = document.elementFromPoint(mx, my) as HTMLElement;
+      const isOverInteractive = !!target?.closest('.card-interactive, .monolith-card, a, button, #case-studies');
+
       if (isMoving && !wasMovingRef.current) {
         snakeTrailRef.current = [];
         exitProgressRef.current = 0;
       }
 
-      // When cursor just stopped, begin linear exit. Each frame advance ~1/50 (≈830ms total)
-      if (!isMoving) {
-        exitProgressRef.current = Math.min(1, exitProgressRef.current + 1 / 50);
+      if (!isMoving || isOverInteractive) {
+        exitProgressRef.current = Math.min(1, exitProgressRef.current + 1 / 45);
       } else {
         exitProgressRef.current = 0;
       }
 
       wasMovingRef.current = isMoving;
 
-      // Sample snake trail (throttled by distance)
-      if (mx > -999 && isMoving) {
+      if (mx > -999 && isMoving && !isOverInteractive) {
         const trail = snakeTrailRef.current;
         const last = trail[trail.length - 1];
         if (!last || Math.hypot(mx - last.x, my - last.y) >= snakeMinDist) {
           trail.push({ x: mx, y: my });
-          
-          // Cap by points first
           if (trail.length > snakeMaxLen) trail.shift();
-
-          // Cap by total pixel distance for fast movement
           let totalDist = 0;
           for (let i = 0; i < trail.length - 1; i++) {
             totalDist += Math.hypot(trail[i+1].x - trail[i].x, trail[i+1].y - trail[i].y);
@@ -113,65 +117,73 @@ export default function CanvasGrid() {
       }
 
       // ── Grid dots ────────────────────────────────────────────
+      const trail = trailRef.current;
+      const trailLen = trail.length;
+      const repulsionRadiusInv = 1 / repulsionRadius;
+      const glowRadiusInv = 1 / glowRadius;
+      
       for (let gx = gridSize / 2; gx < gridCanvas.width; gx += gridSize) {
         for (let gy = gridSize / 2; gy < gridCanvas.height; gy += gridSize) {
 
           const dxc = gx - mx;
           const dyc = gy - my;
-          const distFromCursor = Math.hypot(dxc, dyc);
+          const distFromCursorSq = dxc * dxc + dyc * dyc;
 
-          // Fading-bubble repulsion: accumulate from cursor + all trail points
           let totalDx = 0, totalDy = 0;
+          let distFromCursor = -1;
 
-          if (distFromCursor < repulsionRadius && distFromCursor > 0) {
-            const s = ((1 - distFromCursor / repulsionRadius) ** 2) * maxDisplacement;
+          if (distFromCursorSq < repulsionRadiusSq && distFromCursorSq > 0) {
+            distFromCursor = Math.sqrt(distFromCursorSq);
+            const s = ((1 - distFromCursor * repulsionRadiusInv) ** 2) * maxDisplacement;
             totalDx += (dxc / distFromCursor) * s;
             totalDy += (dyc / distFromCursor) * s;
           }
 
-          for (const p of trailRef.current) {
-            const fadeStr = (1 - p.age / maxTrailAge) * 0.5; // halved to calm scatter
+          for (let i = 0; i < trailLen; i++) {
+            const p = trail[i];
             const dx = gx - p.x, dy = gy - p.y;
-            const d = Math.hypot(dx, dy);
-            if (d < repulsionRadius && d > 0) {
-              const s = ((1 - d / repulsionRadius) ** 2) * maxDisplacement * fadeStr;
+            const dSq = dx * dx + dy * dy;
+            if (dSq < repulsionRadiusSq && dSq > 0) {
+              const d = Math.sqrt(dSq);
+              const fadeStr = (1 - p.age / maxTrailAge) * 0.45;
+              const s = ((1 - d * repulsionRadiusInv) ** 2) * maxDisplacement * fadeStr;
               totalDx += (dx / d) * s;
               totalDy += (dy / d) * s;
             }
           }
 
-          // Clamp total displacement
-          const mag = Math.hypot(totalDx, totalDy);
-          const clamp = maxDisplacement * 1.2;
-          if (mag > clamp) { totalDx *= clamp / mag; totalDy *= clamp / mag; }
-
           const drawX = gx + totalDx;
           const drawY = gy + totalDy;
 
-          // Glow: based on original grid position
-          let minGlowDist = distFromCursor;
-          for (const p of trailRef.current) {
-            const adj = Math.hypot(gx - p.x, gy - p.y) + p.age * 3.5;
-            if (adj < minGlowDist) minGlowDist = adj;
+          let minGlowDist = distFromCursor >= 0 ? distFromCursor : Math.sqrt(distFromCursorSq);
+          for (let i = 0; i < trailLen; i++) {
+            const p = trail[i];
+            const d = Math.sqrt((gx - p.x) ** 2 + (gy - p.y) ** 2) + p.age * 3.5;
+            if (d < minGlowDist) minGlowDist = d;
           }
 
           let opacity = baseOpacity;
           let radius = baseRadius;
           if (minGlowDist < glowRadius) {
-            const t = (1 - minGlowDist / glowRadius) ** 2;
+            const t = (1 - minGlowDist * glowRadiusInv) ** 2;
             opacity = baseOpacity + (activeOpacity - baseOpacity) * t;
             radius  = baseRadius  + (activeRadius  - baseRadius)  * t;
           }
 
-          // Fade dots inside repulsion zone
-          if (distFromCursor < repulsionRadius) {
-            opacity *= Math.max(0, (distFromCursor / repulsionRadius) * 1.5 - 0.2);
+          if (distFromCursor < 0 && distFromCursorSq < repulsionRadiusSq) {
+             distFromCursor = Math.sqrt(distFromCursorSq);
           }
 
-          gridCtx.beginPath();
-          gridCtx.arc(drawX, drawY, radius, 0, Math.PI * 2);
-          gridCtx.fillStyle = `rgba(255,255,255,${opacity})`;
-          gridCtx.fill();
+          if (distFromCursor >= 0 && distFromCursor < repulsionRadius) {
+            opacity *= Math.max(0, (distFromCursor * repulsionRadiusInv) * 1.5 - 0.2);
+          }
+
+          if (opacity > 0.04) {
+            gridCtx.beginPath();
+            gridCtx.arc(drawX, drawY, radius, 0, Math.PI * 2);
+            gridCtx.fillStyle = `rgba(255,255,255,${opacity.toFixed(3)})`;
+            gridCtx.fill();
+          }
         }
       }
 

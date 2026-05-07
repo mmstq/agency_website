@@ -91,6 +91,7 @@ export default function Navbar() {
                     brightness={58}
                     opacity={0.88}
                     className="pointer-events-auto w-full"
+                    simplified={true}
                 >
 
                     <nav className="flex h-full w-full items-center justify-between px-8 md:px-12">
@@ -136,6 +137,7 @@ export default function Navbar() {
                                         saturation={1.55}
                                         distortionScale={-105}
                                         className="absolute top-full left-1/2 mt-3 -translate-x-1/2 glass-surface--flush"
+                                        simplified={true}
                                     >
                                         <div className="w-full overflow-hidden rounded-[18px]">
                                             {displayServices.map((item) => (
@@ -166,7 +168,7 @@ export default function Navbar() {
                         {/* Desktop CTA + Mobile Hamburger */}
                         <div className="flex items-center gap-3">
                             <Link href="/contact" className="hidden md:block" onClick={closeAll}>
-                                <GlassSurface width={154} height={48} borderRadius={999} backgroundOpacity={0.20} distortionScale={-95} className="glass-surface--flush glass-surface--soft-hover">
+                                <GlassSurface width={154} height={48} borderRadius={999} backgroundOpacity={0.20} distortionScale={-95} className="glass-surface--flush glass-surface--soft-hover" simplified={true}>
                                     <div className="flex h-full w-full bg-white/90 text-[#1a1c1c] px-6 py-2.5 rounded-full font-bold text-sm items-center justify-center gap-2 hover:bg-[#e2e2e2] transition-all duration-300 active:scale-95">
                                         Get started
                                         <svg suppressHydrationWarning xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -183,7 +185,7 @@ export default function Navbar() {
                                 className="md:hidden flex items-center justify-center w-10 h-10 rounded-full text-white"
                                 aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
                             >
-                                <GlassSurface width={40} height={40} borderRadius={999} backgroundOpacity={0.18} distortionScale={-95} className="glass-surface--flush">
+                                <GlassSurface width={40} height={40} borderRadius={999} backgroundOpacity={0.18} distortionScale={-95} className="glass-surface--flush" simplified={true}>
                                     <span className="flex h-full w-full items-center justify-center">
                                         <svg suppressHydrationWarning xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                             {mobileOpen ? (
@@ -222,6 +224,7 @@ export default function Navbar() {
                         saturation={1.6}
                         distortionScale={-115}
                         className="fixed top-0 right-0 z-50 max-w-[85vw] md:hidden glass-surface--flush animate-slide-in"
+                        simplified={true}
                     >
                         <div
                             ref={mobileMenuRef}
@@ -235,7 +238,7 @@ export default function Navbar() {
                                     className="w-8 h-8 rounded-full flex items-center justify-center text-white"
                                     aria-label="Close menu"
                                 >
-                                    <GlassSurface width={32} height={32} borderRadius={999} backgroundOpacity={0.18} distortionScale={-90} className="glass-surface--flush">
+                                    <GlassSurface width={32} height={32} borderRadius={999} backgroundOpacity={0.18} distortionScale={-90} className="glass-surface--flush" simplified={true}>
                                         <span className="flex h-full w-full items-center justify-center">
                                             <svg suppressHydrationWarning xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                                 <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -286,7 +289,7 @@ export default function Navbar() {
                             {/* Drawer Footer CTA */}
                             <div className="px-6 py-5 border-t border-white/5">
                                 <Link href="/contact" onClick={closeAll}>
-                                    <GlassSurface width="100%" height={48} borderRadius={999} backgroundOpacity={0.20} distortionScale={-95} className="glass-surface--flush">
+                                    <GlassSurface width="100%" height={48} borderRadius={999} backgroundOpacity={0.20} distortionScale={-95} className="glass-surface--flush" simplified={true}>
                                         <div className="w-full h-full bg-white/90 text-[#1a1c1c] rounded-full font-bold text-sm flex items-center justify-center gap-2 hover:bg-[#e2e2e2] transition-all duration-300 active:scale-95">
                                             Get started
                                             <svg suppressHydrationWarning xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

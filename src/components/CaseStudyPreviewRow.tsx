@@ -69,27 +69,42 @@ function VaultCard({ study, height, featured = false, showStatHero = false, stag
         const wrapper = marqueeRef.current;
         if (!card || !wrapper) return;
 
+        let isVisible = false;
+        let isHovered = false;
+
+        const obs = new IntersectionObserver(([entry]) => {
+            isVisible = entry.isIntersecting;
+        }, { threshold: 0.01 });
+        obs.observe(card);
+
         const onMove = (e: MouseEvent) => {
             const r = card.getBoundingClientRect();
             targetYRef.current = ((e.clientY - r.top) / r.height - 0.5) * -20;
         };
-        const onLeave = () => { targetYRef.current = 0; };
+        const onEnter = () => { isHovered = true; };
+        const onLeave = () => { isHovered = false; targetYRef.current = 0; };
 
         const loop = () => {
-            currentYRef.current += (targetYRef.current - currentYRef.current) * 0.07;
-            if (Math.abs(currentYRef.current) > 0.01) {
-                wrapper.style.transform = `translateY(${currentYRef.current.toFixed(2)}px)`;
+            if (isVisible) {
+                const diff = targetYRef.current - currentYRef.current;
+                if (Math.abs(diff) > 0.01 || isHovered) {
+                    currentYRef.current += diff * 0.07;
+                    wrapper.style.transform = `translateY(${currentYRef.current.toFixed(2)}px)`;
+                }
             }
             parallaxRafRef.current = requestAnimationFrame(loop);
         };
 
         card.addEventListener('mousemove', onMove);
+        card.addEventListener('mouseenter', onEnter);
         card.addEventListener('mouseleave', onLeave);
         parallaxRafRef.current = requestAnimationFrame(loop);
 
         return () => {
             card.removeEventListener('mousemove', onMove);
+            card.removeEventListener('mouseenter', onEnter);
             card.removeEventListener('mouseleave', onLeave);
+            obs.disconnect();
             cancelAnimationFrame(parallaxRafRef.current);
             cancelAnimationFrame(counterRafRef.current);
         };
@@ -99,7 +114,7 @@ function VaultCard({ study, height, featured = false, showStatHero = false, stag
         <Link href={study.href} className="block">
             <div
                 ref={cardRef}
-                className="relative rounded-[24px] overflow-hidden border border-white/[0.07] bg-[#1a1a1a] group cursor-none"
+                className="relative rounded-[16px] overflow-hidden border border-white/[0.07] bg-[#1a1a1a] group"
                 style={{
                     height: `${height}px`,
                     opacity: 0,
@@ -124,10 +139,10 @@ function VaultCard({ study, height, featured = false, showStatHero = false, stag
                 {/* Screenshot layer with parallax */}
                 <div
                     ref={marqueeRef}
-                    className={`absolute inset-0 will-change-transform transition-[filter,opacity] duration-700 grayscale group-hover:grayscale-0 ${
+                    className={`absolute inset-0 will-change-transform transition-[filter,opacity] duration-700 ${
                         featured
-                            ? 'opacity-50 group-hover:opacity-100'
-                            : 'opacity-25 group-hover:opacity-75'
+                            ? 'opacity-65 group-hover:opacity-100'
+                            : 'opacity-40 group-hover:opacity-85'
                     }`}
                 >
                     {showStatHero ? (
@@ -202,8 +217,19 @@ function ScanLine() {
         const el = lineRef.current?.parentElement?.parentElement;
         if (!el) return;
 
-        const onEnter = () => { visibleRef.current = true; };
-        const onLeave = () => { visibleRef.current = false; posRef.current = -2; };
+        let rafId: number;
+        const onEnter = () => { 
+            visibleRef.current = true; 
+            cancelAnimationFrame(rafId);
+            rafId = requestAnimationFrame(loop);
+        };
+        const onLeave = () => { 
+            visibleRef.current = false; 
+            posRef.current = -2; 
+            if (lineRef.current) lineRef.current.style.opacity = '0';
+            cancelAnimationFrame(rafId);
+        };
+        
         el.addEventListener('mouseenter', onEnter);
         el.addEventListener('mouseleave', onLeave);
 
@@ -213,17 +239,14 @@ function ScanLine() {
                 if (posRef.current > 102) posRef.current = -2;
                 lineRef.current.style.top = `${posRef.current}%`;
                 lineRef.current.style.opacity = '1';
-            } else if (lineRef.current) {
-                lineRef.current.style.opacity = '0';
+                rafId = requestAnimationFrame(loop);
             }
-            rafRef.current = requestAnimationFrame(loop);
         };
-        rafRef.current = requestAnimationFrame(loop);
 
         return () => {
             el.removeEventListener('mouseenter', onEnter);
             el.removeEventListener('mouseleave', onLeave);
-            cancelAnimationFrame(rafRef.current);
+            cancelAnimationFrame(rafId);
         };
     }, []);
 
@@ -258,7 +281,7 @@ export default function CaseStudyPreviewRow() {
     const cs = caseStudies;
 
     return (
-        <section id="case-studies" className="py-24 relative scroll-mt-24">
+        <section id="case-studies" className="py-24 relative scroll-mt-24 cursor-auto">
             <div className="w-full px-6 md:px-12">
                 {/* Header */}
                 <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-16">

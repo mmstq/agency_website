@@ -23,7 +23,8 @@ export default function ProjectScreenshotMarquee({
     pauseOnHover = true,
 }: ProjectScreenshotMarqueeProps) {
     // Duplicate screenshots to ensure the marquee is always full and seamless
-    const items = [...screenshots, ...screenshots, ...screenshots, ...screenshots];
+    // Reduced from 4 sets to 2 sets for performance
+    const items = [...screenshots, ...screenshots];
 
     return (
         <div 
@@ -45,7 +46,7 @@ export default function ProjectScreenshotMarquee({
                         {items.map((shot, sIdx) => (
                             <div 
                                 key={`${i}-${sIdx}`} 
-                                className="relative aspect-[9/19] shrink-0 rounded-[2rem] overflow-hidden border border-white/5 bg-[#121212] transition-all duration-700 hover:border-white/20 hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                                className="relative aspect-[9/19] shrink-0 rounded-[1.25rem] overflow-hidden border border-white/5 bg-[#121212] transition-all duration-700 hover:border-white/20 hover:scale-[1.02] hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
                                 style={{ height: typeof height === 'number' ? `${height}px` : height }}
                             >
                                 <Image 
@@ -61,7 +62,7 @@ export default function ProjectScreenshotMarquee({
                                 </div>
                                 
                                 {/* Subtle inner glow and border */}
-                                <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-[2rem] pointer-events-none" />
+                                <div className="absolute inset-0 ring-1 ring-inset ring-white/10 rounded-[1.25rem] pointer-events-none" />
                                 <div className="absolute inset-0 bg-gradient-to-b from-white/5 to-transparent pointer-events-none" />
                             </div>
                         ))}

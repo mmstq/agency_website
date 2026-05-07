@@ -1,35 +1,40 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import GlassSurface from './GlassSurface';
 
 export default function LiquidCursor() {
-    const [position, setPosition] = useState({ x: -100, y: -100 });
+    const cursorRef = useRef<HTMLDivElement>(null);
     const [isVisible, setIsVisible] = useState(false);
 
     useEffect(() => {
+        const cursor = cursorRef.current;
         const handleMouseMove = (e: MouseEvent) => {
-            setPosition({ x: e.clientX, y: e.clientY });
+            if (cursor) {
+                cursor.style.left = `${e.clientX}px`;
+                cursor.style.top = `${e.clientY}px`;
+            }
             
-            // Check if hovering over an interactive card (project or testimonial)
             const target = e.target as HTMLElement;
-            const isOverInteractive = target.closest('.card-interactive');
-            setIsVisible(!!isOverInteractive);
+            const isOverInteractive = !!target.closest('.card-interactive');
+            if (isOverInteractive !== isVisible) {
+                setIsVisible(isOverInteractive);
+            }
         };
 
-        window.addEventListener('mousemove', handleMouseMove);
+        window.addEventListener('mousemove', handleMouseMove, { passive: true });
         return () => window.removeEventListener('mousemove', handleMouseMove);
-    }, []);
-
-    if (!isVisible) return null;
+    }, [isVisible]);
 
     return (
         <div 
+            ref={cursorRef}
             className="fixed pointer-events-none z-[9999] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-300"
             style={{ 
-                left: `${position.x}px`, 
-                top: `${position.y}px`,
-                opacity: isVisible ? 1 : 0
+                left: '-100px',
+                top: '-100px',
+                opacity: isVisible ? 1 : 0,
+                display: isVisible ? 'block' : 'none'
             }}
         >
             <GlassSurface
