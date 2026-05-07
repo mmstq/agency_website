@@ -56,8 +56,9 @@ export default function CanvasGrid() {
     const maxTrailAge = 40;
 
     // Cursor snake: keep last N sampled points for the worm visual
-    const snakeMaxLen = 22;
-    const snakeMinDist = 6;   // wider spacing = fewer points = smoother curve
+    const snakeMaxLen = 8;
+    const snakeMinDist = 4;   // tighter sampling for smoother curve
+    const maxSnakePixels = 120; // Cap total visual length for fast movement
     const idleThreshold = 120;
 
     const render = () => {
@@ -94,7 +95,20 @@ export default function CanvasGrid() {
         const last = trail[trail.length - 1];
         if (!last || Math.hypot(mx - last.x, my - last.y) >= snakeMinDist) {
           trail.push({ x: mx, y: my });
+          
+          // Cap by points first
           if (trail.length > snakeMaxLen) trail.shift();
+
+          // Cap by total pixel distance for fast movement
+          let totalDist = 0;
+          for (let i = 0; i < trail.length - 1; i++) {
+            totalDist += Math.hypot(trail[i+1].x - trail[i].x, trail[i+1].y - trail[i].y);
+          }
+          while (totalDist > maxSnakePixels && trail.length > 2) {
+            const p1 = trail.shift()!;
+            const p2 = trail[0];
+            totalDist -= Math.hypot(p2.x - p1.x, p2.y - p1.y);
+          }
         }
       }
 
@@ -186,7 +200,7 @@ export default function CanvasGrid() {
           cursorCtx.lineCap  = 'round';
           cursorCtx.lineJoin = 'round';
           cursorCtx.shadowColor = `rgba(255,255,255,${0.35 * tailOpacity})`;
-          cursorCtx.shadowBlur  = 10;
+          cursorCtx.shadowBlur  = 12;
 
           // Single continuous quadratic-bezier path
           cursorCtx.beginPath();
@@ -205,7 +219,7 @@ export default function CanvasGrid() {
           grad.addColorStop(0.4, `rgba(255,255,255,${0.35 * tailOpacity})`);
           grad.addColorStop(1,   `rgba(255,255,255,${0.95 * tailOpacity})`);
 
-          cursorCtx.lineWidth   = 5.5;
+          cursorCtx.lineWidth   = 14.0;
           cursorCtx.strokeStyle = grad;
           cursorCtx.stroke();
           cursorCtx.restore();
@@ -214,7 +228,7 @@ export default function CanvasGrid() {
         // Idle dot — only when fully faded out or just stopped
         if (!isMoving && ep >= 1) {
           cursorCtx.beginPath();
-          cursorCtx.arc(mx, my, 5, 0, Math.PI * 2);
+          cursorCtx.arc(mx, my, 12, 0, Math.PI * 2);
           cursorCtx.fillStyle = 'rgba(255,255,255,0.95)';
           cursorCtx.fill();
         }

@@ -1,6 +1,5 @@
 import React from 'react';
 import { ShieldCheck, BarChart3, Globe2, Cpu, Database, Landmark } from 'lucide-react';
-import GlassSurface from './GlassSurface';
 
 const INDUSTRIES = [
     {

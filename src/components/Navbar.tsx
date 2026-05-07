@@ -59,7 +59,6 @@ export default function Navbar() {
     }, [mobileOpen]);
 
     const navLinks = [
-        { label: 'Industries', href: '/#industries' },
         { label: 'Case studies', href: '/portfolio' },
         { label: 'About us', href: '/about' },
         { label: 'Blog', href: '/blog' },

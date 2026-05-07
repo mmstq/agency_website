@@ -11,4 +11,5 @@ export interface Project {
   screenshotExt: string;
   iosLink: string;
   screenshotPaths: StaticImageData[];
+  webLink?: string;
 }

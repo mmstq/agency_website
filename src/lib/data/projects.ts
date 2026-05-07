@@ -41,7 +41,7 @@ import spotted4 from '@/assets/project_images/spotted/4.png';
 import spotted5 from '@/assets/project_images/spotted/5.png';
 
 // SSC AI
-import sscLogo from '@/assets/project_images/ssc_ai/1.jpg';
+import sscLogo from '@/assets/project_images/ssc_ai/0.jpg';
 import ssc1 from '@/assets/project_images/ssc_ai/1.jpg';
 import ssc2 from '@/assets/project_images/ssc_ai/2.png';
 import ssc3 from '@/assets/project_images/ssc_ai/3.png';
@@ -62,7 +62,8 @@ export const projects: Project[] = [
     screenshots: 6,
     screenshotExt: "png",
     iosLink: "https://apps.apple.com/in/app/marhaba-auction/id1276558362",
-    screenshotPaths: [marhaba1, marhaba2, marhaba3, marhaba4, marhaba5, marhaba6]
+    screenshotPaths: [marhaba1, marhaba2, marhaba3, marhaba4, marhaba5, marhaba6],
+    webLink: "https://marhabaauctions.com/"
   },
   {
     id: "koor",
@@ -74,7 +75,8 @@ export const projects: Project[] = [
     screenshots: 6,
     screenshotExt: "jpg",
     iosLink: "https://apps.apple.com/no/app/koor-buy-rent-property/id6746753805",
-    screenshotPaths: [koor1, koor2, koor3, koor4, koor5, koor6]
+    screenshotPaths: [koor1, koor2, koor3, koor4, koor5, koor6],
+    webLink: "https://koor.co/"
   },
   {
     id: "movermate",
@@ -86,7 +88,8 @@ export const projects: Project[] = [
     screenshots: 4,
     screenshotExt: "jpg",
     iosLink: "https://apps.apple.com/no/app/movermate-crew/id6737702875",
-    screenshotPaths: [movermate1, movermate2, movermate3, movermate4]
+    screenshotPaths: [movermate1, movermate2, movermate3, movermate4],
+    webLink: "https://movermate.com.au/"
   },
   {
     id: "counsellor_app",
@@ -98,7 +101,8 @@ export const projects: Project[] = [
     screenshots: 4,
     screenshotExt: "jpg",
     iosLink: "https://apps.apple.com/no/app/swiftams-business/id6451433255",
-    screenshotPaths: [counsellor1, counsellor2, counsellor3, counsellor4]
+    screenshotPaths: [counsellor1, counsellor2, counsellor3, counsellor4],
+    webLink: "https://swiftams.com/"
   },
   {
     id: "spotted",
@@ -110,11 +114,12 @@ export const projects: Project[] = [
     screenshots: 5,
     screenshotExt: "png",
     iosLink: "https://apps.apple.com/no/app/spotted-share-with-friends/id6753819174",
-    screenshotPaths: [spotted1, spotted2, spotted3, spotted4, spotted5]
+    screenshotPaths: [spotted1, spotted2, spotted3, spotted4, spotted5],
+    webLink: "https://www.tryspotted.com/"
   },
   {
     id: "ssc_ai",
-    title: "SSC Exam App",
+    title: "SSC Ai",
     logo: sscLogo,
     description: "A comprehensive quiz app for SSC students with AI-powered explanations. Features Gemini API integration for generating brief solutions to every question. Includes AI chat for generating questions and curated notes based on topics. Previous year questions extracted using Local LLM with Phi-4 model.",
     tech: ["Flutter", "Gemini API", "AI/ML", "Firebase", "LLM", "Supabase"],
@@ -122,6 +127,7 @@ export const projects: Project[] = [
     screenshots: 8,
     screenshotExt: "png",
     iosLink: "",
-    screenshotPaths: [ssc1, ssc2, ssc3, ssc4, ssc5, ssc6, ssc7, ssc8]
+    screenshotPaths: [ssc1, ssc2, ssc3, ssc4, ssc5, ssc6, ssc7, ssc8],
+    webLink: "https://sscaiapp.com/"
   }
 ];

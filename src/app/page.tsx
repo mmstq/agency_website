@@ -1,6 +1,6 @@
 import HeroSection from '@/components/HeroSection';
 import LogoMarquee from '@/components/LogoMarquee';
-import IndustriesSection from '@/components/IndustriesSection';
+import IndustriesTicker from '@/components/IndustriesTicker';
 import CaseStudyPreviewRow from '@/components/CaseStudyPreviewRow';
 import ProcessSection from '@/components/ProcessSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
@@ -16,9 +16,9 @@ export default function Home() {
       {/* 3. Logo Marquee */}
       <LogoMarquee />
 
-      {/* 4. Industries Section */}
+      {/* 4. Industries Ticker (Refactored Market Expertise) */}
       <ScrollReveal variant="zoom-in">
-        <IndustriesSection />
+        <IndustriesTicker />
       </ScrollReveal>
 
       {/* 5. Case Study Previews */}
