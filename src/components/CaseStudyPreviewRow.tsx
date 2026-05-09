@@ -53,7 +53,7 @@ function VaultCard({ study, height, featured = false, showStatHero = false, stag
             if (entry.isIntersecting) {
                 setTimeout(() => {
                     el.style.opacity = '1';
-                    el.style.transform = 'translateY(0px)';
+                    el.style.transform = 'translateY(0px) scale(var(--vault-scale, 1))';
                 }, staggerDelay);
                 runCounter();
                 obs.disconnect();
@@ -114,13 +114,13 @@ function VaultCard({ study, height, featured = false, showStatHero = false, stag
         <Link href={study.href} className="block">
             <div
                 ref={cardRef}
-                className="relative rounded-[16px] overflow-hidden border border-white/[0.07] bg-[#1a1a1a] group"
+                className="relative rounded-[16px] overflow-hidden border border-white/[0.07] bg-[#1a1a1a] group hover:border-white/20 hover:shadow-[0_20px_50px_rgba(0,0,0,0.5)] group-hover:[--vault-scale:1.015]"
                 style={{
                     height: `${height}px`,
                     opacity: 0,
-                    transform: 'translateY(56px)',
-                    transition: 'opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.9s cubic-bezier(0.16,1,0.3,1)',
-                    willChange: 'opacity, transform',
+                    transform: 'translateY(56px) scale(var(--vault-scale, 1))',
+                    transition: 'opacity 0.9s cubic-bezier(0.16,1,0.3,1), transform 0.6s cubic-bezier(0.16,1,0.3,1), border-color 0.4s ease, box-shadow 0.4s ease',
+                    willChange: 'opacity, transform, border-color',
                 }}
             >
                 {/* Ghost project number */}
