@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, PenTool, Code2, Rocket } from 'lucide-react';
 import GlassSurface from './GlassSurface';
+import SplitText from './SplitText';
 
 const STEPS = [
     {
@@ -34,8 +35,16 @@ export default function ProcessSection() {
                         <p className="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-white/30 mb-4">
                             How we build
                         </p>
-                        <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-white mb-8">
-                            A ruthlessly efficient path to production.
+                        <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-white mb-8 perspective-1000">
+                            <SplitText
+                                text="A ruthlessly efficient path to production."
+                                delay={35}
+                                duration={0.8}
+                                splitType="words"
+                                from={{ opacity: 0, y: 60, rotateX: -25 }}
+                                to={{ opacity: 1, y: 0, rotateX: 0 }}
+                                tag="span"
+                            />
                         </h2>
                         <p className="text-white/50 text-lg leading-relaxed mb-10">
                             We operate at the intersection of surgical engineering and premium design, stripping away the bloat to deliver pure technological value.

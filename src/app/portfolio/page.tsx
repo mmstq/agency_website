@@ -4,7 +4,7 @@ import { projects } from '@/lib/data/projects';
 import { caseStudies } from '@/lib/data/case-studies';
 import ScrollReveal from '@/components/ScrollReveal';
 import ProjectScreenshotMarquee from '@/components/ProjectScreenshotMarquee';
-import WordReveal from '@/components/WordReveal';
+import SplitText from '@/components/SplitText';
 
 // Merge project + case-study data for stats
 function getStudyMeta(id: string) {
@@ -30,16 +30,17 @@ export default function PortfolioPage() {
                         </p>
                     </ScrollReveal>
                     
-                    <ScrollReveal variant="zoom-in" delay="delay-100">
-                        <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-white leading-[0.95]">
-                            <WordReveal 
-                                text="Technical artifacts of human progress."
-                                delay={400}
-                                wordDelay={80}
-                                staticWordsCount={1}
-                            />
-                        </h1>
-                    </ScrollReveal>
+                    <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-white leading-[0.95] perspective-1000">
+                        <SplitText 
+                            text="Technical artifacts of human progress."
+                            delay={35}
+                            duration={0.8}
+                            splitType="words"
+                            from={{ opacity: 0, y: 80, rotateX: -30 }}
+                            to={{ opacity: 1, y: 0, rotateX: 0 }}
+                            tag="span"
+                        />
+                    </h1>
 
                     <ScrollReveal delay="delay-200">
                         <p className="text-white/50 text-xl md:text-3xl font-medium leading-tight">
@@ -63,21 +64,21 @@ export default function PortfolioPage() {
                                 <div
                                     id={project.id}
                                     className="group relative flex flex-col md:flex-row overflow-hidden border-t border-white/[0.06] last:border-b scroll-mt-32 hover:bg-[#191919] transition-colors duration-500"
-                                    style={{ minHeight: '340px' }}
+                                    style={{ minHeight: '520px' }}
                                 >
                                     {/* ── Info column ───────────────────────────── */}
                                     <div
-                                        className={`relative flex flex-col justify-center gap-6 py-12 z-10 w-full md:w-[45%] ${
+                                        className={`relative flex flex-col justify-center gap-8 py-20 z-10 w-full md:w-[45%] ${
                                             isEven ? 'md:order-1 md:pr-14' : 'md:order-2 md:pl-14'
                                         }`}
                                     >
                                         {/* Project number + title */}
-                                        <div className="flex items-baseline gap-5">
-                                            <span className="font-black text-white/[0.04] leading-none select-none shrink-0" style={{ fontSize: '5rem' }}>
+                                        <div className="flex items-baseline gap-6">
+                                            <span className="font-black text-white/[0.04] leading-none select-none shrink-0" style={{ fontSize: '7rem' }}>
                                                 {String(idx + 1).padStart(2, '0')}
                                             </span>
-                                            <div className="flex items-center gap-4 min-w-0">
-                                                <div className="relative w-10 h-10 shrink-0 rounded-full overflow-hidden border border-white/10 bg-[#1a1a1a]">
+                                            <div className="flex items-center gap-5 min-w-0">
+                                                <div className="relative w-14 h-14 shrink-0 rounded-full overflow-hidden border border-white/10 bg-[#1a1a1a]">
                                                     <Image
                                                         src={project.logo}
                                                         alt={project.title}
@@ -85,14 +86,14 @@ export default function PortfolioPage() {
                                                         className="object-contain p-1"
                                                     />
                                                 </div>
-                                                <h2 className="text-2xl md:text-3xl font-black tracking-tighter text-white leading-tight">
+                                                <h2 className="text-3xl md:text-5xl font-black tracking-tighter text-white leading-tight">
                                                     {project.title}
                                                 </h2>
                                             </div>
                                         </div>
 
                                         {/* Description */}
-                                        <p className="text-white/45 text-sm leading-relaxed line-clamp-3">
+                                        <p className="text-white/45 text-base md:text-lg leading-relaxed line-clamp-4">
                                             {project.description}
                                         </p>
 
@@ -113,8 +114,8 @@ export default function PortfolioPage() {
                                             {/* Stat */}
                                             {meta && (
                                                 <div>
-                                                    <p className="text-3xl font-black text-white leading-none">{meta.metric}</p>
-                                                    <p className="text-[0.6rem] uppercase tracking-widest text-white/30 mt-1">{meta.metricLabel}</p>
+                                                    <p className="text-4xl md:text-5xl font-black text-white leading-none">{meta.metric}</p>
+                                                    <p className="text-[0.7rem] uppercase tracking-widest text-white/30 mt-2">{meta.metricLabel}</p>
                                                 </div>
                                             )}
 
@@ -125,12 +126,13 @@ export default function PortfolioPage() {
                                                         href={project.link}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="group/btn inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/[0.06] border border-white/10 text-white font-bold text-xs hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                                                        style={{ backgroundColor: '#ffffff', color: '#000000' }}
+                                                        className="group/btn inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full font-bold text-xs transition-all duration-300 hover:opacity-90"
                                                     >
                                                         <img
-                                                            src="https://img.icons8.com/?size=100&id=sDtU582wAEWd&format=png&color=FFFFFF"
+                                                            src="https://img.icons8.com/?size=100&id=sDtU582wAEWd&format=png&color=000000"
                                                             alt="Play Store"
-                                                            className="w-4 h-4 object-contain opacity-80"
+                                                            className="w-4 h-4 object-contain"
                                                         />
                                                         Play Store
                                                         <PlayStoreArrow />
@@ -141,12 +143,13 @@ export default function PortfolioPage() {
                                                         href={project.iosLink}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="group/btn inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/[0.06] border border-white/10 text-white font-bold text-xs hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                                                        style={{ backgroundColor: '#ffffff', color: '#000000' }}
+                                                        className="group/btn inline-flex items-center gap-2.5 px-5 py-2.5 rounded-full font-bold text-xs transition-all duration-300 hover:opacity-90"
                                                     >
                                                         <img
-                                                            src="https://img.icons8.com/?size=100&id=2u9oG2V1ZieN&format=png&color=FFFFFF"
+                                                            src="https://img.icons8.com/?size=100&id=2u9oG2V1ZieN&format=png&color=000000"
                                                             alt="App Store"
-                                                            className="w-4 h-4 object-contain opacity-80"
+                                                            className="w-4 h-4 object-contain"
                                                         />
                                                         App Store
                                                         <PlayStoreArrow />
@@ -157,10 +160,11 @@ export default function PortfolioPage() {
                                                         href={project.webLink}
                                                         target="_blank"
                                                         rel="noopener noreferrer"
-                                                        className="group/btn inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/[0.06] border border-white/10 text-white font-bold text-xs hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+                                                        style={{ backgroundColor: '#ffffff', color: '#000000' }}
+                                                        className="group/btn inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-bold text-xs transition-all duration-300 hover:opacity-90"
                                                     >
                                                         Website
-                                                        <ArrowUpRight className="w-3.5 h-3.5 opacity-60 group-hover/btn:opacity-100 transition-opacity" />
+                                                        <ArrowUpRight className="w-3.5 h-3.5" />
                                                     </a>
                                                 )}
                                             </div>
@@ -169,7 +173,7 @@ export default function PortfolioPage() {
 
                                     {/* ── Screenshot panel — parallelogram clip ─── */}
                                     <div
-                                        className={`relative flex-1 overflow-hidden md:order-${isEven ? '2' : '1'} min-h-[280px] md:min-h-0`}
+                                        className={`relative flex-1 overflow-hidden md:order-${isEven ? '2' : '1'} min-h-[420px] md:min-h-0`}
                                         style={{
                                             clipPath: isEven
                                                 ? 'polygon(5% 0%, 100% 0%, 100% 100%, 0% 100%)'
@@ -181,21 +185,11 @@ export default function PortfolioPage() {
                                             <ProjectScreenshotMarquee
                                                 screenshots={project.screenshotPaths}
                                                 title={project.title}
-                                                height={260}
+                                                height={400}
                                                 speed={isEven ? 38 : 46}
                                                 reverse={!isEven}
                                             />
                                         </div>
-
-                                        {/* Edge fade toward info side */}
-                                        <div
-                                            className="absolute inset-0 pointer-events-none z-10"
-                                            style={{
-                                                background: isEven
-                                                    ? 'linear-gradient(to right, #131313 0%, transparent 35%)'
-                                                    : 'linear-gradient(to left, #131313 0%, transparent 35%)',
-                                            }}
-                                        />
 
                                         {/* Arrow button — appears on hover */}
                                         <div className={`absolute bottom-8 z-20 flex size-11 items-center justify-center rounded-full bg-white text-black opacity-0 group-hover:opacity-100 transition-all duration-500 translate-y-2 group-hover:translate-y-0 ${isEven ? 'right-8' : 'left-8'}`}>

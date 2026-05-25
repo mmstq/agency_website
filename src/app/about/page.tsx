@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import Image from 'next/image';
 import { Target, Shield, Zap, Users } from 'lucide-react';
 import ScrollReveal from '@/components/ScrollReveal';
+import SplitText from '@/components/SplitText';
 
 export const metadata: Metadata = {
     title: 'About Us',
@@ -55,25 +56,45 @@ export default function AboutPage() {
         <div className="pt-32 pb-24">
             <div className="w-full px-6 md:px-12">
                 {/* Hero */}
-                <ScrollReveal>
-                    <div className="mb-32 space-y-6 max-w-4xl">
+                <div className="mb-32 space-y-6 max-w-4xl">
+                    <ScrollReveal>
                         <p className="text-[0.6875rem] uppercase tracking-[0.3em] font-bold text-white/30">
                             Our Mission
                         </p>
-                        <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-white leading-[0.95]">
-                            Engineering permanence for the digital age.
-                        </h1>
+                    </ScrollReveal>
+                    <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-white leading-[0.95] perspective-1000">
+                        <SplitText
+                            text="Engineering permanence for the digital age."
+                            delay={35}
+                            duration={0.8}
+                            splitType="words"
+                            from={{ opacity: 0, y: 80, rotateX: -30 }}
+                            to={{ opacity: 1, y: 0, rotateX: 0 }}
+                            tag="span"
+                        />
+                    </h1>
+                    <ScrollReveal delay="delay-100">
                         <p className="text-white/50 text-xl md:text-3xl font-medium leading-tight">
                             Modall was founded on a simple premise: B2B infrastructure should be as high-fidelity and performant as the world&apos;s best consumer experiences.
                         </p>
-                    </div>
-                </ScrollReveal>
+                    </ScrollReveal>
+                </div>
 
                 {/* Grid Content */}
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-32">
                     <ScrollReveal variant="from-left">
                         <div className="monolith-card p-12 space-y-8">
-                            <h2 className="text-3xl font-bold text-white tracking-tight">The Digital Monolith</h2>
+                            <h2 className="text-3xl font-bold text-white tracking-tight perspective-1000">
+                                <SplitText
+                                    text="The Digital Monolith"
+                                    delay={35}
+                                    duration={0.8}
+                                    splitType="words"
+                                    from={{ opacity: 0, y: 40, rotateX: -20 }}
+                                    to={{ opacity: 1, y: 0, rotateX: 0 }}
+                                    tag="span"
+                                />
+                            </h2>
                             <p className="text-white/50 leading-relaxed text-lg">
                                 We believe in building systems that stand the test of time. In an industry obsessed with temporary hacks and MVP-bloat, we choose surgical precision. Our &ldquo;Digital Monolith&rdquo; philosophy means building integrated, high-performance systems that consolidate technical debt rather than scattering it.
                             </p>
@@ -97,16 +118,24 @@ export default function AboutPage() {
 
                 {/* Values */}
                 <div className="mb-32">
-                    <ScrollReveal>
-                        <div className="mb-16">
+                    <div className="mb-16">
+                        <ScrollReveal>
                             <p className="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-white/30 mb-4">
                                 Principles
                             </p>
-                            <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-white">
-                                The code we live by.
-                            </h2>
-                        </div>
-                    </ScrollReveal>
+                        </ScrollReveal>
+                        <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-white perspective-1000">
+                            <SplitText
+                                text="The code we live by."
+                                delay={35}
+                                duration={0.8}
+                                splitType="words"
+                                from={{ opacity: 0, y: 60, rotateX: -25 }}
+                                to={{ opacity: 1, y: 0, rotateX: 0 }}
+                                tag="span"
+                            />
+                        </h2>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {VALUES.map((value, idx) => (
                             <ScrollReveal key={value.title} delay={`delay-${(idx + 1) * 100}` as any}>
@@ -124,16 +153,24 @@ export default function AboutPage() {
 
                 {/* Team */}
                 <div>
-                    <ScrollReveal>
-                        <div className="mb-16">
+                    <div className="mb-16">
+                        <ScrollReveal>
                             <p className="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-white/30 mb-4">
                                 Elite Engineering
                             </p>
-                            <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-white">
-                                Meet the architects.
-                            </h2>
-                        </div>
-                    </ScrollReveal>
+                        </ScrollReveal>
+                        <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-white perspective-1000">
+                            <SplitText
+                                text="Meet the architects."
+                                delay={35}
+                                duration={0.8}
+                                splitType="words"
+                                from={{ opacity: 0, y: 60, rotateX: -25 }}
+                                to={{ opacity: 1, y: 0, rotateX: 0 }}
+                                tag="span"
+                            />
+                        </h2>
+                    </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {TEAM.map((member, idx) => (
                             <ScrollReveal key={member.name} variant="zoom-in" delay={`delay-${(idx + 1) * 100}` as any}>

@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import GlassSurface from './GlassSurface';
 import ScrollReveal from './ScrollReveal';
-import WordReveal from './WordReveal';
+import SplitText from './SplitText';
 
 export default function HeroSection() {
     return (
@@ -38,16 +38,20 @@ export default function HeroSection() {
                         </GlassSurface>
                     </ScrollReveal>
 
-                    <ScrollReveal variant="zoom-in" delay="delay-100">
-                        <h1 className="w-full text-center text-5xl font-black leading-[0.95] tracking-normal text-white sm:text-6xl md:text-7xl lg:text-8xl xl:text-[7rem]">
-                            <WordReveal
-                                text="Build a website that feels like your best sales call."
-                                delay={600}
-                                wordDelay={80}
-                                staticWordsCount={2}
-                            />
-                        </h1>
-                    </ScrollReveal>
+                    <h1 className="w-full text-center text-5xl font-black leading-[0.95] tracking-tight text-white sm:text-6xl md:text-7xl lg:text-8xl xl:text-[7.5rem] perspective-1000">
+                        <SplitText
+                            text="Build a website that feels like your best sales call."
+                            className="inline-block"
+                            delay={35}
+                            duration={0.8}
+                            splitType="words"
+                            from={{ opacity: 0, y: 100, rotateX: -30 }}
+                            to={{ opacity: 1, y: 0, rotateX: 0 }}
+                            tag="span"
+                            threshold={0.1}
+                            rootMargin="-50px"
+                        />
+                    </h1>
 
                     <ScrollReveal delay="delay-200">
                         <p className="mt-7 max-w-3xl text-center text-base leading-8 text-white/62 md:text-xl">

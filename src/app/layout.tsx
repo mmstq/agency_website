@@ -3,7 +3,6 @@ import { Inter, Manrope } from "next/font/google";
 import "./globals.css";
 import MasterLayout from "../components/MasterLayout";
 import StyledJsxRegistry from "./registry";
-import LiquidCursor from "../components/LiquidCursor";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -49,7 +48,6 @@ export default function RootLayout({
         <StyledJsxRegistry>
           <MasterLayout>
             {children}
-            <LiquidCursor />
           </MasterLayout>
         </StyledJsxRegistry>
       </body>

@@ -13,7 +13,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **No Framer Motion / Three.js** — all animations use `requestAnimationFrame` + `useRef` DOM mutation (see [`AnalyticsCard.tsx`](src/components/AnalyticsCard.tsx:6), [`FeatureCardsStack.tsx`](src/components/FeatureCardsStack.tsx:6), [`CanvasGrid.tsx`](src/components/CanvasGrid.tsx:4)). Do NOT install animation libraries.
 - **`GlassSurface`** ([`src/components/GlassSurface.jsx`](src/components/GlassSurface.jsx)) is the universal card wrapper — all major containers use it with `borderRadius={24}`, `backgroundOpacity={0.08}`, `saturation={1.55}`, `distortionScale={-110}`. Do NOT create new card wrappers.
 - **No 1px solid borders** — per [`DESIGN.md`](DESIGN.md:28) "No-Line Rule". Sectioning uses background shifts + vertical spacing only. Ghost borders at 10% opacity are allowed.
-- **`cursor: none` on `<html>`** — custom canvas cursor in [`CanvasGrid.tsx`](src/components/CanvasGrid.tsx). Breaks touch devices; must feature-detect.
+- **`CanvasGrid.tsx`** — interactive dot-grid background with repulsion physics. Works on both desktop and touch devices.
 - **Static export** — [`next.config.ts`](next.config.ts:4) has `output: 'export'`. No server routes, no `getServerSideProps`, no API routes that need a server (newsletter API is a stub).
 - **`recharts` is installed but unused** — [`package.json`](package.json:19) lists it as a dependency but no component imports it. Either use it or remove it.
 - **`@base-ui/react`** — shadcn/ui buttons and inputs use `@base-ui/react` primitives (not Radix). See [`button.tsx`](src/components/ui/button.tsx:3), [`input.tsx`](src/components/ui/input.tsx:2).

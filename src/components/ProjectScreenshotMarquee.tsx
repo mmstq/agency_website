@@ -27,12 +27,8 @@ export default function ProjectScreenshotMarquee({
     const items = [...screenshots, ...screenshots];
 
     return (
-        <div 
+        <div
             className={`group relative w-full overflow-hidden py-8 ${className}`}
-            style={{
-                WebkitMaskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
-                maskImage: 'linear-gradient(to right, transparent, black 15%, black 85%, transparent)',
-            }}
         >
             <div 
                 className={`flex w-fit whitespace-nowrap relative z-20 ${reverse ? 'animate-marquee-reverse' : 'animate-marquee'} ${pauseOnHover ? 'hover:[animation-play-state:paused]' : ''}`}

@@ -40,6 +40,8 @@ const INDUSTRIES = [
     },
 ];
 
+import SplitText from './SplitText';
+
 export default function IndustriesSection() {
     return (
         <section id="industries" className="py-24 relative scroll-mt-24">
@@ -48,11 +50,19 @@ export default function IndustriesSection() {
                     <p className="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-white/30 mb-4">
                         Market Expertise
                     </p>
-                    <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-white max-w-2xl">
-                        Deep technical authority across high-stakes industries.
+                    <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-white max-w-2xl perspective-1000">
+                        <SplitText
+                            text="Deep technical authority across high-stakes industries."
+                            delay={35}
+                            duration={0.8}
+                            splitType="words"
+                            from={{ opacity: 0, y: 60, rotateX: -25 }}
+                            to={{ opacity: 1, y: 0, rotateX: 0 }}
+                            tag="span"
+                        />
                     </h2>
                 </div>
-
+...
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {INDUSTRIES.map((industry) => (
                         <div

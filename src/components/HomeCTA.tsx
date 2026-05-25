@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import GlassSurface from './GlassSurface';
+import SplitText from './SplitText';
 
 export default function HomeCTA() {
     return (
@@ -20,12 +21,20 @@ export default function HomeCTA() {
                     <div className="relative p-12 md:p-24 flex flex-col items-center text-center">
                         {/* Background Glow */}
                         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[60%] h-[60%] bg-emerald-500/10 blur-[120px] -z-10" />
-                        
+
                         <p className="text-[0.6875rem] uppercase tracking-[0.3em] font-bold text-white/40 mb-8">
                             Ready to scale?
                         </p>
-                        <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-white mb-10 max-w-4xl leading-[0.95]">
-                            Let&apos;s build your digital monolith.
+                        <h2 className="text-5xl md:text-7xl font-black tracking-tighter text-white mb-10 max-w-4xl leading-[0.95] perspective-1000">
+                            <SplitText
+                                text="Let's build your digital monolith."
+                                delay={35}
+                                duration={0.8}
+                                splitType="words"
+                                from={{ opacity: 0, y: 80, rotateX: -30 }}
+                                to={{ opacity: 1, y: 0, rotateX: 0 }}
+                                tag="span"
+                            />
                         </h2>
                         <p className="text-white/50 text-xl md:text-2xl max-w-2xl mb-12 font-medium">
                             Join the ranks of high-performance technical teams who trust Modall for their critical infrastructure.

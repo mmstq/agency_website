@@ -12,9 +12,7 @@ const LOGOS = [
 
 export default function LogoMarquee() {
     return (
-        <section className="py-20 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-[#131313] via-transparent to-[#131313] z-10 pointer-events-none" />
-            
+        <section className="py-20 relative">
             <p className="text-center text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-white/30 mb-12">
                 Engineering infrastructure for industry leaders
             </p>

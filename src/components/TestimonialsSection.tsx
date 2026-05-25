@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { Quote, MapPin } from 'lucide-react';
 import { testimonials } from '@/lib/data/testimonials';
 import ScrollReveal from './ScrollReveal';
+import SplitText from './SplitText';
 
 const VISIBLE_CHARS = 130;
 const CHARS_PER_TICK = 3;
@@ -58,18 +59,13 @@ function TestimonialCard({ testimonial, isHovered, onHoverStart, onHoverEnd }: T
     const typedRemaining = isHovered ? remainingText.slice(0, revealedChars) : '';
     const isTyping = isHovered && !isTypingComplete;
 
-    const scale = isHovered ? 1.06 : 1;
-
     return (
         <div
             onMouseEnter={onHoverStart}
             onMouseLeave={onHoverEnd}
             style={{
-                transform: `scale(${scale})`,
-                transformOrigin: 'center center',
                 zIndex: isHovered ? 20 : 0,
                 transition: [
-                    'transform 0.4s cubic-bezier(0.34, 1.2, 0.64, 1)',
                     'background-color 0.3s ease',
                     'border-color 0.3s ease',
                     'box-shadow 0.4s ease',
@@ -146,16 +142,24 @@ export default function TestimonialsSection() {
     return (
         <section id="testimonials" className="py-24 relative overflow-hidden scroll-mt-24">
             <div className="w-full px-6 md:px-12 mb-16">
-                <ScrollReveal>
-                    <div className="text-center">
+                <div className="text-center">
+                    <ScrollReveal>
                         <p className="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-white/30 mb-4">
                             Success Stories
                         </p>
-                        <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-white">
-                            Trusted by industry-defining leaders.
-                        </h2>
-                    </div>
-                </ScrollReveal>
+                    </ScrollReveal>
+                    <h2 className="text-4xl md:text-5xl font-black tracking-tighter text-white perspective-1000">
+                        <SplitText
+                            text="Trusted by industry-defining leaders."
+                            delay={35}
+                            duration={0.8}
+                            splitType="words"
+                            from={{ opacity: 0, y: 60, rotateX: -25 }}
+                            to={{ opacity: 1, y: 0, rotateX: 0 }}
+                            tag="span"
+                        />
+                    </h2>
+                </div>
             </div>
 
             {/* Right-to-Left Marquee */}

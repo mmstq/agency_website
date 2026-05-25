@@ -1,6 +1,7 @@
 import React from 'react';
 import { Metadata } from 'next';
 import GlassSurface from '@/components/GlassSurface';
+import SplitText from '@/components/SplitText';
 
 export const metadata: Metadata = {
     title: 'Blog',
@@ -14,8 +15,16 @@ export default function BlogPage() {
                 <p className="text-[0.6875rem] uppercase tracking-[0.3em] font-bold text-white/30 mb-6">
                     Insights
                 </p>
-                <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-white leading-[0.95] mb-12">
-                    Coming Soon to the Monolith.
+                <h1 className="text-5xl md:text-8xl font-black tracking-tighter text-white leading-[0.95] mb-12 perspective-1000">
+                    <SplitText
+                        text="Coming Soon to the Monolith."
+                        delay={35}
+                        duration={0.8}
+                        splitType="words"
+                        from={{ opacity: 0, y: 80, rotateX: -30 }}
+                        to={{ opacity: 1, y: 0, rotateX: 0 }}
+                        tag="span"
+                    />
                 </h1>
                 <p className="text-white/50 text-xl md:text-3xl font-medium leading-tight max-w-2xl mx-auto mb-16">
                     Our team is currently documenting the architecture of human progress. Check back soon for deep-dives into engineering and design.

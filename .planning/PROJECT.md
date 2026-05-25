@@ -59,7 +59,7 @@ A production-ready agency website that converts high-value B2B leads through pre
 - Floating pill navbar with desktop dropdown + mobile drawer
 - Hero section with working email capture form and API stub
 - Bento grid: VideoCard (demo video), FeatureCardsStack (spinning ecosystem rings), AnalyticsCard (spinning donut rings)
-- CanvasGrid: interactive cursor-following dot grid with repulsion physics, snake cursor, worm trail
+- CanvasGrid: interactive cursor-following dot grid with repulsion physics
 - MasterLayout composing CanvasGrid behind all pages
 
 **Known issues:**
