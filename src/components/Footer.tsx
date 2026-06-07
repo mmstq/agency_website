@@ -1,6 +1,7 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
+import WaveGrid from './WaveGrid';
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -42,8 +43,10 @@ export default function Footer() {
     ];
 
     return (
-        <footer className="relative z-20 mt-20 border-t border-white/5 bg-transparent pt-16 pb-12">
-            <div className="w-full px-6 md:px-12">
+        <footer className="relative z-20 mt-20 overflow-hidden border-t border-white/5 bg-transparent pt-16 pb-12">
+            {/* Ocean-wave dot field (no cursor interaction) */}
+            <WaveGrid />
+            <div className="relative w-full px-6 md:px-12">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 mb-16">
                     
                     {/* Brand Column */}

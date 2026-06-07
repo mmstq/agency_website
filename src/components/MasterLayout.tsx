@@ -6,25 +6,28 @@ import Footer from './Footer';
 
 export default function MasterLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const hideNavbar = pathname?.startsWith('/portfolio');
+  // Portfolio is a full-bleed, self-contained stacking-scroll experience —
+  // it hides both the global navbar and the footer.
+  const isPortfolio = pathname?.startsWith('/portfolio');
 
   return (
-    <div className="relative min-h-screen bg-transparent text-white overflow-hidden selection:bg-white/20">
+    <div className="relative min-h-screen bg-transparent text-white overflow-x-clip selection:bg-white/20">
 
       {/* Dynamic Cursor Hover Canvas Grid */}
       <CanvasGrid />
 
       {/* Top Navigation */}
-      {!hideNavbar && <Navbar />}
+      {!isPortfolio && <Navbar />}
 
-      {/* Transparent Content Container */}
-      <main className="relative z-20 w-full pb-12 bg-transparent">
+      {/* Transparent Content Container. Portfolio drops the bottom padding so
+          its stacking scroll ends flush at the last pinned card. */}
+      <main className={`relative z-20 w-full bg-transparent ${isPortfolio ? '' : 'pb-12'}`}>
         {children}
       </main>
 
 
       {/* Footer */}
-      <Footer />
+      {!isPortfolio && <Footer />}
     </div>
   );
 }

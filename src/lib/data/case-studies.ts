@@ -25,6 +25,6 @@ export const caseStudies: CaseStudy[] = projects.map(p => ({
     metricLabel: p.id === 'koor' ? 'Downloads' : (p.id === 'ssc_ai' ? 'Powered' : 'Bidding'),
     image: p.screenshotPaths[0].src,
     screenshots: p.screenshotPaths,
-    href: `/portfolio#${p.id}`,
+    href: `/portfolio?p=${p.id}`,
     featured: true
 }));

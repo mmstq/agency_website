@@ -1,7 +1,7 @@
 import HeroSection from '@/components/HeroSection';
 import LogoMarquee from '@/components/LogoMarquee';
 import IndustriesTicker from '@/components/IndustriesTicker';
-import CaseStudyPreviewRow from '@/components/CaseStudyPreviewRow';
+import ShowcaseHoverList from '@/components/showcase-variants/ShowcaseHoverList';
 import ProcessSection from '@/components/ProcessSection';
 import TestimonialsSection from '@/components/TestimonialsSection';
 import HomeCTA from '@/components/HomeCTA';
@@ -21,10 +21,9 @@ export default function Home() {
         <IndustriesTicker />
       </ScrollReveal>
 
-      {/* 5. Case Study Previews */}
-      <ScrollReveal variant="from-left">
-        <CaseStudyPreviewRow />
-      </ScrollReveal>
+      {/* 5. Selected Work — interactive hover-reveal list with its own
+          staggered, per-row scroll reveal (handled inside the component). */}
+      <ShowcaseHoverList />
 
       {/* 6. Process Section */}
       <ScrollReveal variant="from-right">

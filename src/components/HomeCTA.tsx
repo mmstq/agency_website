@@ -15,7 +15,7 @@ export default function HomeCTA() {
                     backgroundOpacity={0.15}
                     saturation={1.6}
                     distortionScale={-110}
-                    className="overflow-hidden"
+                    className="overflow-hidden cta-card"
                     simplified
                 >
                     <div className="relative p-12 md:p-24 flex flex-col items-center text-center">

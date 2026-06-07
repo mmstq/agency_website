@@ -171,6 +171,35 @@
     transform: scale(1);
   }
 
+  /* Selected Work — per-row staggered reveal on scroll.
+     Kept separate from .scroll-animate so each row's hover emphasis (translateX
+     + dim) lives on the <li> while the reveal (translateY + fade) lives on an
+     inner wrapper — the two never fight over the same transform/opacity. */
+  .sw-reveal {
+    opacity: 0;
+    /* Larger travel + slight scale + blur-in so the reveal is clearly visible,
+       not a faint nudge. */
+    transform: translateY(80px) scale(0.96);
+    filter: blur(8px);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform, filter;
+  }
+  .sw-reveal.sw-shown {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sw-reveal {
+      opacity: 1;
+      transform: none;
+      filter: none;
+      transition: none;
+    }
+  }
+
   /* Staggered delay helpers */
   .delay-100 { transition-delay: 0.1s; }
   .delay-200 { transition-delay: 0.2s; }
