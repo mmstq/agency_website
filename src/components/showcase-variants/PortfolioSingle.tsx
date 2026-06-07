@@ -48,11 +48,11 @@ export default function PortfolioSingle({ initialId }: { initialId?: string }) {
     const project = projects[active];
 
     return (
-        <section id="work" className="relative scroll-mt-24 py-16 md:py-20">
+        <section id="work" className="relative pt-4 pb-8 md:py-0">
             <div className="w-full px-6 md:px-12">
                 {/* Numbered rail — switches the shown project in place. */}
                 <div
-                    className="mb-10 border-t border-white/[0.06] pt-6"
+                    className="mb-8 border-t border-white/[0.06] pt-6 md:mb-6"
                     role="group"
                     aria-label="Project navigation"
                     onKeyDown={onRailKeyDown}
@@ -95,7 +95,7 @@ export default function PortfolioSingle({ initialId }: { initialId?: string }) {
 
                 {/* The active project — re-keyed so each swap fades in. */}
                 <div key={active} className="portfolio-single-fade">
-                    <DetailLayout project={project} index={active} active />
+                    <DetailLayout project={project} index={active} active fill />
                 </div>
             </div>
 

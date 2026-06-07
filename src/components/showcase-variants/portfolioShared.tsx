@@ -112,6 +112,7 @@ export function DetailLayout({
     active,
     copyRef,
     phonesRef,
+    fill = false,
 }: {
     project: (typeof projects)[number];
     index: number;
@@ -120,6 +121,10 @@ export function DetailLayout({
     // parallax (translateY) to these two columns as the card recedes.
     copyRef?: (el: HTMLDivElement | null) => void;
     phonesRef?: (el: HTMLDivElement | null) => void;
+    // Single-project mode: size the deck by viewport HEIGHT so the whole view
+    // fits one screen with no scroll. Default (stacking scroll) keeps the
+    // width-driven deck — each card there is its own full-height pane.
+    fill?: boolean;
 }) {
     const meta = SPOTLIGHT[project.id];
 
@@ -225,7 +230,7 @@ export function DetailLayout({
 
             {/* ── Project visual — fanned screenshot deck ─────────── */}
             <div ref={phonesRef} className="order-1 md:order-2">
-                <FannedDeck screenshots={project.screenshotPaths} active={active} />
+                <FannedDeck screenshots={project.screenshotPaths} active={active} fill={fill} />
             </div>
         </div>
     );

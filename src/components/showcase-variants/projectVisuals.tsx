@@ -19,7 +19,7 @@ import Image, { StaticImageData } from 'next/image';
    prefers-reduced-motion (no auto-shuffle; manual advance still works).
    ───────────────────────────────────────────────────────────────────────── */
 
-export type VizProps = { screenshots: StaticImageData[]; active: boolean };
+export type VizProps = { screenshots: StaticImageData[]; active: boolean; fill?: boolean };
 
 const EASE = 'cubic-bezier(0.22,1,0.36,1)';
 const DECK_TICK_MS = 3600;
@@ -38,7 +38,7 @@ const DECK_SLOTS: Slot[] = [
 // Parked behind the deck, invisible — the card mid-cycle between front and back.
 const DECK_HIDDEN: Slot = { transform: 'rotate(0deg) translate(0%,0%) scale(0.9)', filter: 'brightness(0.4)', opacity: 0, z: 0 };
 
-export function FannedDeck({ screenshots }: VizProps) {
+export function FannedDeck({ screenshots, fill = false }: VizProps) {
     const shots = screenshots.slice(0, 5);
     const n = shots.length;
     const [i, setI] = useState(0);
@@ -58,7 +58,14 @@ export function FannedDeck({ screenshots }: VizProps) {
 
     return (
         <div
-            className="relative mx-auto aspect-[9/19] max-h-[86svh] w-full max-w-[400px] cursor-pointer"
+            // `fill` (single-project view): drive size from viewport HEIGHT on
+            // md+ (w-auto + aspect-ratio keeps phones proportional) so the deck
+            // never runs off the bottom. Default: width-driven, as before.
+            className={`relative mx-auto aspect-[9/19] cursor-pointer ${
+                fill
+                    ? 'w-full max-w-[340px] md:h-[68svh] md:w-auto md:max-w-full'
+                    : 'max-h-[86svh] w-full max-w-[400px]'
+            }`}
             style={{ perspective: '1000px' }}
             role="button"
             tabIndex={0}
