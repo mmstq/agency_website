@@ -61,10 +61,6 @@ export default function PortfolioView() {
                                     from={{ opacity: 0, y: 80, rotateX: -30 }}
                                     to={{ opacity: 1, y: 0, rotateX: 0 }}
                                     tag="span"
-                                    // SplitText clips its own box (overflow:hidden) to mask the
-                                    // word reveal; with leading-[0.95] that crops descenders
-                                    // (the "g" in "progress"). Bottom padding gives them room.
-                                    className="pb-[0.18em]"
                                 />
                             </h1>
 

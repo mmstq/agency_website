@@ -35,7 +35,11 @@ const SplitText: React.FC<SplitTextProps> = ({
   to = { opacity: 1, y: 0 },
   threshold = 0.1,
   rootMargin = '-100px',
-  textAlign = 'center',
+  // 'inherit' so headings follow their layout's alignment: centered sections
+  // (text-center parents) stay centered, editorial left layouts stay left.
+  // A 'center' default only shows on MULTI-line headings (the inline-block
+  // hugs single lines), which made left-layout heroes wrap centered.
+  textAlign = 'inherit',
   tag = 'p',
   onLetterAnimationComplete
 }) => {
@@ -170,7 +174,13 @@ const SplitText: React.FC<SplitTextProps> = ({
       display: 'inline-block',
       whiteSpace: 'normal',
       wordWrap: 'break-word',
-      willChange: 'transform, opacity'
+      willChange: 'transform, opacity',
+      // overflow:hidden masks the word-rise reveal, but with tight heading
+      // line-heights (leading-[0.95]) it also crops descenders ("g", "y") on
+      // the last line. Bottom padding gives them room INSIDE the clip box;
+      // the negative margin cancels the layout shift so rhythm is unchanged.
+      paddingBottom: '0.18em',
+      marginBottom: '-0.18em'
     };
     const classes = `split-parent ${className}`;
     const Tag = tag || 'p';

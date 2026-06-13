@@ -102,6 +102,12 @@ const AppStoreIcon = () => (
     />
 );
 
+// Primary store CTAs (Play Store / App Store): solid WHITE pill, BLACK text +
+// black icons. Shared by both buttons so they stay identical. The Website link
+// stays a secondary ghost pill (defined inline below).
+const STORE_CTA =
+    'inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-bold text-black transition-opacity duration-300 hover:opacity-90';
+
 /**
  * DetailLayout — the full detailed composition for one project. `active`
  * controls whether the visual (the fanned screenshot deck) cycles.
@@ -194,7 +200,7 @@ export function DetailLayout({
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label={`${project.title} on Google Play`}
-                            className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-bold text-black transition-opacity duration-300 hover:opacity-90"
+                            className={STORE_CTA}
                         >
                             <PlayStoreIcon />
                             Play Store
@@ -206,7 +212,7 @@ export function DetailLayout({
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label={`${project.title} on the App Store`}
-                            className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-bold text-black transition-opacity duration-300 hover:opacity-90"
+                            className={STORE_CTA}
                         >
                             <AppStoreIcon />
                             App Store
