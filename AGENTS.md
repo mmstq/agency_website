@@ -2,6 +2,22 @@
 
 This file provides guidance to agents when working with code in this repository.
 
+## Session Context & Worklog (read first, keep current)
+
+A persistent worklog lives in [`.planning/`](.planning/) so context survives across chat sessions. This is the source of truth for "what we've been working on."
+
+**At the START of a session**, read these to recover context:
+- [`.planning/PROJECT.md`](.planning/PROJECT.md) — stable whole-project knowledge (what it is, stack, design system, decisions). Changes rarely.
+- [`.planning/STATE.md`](.planning/STATE.md) — current position / what's being worked on right now + recent work log.
+- [`.planning/PROGRESS.md`](.planning/PROGRESS.md) — full status board: every page/feature as ✅ done / 🟡 partial / ⬜ not started.
+
+**When meaningful work LANDS in a session** (a feature, page, fix, or decision — not trivial edits), update the worklog before finishing, without being asked:
+- `STATE.md` — always: bump the date, refresh the "working on" line, add a "Most Recent Work" entry.
+- `PROGRESS.md` — when a page/feature changes state (e.g. ⬜ → ✅).
+- `PROJECT.md` — only for new architectural decisions, scope changes, or new known issues.
+
+Keep entries terse and factual. Commit worklog updates alongside the related code change.
+
 <!-- BEGIN:nextjs-agent-rules -->
 # This is NOT the Next.js you know
 
@@ -19,7 +35,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **`recharts` is installed but unused** — [`package.json`](package.json:19) lists it as a dependency but no component imports it. Either use it or remove it.
 - **`@base-ui/react`** — shadcn/ui buttons and inputs use `@base-ui/react` primitives (not Radix). See [`button.tsx`](src/components/ui/button.tsx:3), [`input.tsx`](src/components/ui/input.tsx:2).
 - **`styled-jsx` registry** — [`registry.tsx`](src/app/registry.tsx) wraps the app for styled-jsx SSR support. New pages must be inside `<StyledJsxRegistry>`.
-- **Nav links are broken** — all [`Navbar.tsx`](src/components/Navbar.tsx:57) links point to `#industries`, `#case-studies`, `#about`, `#blog` anchor IDs that don't exist yet.
+- **Nav links resolve to real routes** — [`Navbar.tsx`](src/components/Navbar.tsx) links point to `/`, `/services`, `/services#slug`, `/contact` (fixed; previously broken anchor-only links).
 - **Design tokens** — bg `#131313`, text `#e2e2e2`, Manrope for headings, Inter for body. All radii use `xl` (24px). See [`DESIGN.md`](DESIGN.md).
 
 ## Commands

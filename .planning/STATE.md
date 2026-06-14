@@ -2,24 +2,36 @@
 
 ## Current Position
 
-Phase: Phase 4: About + Services pages completed
-Plan: Phase 5: Portfolio + Case Studies
-Status: Phase 4 implemented; transitioning to Phase 5
-Last activity: 2026-05-01 — Phase 4 completed
+**Date:** 2026-06-14
+**Milestone:** v1.0 Agency Website — Fully Functional (most scope landed)
+**Working on right now:** Set up a persistent context/worklog system (PROJECT.md / STATE.md / PROGRESS.md) so context survives across chat sessions. No feature work in flight.
+**Next likely:** Wire newsletter to a real provider · add `robots.txt` · resolve contact-form submission backend.
+
+## Most Recent Work (newest first)
+
+- 2026-06-13 — Replaced WaveGrid with `BubbleField`; added legal (`/privacy`, `/terms`) + `sitemap.ts`; refactored `CanvasGrid` for footer sync; refined `SplitText` layout; device streaming config + Galaxy Tab S10+
+- 2026-06-07 — Viewport-locked layout for single-project portfolio views; `FannedDeck` height-based scaling; modular `showcase-variants/` with staggered scroll animations
+- 2026-05-25 — Integrated GSAP `SplitText`; removed LiquidCursor (fixed touch `cursor:none` bug); simplified `CanvasGrid`; refined portfolio nav logic
+- 2026-05-07 — Portfolio page overhaul: project marquee + employer assets + visual polish
+- 2026-05-03 — Comprehensive site layout, navigation, and core feature sections with page routing
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-04-30)
+- **Stable knowledge:** [PROJECT.md](PROJECT.md)
+- **Full status board:** [PROGRESS.md](PROGRESS.md)
+- **Design spec:** [../DESIGN.md](../DESIGN.md)
 
 **Core value:** A production-ready agency website that converts high-value B2B leads through premium design and complete content across all key pages.
-**Current focus:** Milestone v1.0 — requirements definition
 
-## Accumulated Context
+## Accumulated Context (gotchas)
 
-- Project uses Next.js 16 App Router with static export (Netlify)
-- "Digital Monolith" design system defined in DESIGN.md — must be followed for all new work
-- DESIGN_LOG.md and CURSOR_ANIMATION_DESIGN.md document the existing animation decisions
-- All animations use RAF + CSS only — no Framer Motion, no Three.js
-- Navbar nav links currently point to anchor IDs that do not exist yet
-- Newsletter API route is a stub (console.log only)
-- `recharts` is installed but unused — should be removed
+- Next.js 16 App Router, **static export** (`output: 'export'`) — no server routes; forms/newsletter need 3rd-party or serverless endpoints
+- "Digital Monolith" design system in DESIGN.md — follow exactly for all new work
+- Animations: RAF + `useRef` DOM mutation + CSS only. No Framer Motion / Three.js. GSAP only for `SplitText`
+- `GlassSurface` is the universal card wrapper — don't create new card wrappers
+- Scroll reveals must re-trigger on every viewport entry (never `unobserve` after first reveal); honor `prefers-reduced-motion`
+- Newsletter API route is a stub (`console.log` only)
+- `recharts` installed but unused — remove or use
+
+---
+*Update this file each working session: bump the date, move the "working on" line to "Most Recent Work," set the new focus.*

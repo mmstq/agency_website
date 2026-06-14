@@ -10,14 +10,9 @@ A production-ready agency website that converts high-value B2B leads through pre
 
 ## Current Milestone: v1.0 Agency Website — Fully Functional
 
-**Goal:** Transform the existing single-page scaffold into a complete, production-ready agency website with all pages, sections, working interactions, SEO metadata, and mobile polish.
+**Goal:** Transform the single-page scaffold into a complete, production-ready agency website with all pages, sections, working interactions, SEO metadata, and mobile polish.
 
-**Target features:**
-- Complete Home page (logo marquee, industries, case study previews, process, testimonials, final CTA, footer)
-- All missing pages: About, Services, Portfolio, Case Studies, Blog, Contact, 404
-- Working interactions: "Get started" CTA, contact form, nav anchor links, newsletter wired to a real provider
-- SEO & performance: OG tags, sitemap, robots.txt, fix touch cursor issue
-- Mobile polish: fix cursor-none on touch devices, review VideoCard height on small screens
+**Status (2026-06-14):** All core pages built and routed. Most v1.0 interactions and SEO landed. Remaining gaps: newsletter provider wiring, `robots.txt`, and contact-form submission backend (constrained by static export).
 
 ## Requirements
 
@@ -25,21 +20,24 @@ A production-ready agency website that converts high-value B2B leads through pre
 
 <!-- Shipped and confirmed valuable. -->
 
-(None yet — ship to validate)
+(None formally validated yet — site not yet live/measured.)
 
 ### Active
 
 <!-- Current scope. Building toward these. -->
 
-- [ ] Home page completed with all sections (marquee, industries, process, testimonials, CTA, footer)
-- [ ] About, Services, Portfolio, Case Studies, Blog, Contact pages created
-- [ ] 404 page created
-- [ ] Working contact form (with API route)
-- [ ] Newsletter wired to a real email provider
-- [ ] Nav links resolve to real sections/pages
-- [ ] "Get started" CTA wired to contact/calendar flow
-- [ ] OG tags, sitemap, robots.txt
-- [ ] Cursor animation safe on touch/mobile devices
+- [x] Home page completed with all sections (marquee, industries, process, testimonials, CTA, footer)
+- [x] About, Services, Portfolio, Blog, Contact pages created
+- [x] 404 page created (`not-found.tsx`)
+- [x] Nav links resolve to real routes (`/`, `/services`, `/services#slug`, `/contact`)
+- [x] OG tags + sitemap (`layout.tsx` metadata, `sitemap.ts`)
+- [x] Cursor animation safe on touch/mobile (LiquidCursor removed; no `cursor:none`)
+- [x] Legal pages: `/privacy`, `/terms`
+- [~] Contact form built (UI complete); submission backend pending (static export — no server)
+- [~] "Get started" CTA wired to `/contact` flow (verify all entry points)
+- [ ] Newsletter wired to a real email provider (API route still `console.log` stub)
+- [ ] `robots.txt` / `robots.ts`
+- [ ] Dedicated Case Studies page (currently folded into Portfolio via `CaseStudyPreviewRow`)
 
 ### Out of Scope
 
@@ -51,30 +49,34 @@ A production-ready agency website that converts high-value B2B leads through pre
 
 ## Context
 
-**Stack:** Next.js 16.2.2 (App Router, static export), React 19, Tailwind v4, shadcn/ui, TypeScript. No Framer Motion — all animations use RAF + CSS only.
+**Stack:** Next.js 16 (App Router, `output: 'export'` static export), React 19, Tailwind v4, shadcn/ui (on `@base-ui/react`, not Radix), TypeScript. No Framer Motion / Three.js — all animations are RAF + `useRef` DOM mutation + CSS. GSAP is used for `SplitText` typography only.
 
-**Design system:** DESIGN.md defines the "Digital Monolith" system: `#131313` background, Manrope/Inter dual typeface, xl (24px) radius on all major containers, no 1px solid borders (ghost borders only at 10% opacity), glassmorphism for navbar/overlays.
+**Design system:** [DESIGN.md](../DESIGN.md) defines the "Digital Monolith" system: `#131313` background, `#e2e2e2` text, Manrope (headings) / Inter (body), `xl` (24px) radius on all major containers, no 1px solid borders (ghost borders only at 10% opacity), glassmorphism via the universal `GlassSurface` wrapper.
 
 **What's already built:**
-- Floating pill navbar with desktop dropdown + mobile drawer
-- Hero section with working email capture form and API stub
-- Bento grid: VideoCard (demo video), FeatureCardsStack (spinning ecosystem rings), AnalyticsCard (spinning donut rings)
-- CanvasGrid: interactive cursor-following dot grid with repulsion physics
-- MasterLayout composing CanvasGrid behind all pages
+- **Pages:** Home, About, Services, Portfolio, Blog, Contact, Privacy, Terms, 404
+- **Navbar** — floating pill, desktop dropdown + mobile drawer; links now resolve to real routes
+- **HeroSection** — glassmorphism hero with email capture + newsletter API stub
+- **Bento cards** — `VideoCard` (demo video), `FeatureCardsStack` (spinning ecosystem rings), `AnalyticsCard` (spinning donut rings)
+- **Home sections** — `LogoMarquee`, `IndustriesSection`/`IndustriesTicker`, `ProcessSection`, `TestimonialsSection`, `CaseStudyPreviewRow`, `HomeCTA`, `Footer`
+- **Portfolio showcase system** — modular `showcase-variants/` (`PortfolioView`, `PortfolioSingle`, `ShowcaseHoverList`, `StackScaleBack`) with staggered scroll animations and viewport-locked single-project views
+- **Backgrounds** — `CanvasGrid` (interactive dot grid w/ repulsion physics, footer-synced) + `BubbleField` (ambient animation, replaced WaveGrid)
+- **Typography/animation primitives** — `SplitText` (GSAP), `ScrollReveal` + `use-scroll-animation` (re-triggering reveals)
+- **MasterLayout** composing backgrounds behind all pages
 
-**Known issues:**
+**Known issues / debt:**
 - Newsletter API logs to console only — no provider wired
-- All nav links point to anchor IDs that don't exist yet
-- "Get started" button has no action
-- `cursor: none` on `<html>` affects touch devices
-- `recharts` installed but unused (dead dep)
+- Contact form has no submission backend (static export constraint — needs a 3rd-party form endpoint or serverless function)
+- `robots.txt` not yet present (sitemap + OG are done)
+- `recharts` listed in `package.json` but unused — remove or use
+- AGENTS.md historically said "nav links are broken" — now fixed (corrected in AGENTS.md)
 
 ## Constraints
 
 - **Tech stack**: Next.js App Router + Tailwind v4 + shadcn/ui — no breaking changes, no new heavy deps
-- **Performance**: No Framer Motion or Three.js — animations must stay RAF/CSS
+- **Performance**: No Framer Motion or Three.js — animations must stay RAF/CSS (GSAP only for SplitText)
 - **Design**: All new pages/sections must follow DESIGN.md "Digital Monolith" spec exactly
-- **Export**: Must remain compatible with Netlify static export (`output: 'export'`)
+- **Export**: Must remain compatible with static export (`output: 'export'`) — no server-only features
 
 ## Key Decisions
 
@@ -82,26 +84,20 @@ A production-ready agency website that converts high-value B2B leads through pre
 |----------|-----------|---------|
 | RAF for all interactive animations | Bypasses React re-renders; guarantees 60fps for spinning rings and dot grid | ✓ Good |
 | HTML5 Canvas for dot grid | 3000+ DOM nodes would tank framerate; canvas gives precise mathematical control | ✓ Good |
-| `cursor: none` on `<html>` + canvas cursor | Unified custom cursor experience matching "Digital Monolith" premium feel | ⚠️ Revisit — breaks touch devices |
-| Tailwind v4 + shadcn | Modern DX, utility-first, component library for forms and UI primitives | — Pending |
-| Static export for Netlify | No server needed for marketing site; cheaper, faster, simpler | ✓ Good |
+| `cursor: none` + custom LiquidCursor | Unified premium cursor experience | ✗ Reverted — broke touch devices; LiquidCursor removed (2026-05-25) |
+| GSAP `SplitText` for headline typography | Per-char/word reveal control beyond CSS; replaced earlier `WordReveal` | ✓ Good |
+| `BubbleField` replaces `WaveGrid` | Lighter, better-fitting ambient background animation | ✓ Good |
+| Modular `showcase-variants/` for portfolio | Reusable showcase layouts shared between home + portfolio; viewport-locked single views | ✓ Good |
+| Static export | No server needed for marketing site; cheaper, faster, simpler | ✓ Good — but constrains forms/newsletter to 3rd-party endpoints |
 
 ## Evolution
 
-This document evolves at phase transitions and milestone boundaries.
+This document holds stable, whole-project knowledge. It evolves at milestone/feature boundaries, not every session.
 
-**After each phase transition** (via `/gsd:transition`):
-1. Requirements invalidated? → Move to Out of Scope with reason
-2. Requirements validated? → Move to Validated with phase reference
-3. New requirements emerged? → Add to Active
-4. Decisions to log? → Add to Key Decisions
-5. "What This Is" still accurate? → Update if drifted
+- **Day-to-day "what I'm doing right now"** lives in [STATE.md](STATE.md).
+- **Full page/feature status board** (done / in-progress / not-started) lives in [PROGRESS.md](PROGRESS.md).
 
-**After each milestone** (via `/gsd:complete-milestone`):
-1. Full review of all sections
-2. Core Value check — still the right priority?
-3. Audit Out of Scope — reasons still valid?
-4. Update Context with current state
+When a requirement is invalidated → move to Out of Scope with reason. When validated → move to Validated. When a new architectural decision is made → add to Key Decisions.
 
 ---
-*Last updated: 2026-04-30 after Milestone v1.0 start*
+*Last updated: 2026-06-14 — backfilled from git history (work through 2026-06-13) after worklog system set up.*

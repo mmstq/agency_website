@@ -117,13 +117,13 @@ export default function BubbleField() {
     const WOBBLE_FREQ_MIN = 0.4; // sway rate (rad/s) — slow, lazy drift.
     const WOBBLE_FREQ_MAX = 1.5;
 
-    const ALPHA_MIN = 0.22; // dimmest free bubble — the grid's base opacity.
-    const ALPHA_MAX = 0.34; // brightest bubble ceiling — keeps text legible.
+    const ALPHA_MIN = 0.30; // dimmest free bubble — the grid's base opacity.
+    const ALPHA_MAX = 0.48; // brightest bubble ceiling — keeps text legible.
 
     const FADE_BOTTOM = 0.06; // bottom fraction over which bubbles fade in.
 
-    const RING_MIN_R = 1.4; // (effective) radius above which a bubble gets a
-    const GLINT_MIN_R = 2.1; // defined outline ring / a highlight glint.
+    const RING_MIN_R = 1.1; // (effective) radius above which a bubble gets a
+    const GLINT_MIN_R = 1.8; // defined outline ring / a highlight glint.
     // ------------------------------------------------------------------------
 
     const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
@@ -213,7 +213,7 @@ export default function BubbleField() {
       // brightness.
       ctx.beginPath();
       ctx.arc(x, y, r, 0, TWO_PI);
-      ctx.fillStyle = `rgba(255,255,255,${(defined ? alpha * 0.45 : alpha).toFixed(3)})`;
+      ctx.fillStyle = `rgba(255,255,255,${(defined ? alpha * 0.7 : alpha).toFixed(3)})`;
       ctx.fill();
 
       // Defined bubbles get a brighter outline ring (+ a glint highlight) —
