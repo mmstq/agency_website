@@ -4,11 +4,12 @@
 
 **Date:** 2026-06-14
 **Milestone:** v1.0 Agency Website — Fully Functional (most scope landed)
-**Working on right now:** Set up a persistent context/worklog system (PROJECT.md / STATE.md / PROGRESS.md) so context survives across chat sessions. No feature work in flight.
-**Next likely:** Wire newsletter to a real provider · add `robots.txt` · resolve contact-form submission backend.
+**Working on right now:** Reskinned `/privacy` to match site design language (was generic). No feature work in flight.
+**Next likely:** Apply same treatment to `/terms` (visual twin) · wire newsletter to a real provider · add `robots.txt` · resolve contact-form submission backend.
 
 ## Most Recent Work (newest first)
 
+- 2026-06-14 — Reskinned `/privacy` to feel native: animated `SplitText` hero (matches contact), per-section `ScrollReveal`, numbered left-rail layout. Design only; legal copy unchanged. `/terms` is the still-generic twin.
 - 2026-06-13 — Replaced WaveGrid with `BubbleField`; added legal (`/privacy`, `/terms`) + `sitemap.ts`; refactored `CanvasGrid` for footer sync; refined `SplitText` layout; device streaming config + Galaxy Tab S10+
 - 2026-06-07 — Viewport-locked layout for single-project portfolio views; `FannedDeck` height-based scaling; modular `showcase-variants/` with staggered scroll animations
 - 2026-05-25 — Integrated GSAP `SplitText`; removed LiquidCursor (fixed touch `cursor:none` bug); simplified `CanvasGrid`; refined portfolio nav logic

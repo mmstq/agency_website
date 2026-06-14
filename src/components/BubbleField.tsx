@@ -56,6 +56,9 @@ interface Bubble {
   wobblePhase: number;
   /** free-bubble brightness ceiling (0..1) — morphs to the grid's alpha */
   baseAlpha: number;
+  /** height fraction this bubble climbs to before it morphs + docks (size-set:
+   *  big bubbles → near DOCK_TOP_FRAC/high, small → near DOCK_LOW_FRAC/low) */
+  dockFrac: number;
   /** docking state: locked onto a lattice row, gliding in / merging */
   docking: boolean;
   /** viewport lattice row index n (row y = GRID_SIZE/2 + n·GRID_SIZE) */
@@ -90,12 +93,17 @@ export default function BubbleField() {
     const GRID_FADE_FRAC = 1.0; // CanvasGrid's lattice fades to 0 across this
     //                             fraction of the footer height (1.0 = bottom).
 
-    const DOCK_Y_FRAC = 0.45; // bubbles start docking above this height fraction.
-    const DOCK_TOP_FRAC = 0.1; // dock rows are spread up to here — merges land
-    //                            all across the formed band (brighter dots the
-    //                            higher up), never on one dim stripe.
+    // How high a bubble climbs before it morphs into a dot and merges is set by
+    // its SIZE: each bubble gets a personal dock line between these two fractions
+    // (see seed). Big, buoyant bubbles reach DOCK_TOP_FRAC (the bright top of the
+    // band); small ones only reach DOCK_LOW_FRAC and dissolve down low.
+    const DOCK_TOP_FRAC = 0.1; // highest a bubble can reach (the biggest bubbles).
+    const DOCK_LOW_FRAC = 0.58; // lowest a bubble reaches (the smallest bubbles).
+    const REACH_SIZE_BIAS = 0.8; // how strongly SIZE (vs. random jitter) sets the
+    //                             reach between those two: 1 = purely size, 0 =
+    //                             all-random (the old size-independent spread).
     const MORPH_SPAN_FRAC = 0.25; // bubble→dot morph happens across this span
-    //                               just below the dock line (0.70H → 0.45H).
+    //                               just below each bubble's own dock line.
     const MERGE_S = 0.8; // seconds a docked dot takes to fade into the grid.
     const APPROACH_EASE_PX = 48; // deceleration radius approaching the row.
     const GLIDE_MIN = 36; // px/s floor while gliding to a row (no crawling).
@@ -143,6 +151,15 @@ export default function BubbleField() {
       const roll = Math.random() * Math.random();
       const r = R_MIN + roll * (R_MAX - R_MIN);
       b.r = r;
+      const rNorm = (r - R_MIN) / (R_MAX - R_MIN);
+      // How high THIS bubble climbs before it morphs into a dot and merges —
+      // set by SIZE. Big, buoyant bubbles reach DOCK_TOP_FRAC (the bright top);
+      // small ones only reach DOCK_LOW_FRAC and dissolve low. Jitter keeps one
+      // size off a single shared row.
+      const reach = clamp01(
+        rNorm * REACH_SIZE_BIAS + Math.random() * (1 - REACH_SIZE_BIAS),
+      );
+      b.dockFrac = lerp(DOCK_LOW_FRAC, DOCK_TOP_FRAC, reach);
       // Spawn on the SAME lattice columns as CanvasGrid (centers at
       // GRID_SIZE/2 + n·GRID_SIZE; the fixed grid and the full-bleed footer
       // share x = 0), so each stream lines up under a column of grid dots.
@@ -150,12 +167,11 @@ export default function BubbleField() {
       b.baseX = GRID_SIZE / 2 + col * GRID_SIZE;
       b.y = atBottom
         ? cssH + PAD + Math.random() * cssH * 0.45 // staggered respawn below
-        : cssH * DOCK_Y_FRAC + Math.random() * cssH * (1 - DOCK_Y_FRAC);
+        : cssH * b.dockFrac + Math.random() * cssH * (1 - b.dockFrac);
       b.vy = RISE_MIN + r * RISE_PER_R + Math.random() * RISE_JITTER;
       b.wobbleAmp = rand(WOBBLE_AMP_MIN, WOBBLE_AMP_MAX);
       b.wobbleFreq = rand(WOBBLE_FREQ_MIN, WOBBLE_FREQ_MAX);
       b.wobblePhase = Math.random() * TWO_PI;
-      const rNorm = (r - R_MIN) / (R_MAX - R_MIN);
       b.baseAlpha = ALPHA_MIN + rNorm * (ALPHA_MAX - ALPHA_MIN);
       b.docking = false;
       b.dockRow = 0;
@@ -180,14 +196,15 @@ export default function BubbleField() {
     const drawBubble = (b: Bubble, t: number) => {
       const y = b.y;
 
-      // morph: 1 = free bubble (lower footer), 0 = lattice dot (dock line and
-      // above). Drives wobble, radius, ring and alpha — the bubble organizes
-      // continuously as it climbs, so docking never pops. FROZEN at 0 while
-      // docking: a scroll that drags a docked dot below the dock line must
-      // not re-inflate it into a wobbling bubble.
+      // morph: 1 = free bubble (below its dock line), 0 = lattice dot (its dock
+      // line and above). Drives wobble, radius, ring and alpha — the bubble
+      // organizes continuously as it climbs, so docking never pops. FROZEN at 0
+      // while docking: a scroll that drags a docked dot below the line must not
+      // re-inflate it into a wobbling bubble. The line is per-bubble (size-set),
+      // so big bubbles stay bubbles higher up and small ones morph low.
       const morph = b.docking
         ? 0
-        : clamp01((y - cssH * DOCK_Y_FRAC) / (cssH * MORPH_SPAN_FRAC));
+        : clamp01((y - cssH * b.dockFrac) / (cssH * MORPH_SPAN_FRAC));
 
       const wobble = b.wobbleAmp * morph;
       const x = b.baseX + wobble * Math.sin(b.wobbleFreq * t + b.wobblePhase);
@@ -244,19 +261,18 @@ export default function BubbleField() {
       // One rect read per frame projects the real lattice rows into local
       // coords, so docked dots stay glued to their grid dots even mid-scroll.
       const rectTop = canvas.getBoundingClientRect().top;
-      const dockLineY = cssH * DOCK_Y_FRAC;
 
       for (let i = 0; i < bubbles.length; i++) {
         const b = bubbles[i];
+        // This bubble's personal dock line — set by its size in seed().
+        const dockLineY = cssH * b.dockFrac;
 
         if (!b.docking) {
           b.y -= b.vy * dt; // free rise
           if (b.y <= dockLineY) {
-            // Lock onto a REAL lattice row above — chosen randomly across the
-            // formed band [DOCK_TOP_FRAC·H .. here], so merges land all over
-            // the half-crystallized lattice, not on one dim stripe.
-            const aim = lerp(cssH * DOCK_TOP_FRAC, b.y, Math.random());
-            b.dockRow = Math.floor((aim + rectTop - GRID_SIZE / 2) / GRID_SIZE);
+            // Reached its size-set ceiling — dock onto the nearest REAL lattice
+            // row right here (it has already morphed into a dot by now).
+            b.dockRow = Math.floor((b.y + rectTop - GRID_SIZE / 2) / GRID_SIZE);
             b.docking = true;
             b.dockT = 0;
           }
