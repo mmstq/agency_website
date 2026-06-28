@@ -210,7 +210,6 @@ function VaultCard({ study, height, featured = false, showStatHero = false, stag
 function ScanLine() {
     const lineRef = useRef<HTMLDivElement>(null);
     const posRef = useRef(-2);
-    const rafRef = useRef(0);
     const visibleRef = useRef(false);
 
     useEffect(() => {

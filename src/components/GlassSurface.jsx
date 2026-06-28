@@ -117,6 +117,10 @@ const GlassSurface = ({
   }, [filterId]);
 
   useEffect(() => {
+    // SSR-safe: the server and the first client render must both see the initial
+    // `false` to avoid a hydration mismatch; the real UA value is read once after
+    // mount. An effect is the correct place for this, so the rule is silenced.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMobile(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
   }, []);
 
@@ -171,11 +175,11 @@ const GlassSurface = ({
   }, [width, height, updateDisplacementMap, useSimplified]);
 
   useEffect(() => {
-    if (useSimplified) {
-      setSvgSupported(false);
-    } else {
-      setSvgSupported(supportsSVGFilters());
-    }
+    // Same SSR-safe rationale as the isMobile effect above: client-only feature
+    // detection deferred to an effect so the initial render matches the server
+    // (svgSupported starts false). Behaviour is unchanged from the if/else form.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setSvgSupported(useSimplified ? false : supportsSVGFilters());
   }, [supportsSVGFilters, useSimplified]);
 
   const containerStyle = {

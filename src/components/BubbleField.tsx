@@ -108,7 +108,7 @@ export default function BubbleField() {
     const APPROACH_EASE_PX = 48; // deceleration radius approaching the row.
     const GLIDE_MIN = 36; // px/s floor while gliding to a row (no crawling).
 
-    const AREA_PER_BUBBLE = 9000; // footer px² per bubble (lower ⇒ denser).
+    const AREA_PER_BUBBLE = 7000; // footer px² per bubble (lower ⇒ denser).
     const MIN_BUBBLES = 18;
     const MAX_BUBBLES = 220;
     const PAD = 28; // spawn-below margin beyond the bottom edge.

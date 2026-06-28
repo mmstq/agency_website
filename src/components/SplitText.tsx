@@ -8,6 +8,10 @@ import { useGSAP } from '@gsap/react';
 
 gsap.registerPlugin(ScrollTrigger, GSAPSplitText);
 
+// The split-target element also caches its GSAP SplitText instance so a prior
+// split can be reverted before re-splitting.
+type SplitTextElement = HTMLElement & { _rbsplitInstance?: GSAPSplitText | null };
+
 interface SplitTextProps {
   text: string;
   className?: string;
@@ -43,7 +47,7 @@ const SplitText: React.FC<SplitTextProps> = ({
   tag = 'p',
   onLetterAnimationComplete
 }) => {
-  const ref = useRef<any>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const animationCompletedRef = useRef(false);
   const onCompleteRef = useRef(onLetterAnimationComplete);
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -54,13 +58,15 @@ const SplitText: React.FC<SplitTextProps> = ({
   }, [onLetterAnimationComplete]);
 
   useEffect(() => {
-    if (document.fonts.status === 'loaded') {
-      setFontsLoaded(true);
-    } else {
-      document.fonts.ready.then(() => {
-        setFontsLoaded(true);
-      });
-    }
+    // document.fonts.ready resolves on a microtask (even when the fonts are
+    // already loaded), so setState never fires synchronously in the effect body.
+    let cancelled = false;
+    document.fonts.ready.then(() => {
+      if (!cancelled) setFontsLoaded(true);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useGSAP(
@@ -68,12 +74,12 @@ const SplitText: React.FC<SplitTextProps> = ({
       if (!ref.current || !text || !fontsLoaded) return;
       // Prevent re-animation if already completed
       if (animationCompletedRef.current) return;
-      const el = ref.current;
+      const el: SplitTextElement = ref.current;
 
       if (el._rbsplitInstance) {
         try {
           el._rbsplitInstance.revert();
-        } catch (_) {
+        } catch {
           /* noop */
         }
         el._rbsplitInstance = null;
@@ -91,12 +97,11 @@ const SplitText: React.FC<SplitTextProps> = ({
             : `+=${marginValue}${marginUnit}`;
       const start = `top ${startPct}%${sign}`;
 
-      let targets: any;
-      const assignTargets = (self: any) => {
-        if (splitType.includes('chars') && self.chars.length) targets = self.chars;
-        if (!targets && splitType.includes('words') && self.words.length) targets = self.words;
-        if (!targets && splitType.includes('lines') && self.lines.length) targets = self.lines;
-        if (!targets) targets = self.chars || self.words || self.lines;
+      const resolveTargets = (self: GSAPSplitText): Element[] => {
+        if (splitType.includes('chars') && self.chars.length) return self.chars;
+        if (splitType.includes('words') && self.words.length) return self.words;
+        if (splitType.includes('lines') && self.lines.length) return self.lines;
+        return self.chars || self.words || self.lines;
       };
 
       const splitInstance = new GSAPSplitText(el, {
@@ -107,8 +112,8 @@ const SplitText: React.FC<SplitTextProps> = ({
         wordsClass: 'split-word',
         charsClass: 'split-char',
         reduceWhiteSpace: false,
-        onSplit: (self: any) => {
-          assignTargets(self);
+        onSplit: (self: GSAPSplitText) => {
+          const targets = resolveTargets(self);
           const tween = gsap.fromTo(
             targets,
             { ...from },
@@ -144,7 +149,7 @@ const SplitText: React.FC<SplitTextProps> = ({
         });
         try {
           splitInstance.revert();
-        } catch (_) {
+        } catch {
           /* noop */
         }
         el._rbsplitInstance = null;
@@ -183,7 +188,7 @@ const SplitText: React.FC<SplitTextProps> = ({
       marginBottom: '-0.18em'
     };
     const classes = `split-parent ${className}`;
-    const Tag = tag || 'p';
+    const Tag: React.ElementType = tag || 'p';
 
     return (
       <Tag ref={ref} style={style} className={classes}>

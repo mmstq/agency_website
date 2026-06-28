@@ -1,5 +1,6 @@
 'use client';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import GlassSurface from './GlassSurface';
@@ -9,14 +10,47 @@ import { services } from '@/lib/data/services';
 export default function Navbar() {
     const [servicesOpen, setServicesOpen] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
+    const [dropdownPos, setDropdownPos] = useState<{ top: number; left: number } | null>(null);
     const pathname = usePathname();
-    const dropdownRef = useRef<HTMLDivElement>(null);
+    const servicesBtnRef = useRef<HTMLButtonElement>(null);
+    const dropdownPanelRef = useRef<HTMLDivElement>(null);
     const mobileMenuRef = useRef<HTMLDivElement>(null);
 
-    // Close services dropdown on outside click
+    // Anchor the portal dropdown beneath the Services button
+    const updateDropdownPos = useCallback(() => {
+        const rect = servicesBtnRef.current?.getBoundingClientRect();
+        if (rect) {
+            setDropdownPos({ top: rect.bottom + 12, left: rect.left + rect.width / 2 });
+        }
+    }, []);
+
+    const toggleServices = useCallback(() => {
+        setServicesOpen(prev => {
+            const next = !prev;
+            if (next) updateDropdownPos();
+            return next;
+        });
+    }, [updateDropdownPos]);
+
+    // Keep the dropdown anchored while open (scroll / resize)
+    useEffect(() => {
+        if (!servicesOpen) return;
+        window.addEventListener('scroll', updateDropdownPos, true);
+        window.addEventListener('resize', updateDropdownPos);
+        return () => {
+            window.removeEventListener('scroll', updateDropdownPos, true);
+            window.removeEventListener('resize', updateDropdownPos);
+        };
+    }, [servicesOpen, updateDropdownPos]);
+
+    // Close services dropdown on outside click (button + portal panel both excluded)
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+            const target = e.target as Node;
+            if (
+                servicesBtnRef.current && !servicesBtnRef.current.contains(target) &&
+                dropdownPanelRef.current && !dropdownPanelRef.current.contains(target)
+            ) {
                 setServicesOpen(false);
             }
         };
@@ -79,7 +113,7 @@ export default function Navbar() {
 
     return (
         <>
-            <div className="sticky top-8 z-50 w-full flex justify-center px-6 md:px-24 lg:px-48 pointer-events-none">
+            <div className="site-navbar sticky top-8 z-50 w-full flex justify-center px-6 md:px-24 lg:px-48 pointer-events-none">
                 <GlassSurface
                     width="100%"
                     height={72}
@@ -118,9 +152,10 @@ export default function Navbar() {
                                     {link.label}
                                 </Link>
                             ))}
-                            <div className="relative" ref={dropdownRef}>
+                            <div className="relative">
                                 <button
-                                    onClick={() => setServicesOpen(o => !o)}
+                                    ref={servicesBtnRef}
+                                    onClick={toggleServices}
                                     className={`flex items-center gap-1 font-medium transition-colors text-[0.6875rem] uppercase tracking-widest ${pathname?.startsWith('/services') ? 'text-white' : 'text-white/60 hover:text-white'}`}
                                 >
                                     Services
@@ -128,40 +163,6 @@ export default function Navbar() {
                                         <polyline points="6 9 12 15 18 9"></polyline>
                                     </svg>
                                 </button>
-                                {servicesOpen && (
-                                    <GlassSurface
-                                        width={224}
-                                        height="auto"
-                                        borderRadius={18}
-                                        backgroundOpacity={0.18}
-                                        saturation={1.55}
-                                        distortionScale={-105}
-                                        className="absolute top-full left-1/2 mt-3 -translate-x-1/2 glass-surface--flush"
-                                        simplified={true}
-                                    >
-                                        <div className="w-full overflow-hidden rounded-[18px]">
-                                            {displayServices.map((item) => (
-                                                <Link
-                                                    key={item.id}
-                                                    href={`/services#${item.slug}`}
-                                                    onClick={() => setServicesOpen(false)}
-                                                    className="flex flex-col px-4 py-3 hover:bg-white/5 transition-colors border-b border-white/5 last:border-0"
-                                                >
-                                                    <span className="text-white text-xs font-semibold">{item.title}</span>
-                                                    <span className="text-white/40 text-[11px] mt-0.5">{item.description}</span>
-                                                </Link>
-                                            ))}
-                                            <Link
-
-                                                href="/services"
-                                                onClick={() => setServicesOpen(false)}
-                                                className="flex items-center justify-center px-4 py-2 bg-white/5 hover:bg-white/10 transition-colors text-[10px] text-white/60 uppercase tracking-widest font-bold"
-                                            >
-                                                View all services
-                                            </Link>
-                                        </div>
-                                    </GlassSurface>
-                                )}
                             </div>
                         </div>
 
@@ -208,6 +209,54 @@ export default function Navbar() {
                     </nav>
                 </GlassSurface>
             </div>
+
+            {/* Services Dropdown — portaled to <body> so it escapes the navbar's overflow:hidden glass pill */}
+            {servicesOpen && dropdownPos && createPortal(
+                <div
+                    ref={dropdownPanelRef}
+                    style={{
+                        position: 'fixed',
+                        top: dropdownPos.top,
+                        left: dropdownPos.left,
+                        transform: 'translateX(-50%)',
+                        zIndex: 60,
+                    }}
+                    className="hidden md:block"
+                >
+                    <GlassSurface
+                        width={224}
+                        height="auto"
+                        borderRadius={18}
+                        backgroundOpacity={0.18}
+                        saturation={1.55}
+                        distortionScale={-105}
+                        className="glass-surface--flush"
+                        simplified={true}
+                    >
+                        <div className="w-full overflow-hidden rounded-[18px] bg-[#131313]/95 backdrop-blur-2xl">
+                            {displayServices.map((item) => (
+                                <Link
+                                    key={item.id}
+                                    href={`/services#${item.slug}`}
+                                    onClick={() => setServicesOpen(false)}
+                                    className="flex flex-col px-4 py-3 hover:bg-white/10 transition-colors border-b border-white/5 last:border-0"
+                                >
+                                    <span className="text-white text-xs font-semibold">{item.title}</span>
+                                    <span className="text-white/40 text-[11px] mt-0.5">{item.description}</span>
+                                </Link>
+                            ))}
+                            <Link
+                                href="/services"
+                                onClick={() => setServicesOpen(false)}
+                                className="flex items-center justify-center px-4 py-2 bg-white/5 hover:bg-white/10 transition-colors text-[10px] text-white/60 uppercase tracking-widest font-bold"
+                            >
+                                View all services
+                            </Link>
+                        </div>
+                    </GlassSurface>
+                </div>,
+                document.body
+            )}
 
             {/* Mobile Slide-in Drawer */}
             {mobileOpen && (

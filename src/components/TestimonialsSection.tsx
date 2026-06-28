@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { Quote, MapPin } from 'lucide-react';
 import { testimonials } from '@/lib/data/testimonials';
@@ -27,7 +27,6 @@ interface TestimonialCardProps {
 
 function TestimonialCard({ testimonial, isHovered, onHoverStart, onHoverEnd }: TestimonialCardProps) {
     const [revealedChars, setRevealedChars] = useState(0);
-    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
     const visibleText = getVisibleText(testimonial.text);
     const hasMore = testimonial.text.length > visibleText.length;
@@ -35,24 +34,22 @@ function TestimonialCard({ testimonial, isHovered, onHoverStart, onHoverEnd }: T
     const isTypingComplete = revealedChars >= remainingText.length;
 
     useEffect(() => {
-        if (isHovered && hasMore) {
-            setRevealedChars(0);
-            intervalRef.current = setInterval(() => {
-                setRevealedChars(prev => {
-                    const next = prev + CHARS_PER_TICK;
-                    if (next >= remainingText.length) {
-                        if (intervalRef.current) clearInterval(intervalRef.current);
-                        return remainingText.length;
-                    }
-                    return next;
-                });
-            }, TICK_MS);
-        } else if (!isHovered) {
-            if (intervalRef.current) clearInterval(intervalRef.current);
-            setRevealedChars(0);
-        }
+        if (!isHovered || !hasMore) return;
+
+        // revealedChars is 0 on entry (this effect's cleanup resets it on the
+        // previous hover-end), so the type-on animation always starts empty. The
+        // counter lives in a local, so the only state writes are async (the
+        // interval tick) or in cleanup — never synchronously in the effect body.
+        let count = 0;
+        const id = setInterval(() => {
+            count = Math.min(count + CHARS_PER_TICK, remainingText.length);
+            setRevealedChars(count);
+            if (count >= remainingText.length) clearInterval(id);
+        }, TICK_MS);
+
         return () => {
-            if (intervalRef.current) clearInterval(intervalRef.current);
+            clearInterval(id);
+            setRevealedChars(0);
         };
     }, [isHovered, hasMore, remainingText.length]);
 

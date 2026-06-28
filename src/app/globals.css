@@ -220,3 +220,16 @@
     perspective: 1000px;
   }
 }
+
+/* /404 ball-pit takeover — hide the global footer + drop <main> padding so the
+   pit fills the viewport, on the not-found page only. Keyed off a marker class
+   on the page root (SSR-rendered → applies on first paint, no flash). This
+   lives in CSS rather than an inline <style> in the page body: extensions like
+   Dark Reader clone every <style> they find, and that injected sibling broke
+   hydration. */
+body:has(.nf-ballpit-takeover) footer { display: none !important; }
+body:has(.nf-ballpit-takeover) main { padding-bottom: 0 !important; }
+/* The sticky navbar reserves ~72px of flow space above the 100svh takeover,
+   producing a stretch of dead scroll with nothing in it. Hide it so the pit
+   is a true full-screen takeover (the "Return Home" button is the way out). */
+body:has(.nf-ballpit-takeover) .site-navbar { display: none !important; }

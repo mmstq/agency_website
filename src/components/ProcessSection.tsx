@@ -1,6 +1,5 @@
 import React from 'react';
 import { Search, PenTool, Code2, Rocket } from 'lucide-react';
-import GlassSurface from './GlassSurface';
 import SplitText from './SplitText';
 
 const STEPS = [

@@ -58,7 +58,7 @@ export default function Footer() {
     ];
 
     return (
-        <footer className="relative z-20 mt-20 overflow-hidden border-t border-white/5 bg-transparent pt-16 pb-12">
+        <footer className="relative z-20 mt-20 overflow-hidden bg-transparent pt-16 pb-12">
             {/* Rising-bubble field — bubbles seep up from the bottom edge */}
             <BubbleField />
             <div className="relative w-full px-6 md:px-12">
@@ -115,7 +115,7 @@ export default function Footer() {
                 </div>
 
                 {/* Bottom Bar */}
-                <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
                     <p className="text-white/30 text-xs font-medium uppercase tracking-widest">
                         © {currentYear} Modall Agency. All rights reserved.
                     </p>

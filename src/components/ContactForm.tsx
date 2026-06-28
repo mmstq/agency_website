@@ -4,32 +4,82 @@ import React, { useState } from 'react';
 import { Send, CheckCircle2, AlertCircle } from 'lucide-react';
 import GlassSurface from './GlassSurface';
 
+// Web3Forms — static-export-friendly form backend (the site has no server of
+// its own; output: 'export'). The access key is a PUBLIC, client-side token by
+// design — it only authorizes posting to the inbox registered with it, and can
+// be domain-locked in the Web3Forms dashboard. Safe to ship in the bundle.
+// Submissions are emailed to the address tied to this key. To rotate it, swap
+// the constant (or later lift it to NEXT_PUBLIC_WEB3FORMS_KEY).
+const WEB3FORMS_ENDPOINT = 'https://api.web3forms.com/submit';
+const WEB3FORMS_ACCESS_KEY = 'b3ac3772-279a-427e-a9bb-74fbc28cdfd8';
+
+const GENERIC_ERROR = 'Something went wrong. Please try again or email us directly.';
+
 export default function ContactForm() {
     const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+    const [errorMsg, setErrorMsg] = useState(GENERIC_ERROR);
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         company: '',
         message: '',
     });
+    // Honeypot — kept empty by real users (hidden, non-tabbable). A bot that
+    // executes JS and fills it gets a silent no-op success.
+    const [botField, setBotField] = useState('');
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setStatus('loading');
+        if (status === 'loading') return;
 
-        try {
-            // Simulating API call - in a real scenario, this would post to /api/contact or Formspree
-            await new Promise(resolve => setTimeout(resolve, 1500));
+        if (botField) {
+            // Pretend success; never hit the network for honeypot trips.
             setStatus('success');
             setFormData({ name: '', email: '', company: '', message: '' });
-        } catch (err) {
+            return;
+        }
+
+        setStatus('loading');
+        setErrorMsg(GENERIC_ERROR);
+
+        try {
+            const res = await fetch(WEB3FORMS_ENDPOINT, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+                body: JSON.stringify({
+                    access_key: WEB3FORMS_ACCESS_KEY,
+                    subject: `New project brief — ${formData.name || 'Modall website'}`,
+                    from_name: 'Modall Website',
+                    replyto: formData.email, // hitting Reply reaches the prospect, not the site inbox
+                    name: formData.name,
+                    email: formData.email,
+                    company: formData.company || 'Not provided',
+                    message: formData.message,
+                    botcheck: botField, // empty for humans (we short-circuit above); engages Web3Forms' filter too
+                }),
+            });
+
+            const data = await res.json().catch(() => null);
+
+            if (res.ok && data?.success) {
+                setStatus('success');
+                setFormData({ name: '', email: '', company: '', message: '' });
+            } else {
+                setErrorMsg(data?.message || GENERIC_ERROR);
+                setStatus('error');
+            }
+        } catch {
+            setErrorMsg('Network error — please check your connection and try again.');
             setStatus('error');
         }
     };
 
     if (status === 'success') {
         return (
-            <div className="monolith-card p-12 flex flex-col items-center text-center animate-in fade-in zoom-in duration-500">
+            <div role="status" aria-live="polite" className="monolith-card p-12 flex flex-col items-center text-center animate-in fade-in zoom-in duration-500">
                 <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mb-6">
                     <CheckCircle2 className="w-10 h-10 text-emerald-500" />
                 </div>
@@ -37,7 +87,7 @@ export default function ContactForm() {
                 <p className="text-white/50 text-lg max-w-sm mb-8">
                     Your request has been logged. Our infrastructure team will reach out within 24 standard hours.
                 </p>
-                <button 
+                <button
                     onClick={() => setStatus('idle')}
                     className="text-white/30 hover:text-white text-xs font-bold uppercase tracking-widest transition-colors"
                 >
@@ -50,15 +100,28 @@ export default function ContactForm() {
     return (
         <div className="monolith-card p-8 md:p-12">
             <form onSubmit={handleSubmit} className="space-y-8">
+                {/* Honeypot — visually hidden, off the tab order, ignored by humans. */}
+                <input
+                    type="text"
+                    name="botcheck"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    aria-hidden="true"
+                    value={botField}
+                    onChange={e => setBotField(e.target.value)}
+                    className="hidden"
+                />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-3">
-                        <label htmlFor="name" className="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-white/40 ml-1">
+                        <label htmlFor="name" className="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-white/40 ml-5">
                             Full Name
                         </label>
                         <input
                             required
                             type="text"
                             id="name"
+                            name="name"
+                            autoComplete="name"
                             placeholder="John Doe"
                             className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white outline-none focus:border-white/30 focus:bg-white/10 transition-all placeholder:text-white/20"
                             value={formData.name}
@@ -66,13 +129,15 @@ export default function ContactForm() {
                         />
                     </div>
                     <div className="space-y-3">
-                        <label htmlFor="email" className="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-white/40 ml-1">
+                        <label htmlFor="email" className="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-white/40 ml-5">
                             Work Email
                         </label>
                         <input
                             required
                             type="email"
                             id="email"
+                            name="email"
+                            autoComplete="email"
                             placeholder="john@company.com"
                             className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white outline-none focus:border-white/30 focus:bg-white/10 transition-all placeholder:text-white/20"
                             value={formData.email}
@@ -82,12 +147,14 @@ export default function ContactForm() {
                 </div>
 
                 <div className="space-y-3">
-                    <label htmlFor="company" className="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-white/40 ml-1">
+                    <label htmlFor="company" className="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-white/40 ml-5">
                         Company / Organization
                     </label>
                     <input
                         type="text"
                         id="company"
+                        name="company"
+                        autoComplete="organization"
                         placeholder="Acme Corp"
                         className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white outline-none focus:border-white/30 focus:bg-white/10 transition-all placeholder:text-white/20"
                         value={formData.company}
@@ -96,12 +163,13 @@ export default function ContactForm() {
                 </div>
 
                 <div className="space-y-3">
-                    <label htmlFor="message" className="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-white/40 ml-1">
+                    <label htmlFor="message" className="text-[0.6875rem] uppercase tracking-[0.2em] font-bold text-white/40 ml-5">
                         Project Brief
                     </label>
                     <textarea
                         required
                         id="message"
+                        name="message"
                         rows={5}
                         placeholder="Tell us about your technical goals..."
                         className="w-full bg-white/5 border border-white/10 rounded-xl px-5 py-4 text-white outline-none focus:border-white/30 focus:bg-white/10 transition-all placeholder:text-white/20 resize-none"
@@ -111,19 +179,19 @@ export default function ContactForm() {
                 </div>
 
                 {status === 'error' && (
-                    <div className="flex items-center gap-2 text-red-400 text-sm bg-red-400/10 p-4 rounded-xl border border-red-400/20">
-                        <AlertCircle className="w-4 h-4" />
-                        Something went wrong. Please try again or email us directly.
+                    <div className="flex items-center gap-2 text-red-400 text-sm bg-red-400/10 p-4 rounded-xl border border-red-400/20" role="alert">
+                        <AlertCircle className="w-4 h-4 shrink-0" />
+                        {errorMsg}
                     </div>
                 )}
 
                 <button
                     disabled={status === 'loading'}
                     type="submit"
-                    className="w-full group relative"
+                    className="w-full group relative disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     <GlassSurface width="100%" height={64} borderRadius={16} backgroundOpacity={0.9} distortionScale={-100} className="glass-surface--flush" simplified>
-                        <div className="flex h-full w-full bg-white text-[#1a1c1c] rounded-2xl font-black text-lg items-center justify-center gap-3 transition-transform hover:scale-[1.01] active:scale-[0.99] disabled:opacity-50 disabled:cursor-not-allowed">
+                        <div className="flex h-full w-full bg-white text-[#1a1c1c] rounded-2xl font-black text-lg items-center justify-center gap-3 transition-transform hover:scale-[1.01] active:scale-[0.99]">
                             {status === 'loading' ? (
                                 <div className="w-6 h-6 border-4 border-[#1a1c1c]/20 border-t-[#1a1c1c] rounded-full animate-spin" />
                             ) : (

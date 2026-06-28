@@ -2,13 +2,19 @@
 
 ## Current Position
 
-**Date:** 2026-06-14
+**Date:** 2026-06-25
 **Milestone:** v1.0 Agency Website — Fully Functional (most scope landed)
-**Working on right now:** Reskinned `/privacy` to match site design language (was generic). No feature work in flight.
-**Next likely:** Apply same treatment to `/terms` (visual twin) · wire newsletter to a real provider · add `robots.txt` · resolve contact-form submission backend.
+**Working on right now:** `/404` is now a full-screen interactive 3D ball-pit (the one sanctioned Three.js exception) — footer hidden, copy + Return Home centered over the pit. No feature work in flight.
+**Next likely:** Replace placeholder social/contact links with real URLs · blog content decision.
 
 ## Most Recent Work (newest first)
 
+- 2026-06-25 (ballpit) — Added [`Ballpit.jsx`](../src/components/Ballpit.jsx) (vendored React Bits, vanilla three.js) as a **full-screen** interactive background on `/404` — monochrome chrome spheres pile at the bottom, cursor pushes them around; `404`/copy/Return Home centered over the pit with a radial readability scrim. Footer hidden on this page only (scoped `<style>` since `MasterLayout` can't branch on the 404's arbitrary pathname; also zeroes `main` padding). NOTE: vendored physics advances position per-frame (not delta-scaled), so settle speed is frame-rate dependent — fine at 60fps (~1-2s), but headless SwiftShader is too slow to show the settled pile without a long wait. **Deliberate one-time exception to the no-Three.js rule** (user-approved; annotated in AGENTS.md). Installed `three`. Fixed a real shader bug for three 0.185: built-in `vColor` is now `vec4`, so the vendored SSS shader's `* vColor` → `* vColor.rgb` (was failing GLSL compile → blank in every browser). Verified static build + WebGL render via headless CDP. Also: the earlier-flagged untracked `reactbits-preview/` + `reactbits/` scratch were explored as a component preview and then **deleted** (user: "nothing looks good"); only Ballpit kept.
+
+- 2026-06-25 (lint) — Cleared all 12 ESLint errors + 4 warnings → `npm run lint` exit 0, `npm run build` exit 0 (still fully static). Typed every `any` (LucideIcon, exported `ScrollRevealDelay`, GSAP SplitText types), removed dead vars/imports, and resolved 4 `set-state-in-effect` without behavior change (SplitText fonts→async `.then`; Testimonials type-on→local counter + cleanup reset; GlassSurface→justified `eslint-disable`, SSR-safe). 4-lens adversarial review: all pass, zero must-fixes. NOTE: found untracked `reactbits-preview/` + `reactbits/` leaking into the build (not mine — left in place, flagged).
+- 2026-06-24 (contact form) — Wired `ContactForm` to **Web3Forms** (static-export-friendly): JSON POST to `api.web3forms.com/submit` with public access key, honeypot, `replyto`=submitter, distinct network/server error states, `role="status"`/`role="alert"` a11y, `name`/`autocomplete` attrs. Verified via a 4-lens adversarial workflow (live API-contract check, edge-cases, project-rules, build+lint) — all pass, no must-fixes. User must domain-lock the key in the Web3Forms dashboard (optional hardening).
+- 2026-06-24 (cleanup) — Audit of "what's not done": deleted `privacy-preview/` scratch routes (were exporting to production `out/`) + dead `api/newsletter` stub (unreferenced, incompatible with static export); removed unused `recharts` dep; added `robots.ts` (`force-static`, mirrors sitemap BASE). Corrected stale board entry — hero has **no** email capture (CTA links only).
+- 2026-06-24 — Reskinned `/terms` to match `/privacy`: animated `SplitText` hero (`perspective-1000`), per-section `ScrollReveal`, numbered left-rail (01–08 + 09 Contact). Design only; legal copy unchanged. Both legal twins now native.
 - 2026-06-14 — Reskinned `/privacy` to feel native: animated `SplitText` hero (matches contact), per-section `ScrollReveal`, numbered left-rail layout. Design only; legal copy unchanged. `/terms` is the still-generic twin.
 - 2026-06-13 — Replaced WaveGrid with `BubbleField`; added legal (`/privacy`, `/terms`) + `sitemap.ts`; refactored `CanvasGrid` for footer sync; refined `SplitText` layout; device streaming config + Galaxy Tab S10+
 - 2026-06-07 — Viewport-locked layout for single-project portfolio views; `FannedDeck` height-based scaling; modular `showcase-variants/` with staggered scroll animations

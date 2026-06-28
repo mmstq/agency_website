@@ -1,11 +1,11 @@
-import { Code2, Cpu, Globe2, ShieldCheck, Zap, Database } from 'lucide-react';
+import { Code2, Cpu, Globe2, ShieldCheck, Zap, Database, type LucideIcon } from 'lucide-react';
 
 export interface Service {
     id: string;
     title: string;
     slug: string;
     description: string;
-    icon: any;
+    icon: LucideIcon;
     features: string[];
 }
 

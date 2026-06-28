@@ -3,11 +3,19 @@
 import React from 'react';
 import { useScrollAnimation } from '@/hooks/use-scroll-animation';
 
+export type ScrollRevealDelay =
+  | 'delay-100'
+  | 'delay-200'
+  | 'delay-300'
+  | 'delay-400'
+  | 'delay-500'
+  | '';
+
 interface ScrollRevealProps {
   children: React.ReactNode;
   className?: string;
   variant?: 'from-left' | 'from-right' | 'zoom-in' | '';
-  delay?: 'delay-100' | 'delay-200' | 'delay-300' | 'delay-400' | 'delay-500' | '';
+  delay?: ScrollRevealDelay;
   threshold?: number;
   triggerOnce?: boolean;
   tag?: React.ElementType;
@@ -26,7 +34,7 @@ export default function ScrollReveal({
 
   return (
     <Tag
-      ref={ref as any}
+      ref={ref as React.Ref<HTMLElement>}
       className={`scroll-animate ${variant} ${delay} ${className}`.trim()}
     >
       {children}

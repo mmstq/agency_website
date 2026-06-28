@@ -2,7 +2,7 @@ import React from 'react';
 import { Metadata } from 'next';
 import Image from 'next/image';
 import { Target, Shield, Zap, Users } from 'lucide-react';
-import ScrollReveal from '@/components/ScrollReveal';
+import ScrollReveal, { type ScrollRevealDelay } from '@/components/ScrollReveal';
 import SplitText from '@/components/SplitText';
 
 export const metadata: Metadata = {
@@ -138,7 +138,7 @@ export default function AboutPage() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                         {VALUES.map((value, idx) => (
-                            <ScrollReveal key={value.title} delay={`delay-${(idx + 1) * 100}` as any}>
+                            <ScrollReveal key={value.title} delay={`delay-${(idx + 1) * 100}` as ScrollRevealDelay}>
                                 <div className="monolith-card p-8 space-y-6 h-full">
                                     <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center">
                                         <value.icon className="w-6 h-6 text-white" />
@@ -173,7 +173,7 @@ export default function AboutPage() {
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {TEAM.map((member, idx) => (
-                            <ScrollReveal key={member.name} variant="zoom-in" delay={`delay-${(idx + 1) * 100}` as any}>
+                            <ScrollReveal key={member.name} variant="zoom-in" delay={`delay-${(idx + 1) * 100}` as ScrollRevealDelay}>
                                 <div className="group">
                                     <div className="relative aspect-[3/4] rounded-[24px] overflow-hidden mb-6 monolith-card border-0">
                                         <Image 

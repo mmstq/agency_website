@@ -535,7 +535,7 @@ export default function ShowcaseHoverList() {
                                 }}
                             >
                                 {/* Two screenshots side-by-side for a richer hero */}
-                                <div className="flex h-full items-center justify-center gap-3 px-5 pt-2">
+                                <div className="flex h-full items-start justify-center gap-3 px-5 pt-2">
                                     {project.screenshotPaths.slice(0, 2).map((shot, sIdx) => (
                                         <div
                                             key={sIdx}
