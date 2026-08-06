@@ -161,9 +161,6 @@ export default function TestimonialsSection() {
 
             {/* Right-to-Left Marquee */}
             <div className="relative flex overflow-x-hidden marquee-container" style={{ overflowY: 'visible' }}>
-                <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-[#131313] to-transparent z-10 pointer-events-none" />
-                <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-[#131313] to-transparent z-10 pointer-events-none" />
-
                 <div className="flex animate-testimonial-marquee whitespace-nowrap py-12">
                     {[...Array(2)].map((_, i) => (
                         <div key={i} className="flex gap-6 px-3">

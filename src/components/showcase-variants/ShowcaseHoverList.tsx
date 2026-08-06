@@ -201,12 +201,36 @@ export default function ShowcaseHoverList() {
             };
             setEmphasis(0);
             if (reduceMotion) return; // hold the first row, no cycling
-            let cycle = 0;
+
+            // Track which rows are actually on-screen — excluding the band
+            // under the sticky navbar — so the cycle only ever highlights a
+            // row the user can actually see, never one hidden behind the nav.
+            const visible = new Set<number>();
+            const io = new IntersectionObserver(
+                (entries) => {
+                    for (const entry of entries) {
+                        const i = rowRefs.current.indexOf(entry.target as HTMLLIElement);
+                        if (i === -1) continue;
+                        if (entry.isIntersecting) visible.add(i);
+                        else visible.delete(i);
+                    }
+                },
+                { rootMargin: '-110px 0px -20% 0px', threshold: 0.3 },
+            );
+            rowRefs.current.forEach((row) => row && io.observe(row));
+
+            let lastActive = 0;
             const id = window.setInterval(() => {
-                cycle = (cycle + 1) % projects.length;
-                setEmphasis(cycle);
+                if (!visible.size) return; // nothing visible — hold last state
+                const sorted = [...visible].sort((a, b) => a - b);
+                const next = sorted.find((i) => i > lastActive) ?? sorted[0];
+                lastActive = next;
+                setEmphasis(next);
             }, 2600);
-            return () => window.clearInterval(id);
+            return () => {
+                window.clearInterval(id);
+                io.disconnect();
+            };
         }
 
         // ---------------- DESKTOP / HOVER ----------------
