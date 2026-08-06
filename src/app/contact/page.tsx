@@ -13,12 +13,13 @@ export default function ContactPage() {
     return (
         <div className="pt-32 pb-24">
             <div className="w-full px-6 md:px-12">
-                {/* Two columns: the left stacks the header above the contact info,
-                    while the form sits in the right column's SECOND row so its top
-                    aligns with the contact-info block — i.e. tucked under the header,
-                    not rising to the top beside it. */}
-                <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-x-20 lg:gap-y-12">
-                    {/* Header — left column, top row */}
+                {/* Two-column grid. The big heading owns row 1 (the space to its
+                    right is intentionally empty). The intro paragraph drops into
+                    row 2 beside the contact info, and the form sits in row 2 of the
+                    right column — so the form's TOP aligns with the intro paragraph,
+                    filling the space that was previously dead air above it. */}
+                <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-x-20 lg:gap-y-6">
+                    {/* Heading — left column, top row */}
                     <div className="space-y-6 lg:col-start-1 lg:row-start-1">
                         <p className="text-[0.6875rem] uppercase tracking-[0.3em] font-bold text-white/30">
                             Contact
@@ -34,17 +35,17 @@ export default function ContactPage() {
                                 tag="span"
                             />
                         </h1>
+                    </div>
+
+                    {/* Intro paragraph + contact info — left column, second row */}
+                    <div className="space-y-12 lg:col-start-1 lg:row-start-2">
                         <p className="text-white/50 text-xl md:text-2xl font-medium max-w-xl">
                             We specialize in high-stakes infrastructure and editorial-grade digital experiences. Tell us about your vision.
                         </p>
-                    </div>
-
-                    {/* Contact info — left column, second row */}
-                    <div className="lg:col-start-1 lg:row-start-2">
                         <ContactInfo />
                     </div>
 
-                    {/* Form — right column, second row (aligned under the header) */}
+                    {/* Form — right column, second row (top aligns with the paragraph) */}
                     <div className="lg:col-start-2 lg:row-start-2">
                         <ContactForm />
                     </div>

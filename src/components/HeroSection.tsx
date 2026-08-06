@@ -12,7 +12,7 @@ import SplitText from './SplitText';
 
 export default function HeroSection() {
     return (
-        <section className="relative isolate overflow-visible px-4 pb-0 md:px-8 md:pt-16">
+        <section className="relative isolate overflow-visible px-4 pb-0 pt-8 md:px-8 md:pt-16">
             <div className="pointer-events-none absolute left-1/2 -top-28 -z-10 h-[100vh] w-[120vw] -translate-x-1/2 [overflow:clip]">
                 <div className="absolute left-1/2 top-0 h-[60vh] w-[70vw] -translate-x-1/2 rounded-full bg-emerald-300/18 blur-[140px]" />
                 <div className="absolute left-[60%] top-8 h-[35vh] w-[30vw] rounded-full bg-amber-300/12 blur-[120px]" />
@@ -31,8 +31,8 @@ export default function HeroSection() {
                             distortionScale={-95}
                             className="mb-6 glass-surface--flush"
                         >
-                            <div className="inline-flex h-full items-center gap-2 px-4 text-[0.68rem] font-bold uppercase tracking-[0.18em] text-white/70">
-                                <Sparkles className="size-3.5 text-amber-200" aria-hidden="true" />
+                            <div className="inline-flex h-full items-center gap-2 whitespace-nowrap px-4 text-[0.56rem] font-bold uppercase tracking-[0.1em] text-white/70 sm:text-[0.68rem] sm:tracking-[0.18em]">
+                                <Sparkles className="size-3.5 shrink-0 text-amber-200" aria-hidden="true" />
                                 Premium web experiences for serious brands
                             </div>
                         </GlassSurface>

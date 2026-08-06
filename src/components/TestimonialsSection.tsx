@@ -68,13 +68,13 @@ function TestimonialCard({ testimonial, isHovered, onHoverStart, onHoverEnd }: T
                     'box-shadow 0.4s ease',
                 ].join(', '),
             }}
-            className={`monolith-card group/card p-6 w-[85vw] md:w-[calc(45vw-2rem)] flex flex-row items-start gap-6 whitespace-normal shrink-0 relative
+            className={`monolith-card group/card p-6 w-[85vw] md:w-[calc(45vw-2rem)] flex flex-col md:flex-row items-start gap-4 md:gap-6 whitespace-normal shrink-0 relative
                 ${isHovered ? 'bg-white/[0.08] border-white/20 shadow-2xl shadow-emerald-500/5' : ''}`}
         >
             <Quote className={`absolute top-6 right-6 w-8 h-8 transition-all duration-500 ${isHovered ? 'text-emerald-400/20 rotate-12' : 'text-white/[0.03]'}`} />
 
             {/* Left: identity */}
-            <div className={`flex items-start gap-4 shrink-0 border-r transition-colors duration-300 pr-6 ${isHovered ? 'border-white/10' : 'border-white/5'}`}>
+            <div className={`flex w-full items-start gap-4 shrink-0 border-b md:w-auto md:border-b-0 md:border-r transition-colors duration-300 pb-4 md:pb-0 md:pr-6 ${isHovered ? 'border-white/10' : 'border-white/5'}`}>
                 <div className="relative w-14 h-14 rounded-full overflow-hidden border border-white/10 shrink-0">
                     <Image
                         src={testimonial.image_url}
