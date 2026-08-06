@@ -113,7 +113,7 @@ export default function Navbar() {
 
     return (
         <>
-            <div className="site-navbar sticky top-8 z-50 w-full flex justify-center px-6 md:px-24 lg:px-48 pointer-events-none">
+            <div className="site-navbar sticky top-12 md:top-8 z-50 w-full flex justify-center px-6 md:px-24 lg:px-48 pointer-events-none">
                 <GlassSurface
                     width="100%"
                     height={72}
@@ -233,7 +233,7 @@ export default function Navbar() {
                         className="glass-surface--flush"
                         simplified={true}
                     >
-                        <div className="w-full overflow-hidden rounded-[18px] bg-[#131313]/95 backdrop-blur-2xl">
+                        <div className="w-full overflow-hidden rounded-[18px] bg-black/95 backdrop-blur-2xl">
                             {displayServices.map((item) => (
                                 <Link
                                     key={item.id}

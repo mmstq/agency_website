@@ -43,7 +43,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${manrope.variable} font-inter antialiased bg-[#131313] text-[#e2e2e2]`}
+        className={`${inter.variable} ${manrope.variable} font-inter antialiased bg-black text-[#e2e2e2]`}
       >
         <StyledJsxRegistry>
           <MasterLayout>

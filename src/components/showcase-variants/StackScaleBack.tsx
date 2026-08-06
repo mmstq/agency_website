@@ -26,7 +26,7 @@
 
    Why a separate scaling "stage":
      The opaque card BACKGROUND must stay full-viewport so each card seamlessly
-     covers the one beneath it (page bg is #131313). If we scaled the whole
+     covers the one beneath it (page bg is black). If we scaled the whole
      surface, its shrunken edges would let lower layers / the page bg peek
      through as a sliver while the next card is mid-rise. So the opaque bg is
      fixed at 100% and only an inner stage (rounded #161616 panel + shadow +
@@ -318,7 +318,7 @@ export default function StackScaleBack({ hero }: { hero?: ReactNode }) {
                         cardRefs.current[i] = node;
                     }}
                     data-index={i}
-                    className="sticky top-0 flex h-screen min-h-screen w-full items-center justify-center overflow-hidden bg-[#131313]"
+                    className="sticky top-0 flex h-screen min-h-screen w-full items-center justify-center overflow-hidden bg-black"
                     // `svh` is the stable mobile viewport (fits on load under the
                     // iOS toolbar); the h-screen/min-h-screen classes are the vh
                     // fallback for browsers without svh. Both height + minHeight
@@ -330,7 +330,7 @@ export default function StackScaleBack({ hero }: { hero?: ReactNode }) {
                 >
                     {/* Inner STAGE: rounded #161616 surface + shadow + content.
                         scale + dim live here so the recede reads as depth, while
-                        the card's own opaque #131313 bg (above) keeps the cover
+                        the card's own opaque black bg (above) keeps the cover
                         seamless. transform + opacity only → 60fps. */}
                     <div
                         ref={(node) => {
