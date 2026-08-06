@@ -113,7 +113,7 @@ export default function Navbar() {
 
     return (
         <>
-            <div className="site-navbar sticky top-12 md:top-8 z-50 w-full flex justify-center px-6 md:px-24 lg:px-48 pointer-events-none">
+            <div className="site-navbar sticky top-10 md:top-8 z-50 w-full flex justify-center px-6 md:px-24 lg:px-48 pointer-events-none">
                 <GlassSurface
                     width="100%"
                     height={72}

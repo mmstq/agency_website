@@ -12,7 +12,7 @@ import SplitText from './SplitText';
 
 export default function HeroSection() {
     return (
-        <section className="relative isolate overflow-visible px-4 pb-0 pt-8 md:px-8 md:pt-16">
+        <section className="relative isolate overflow-visible px-4 pb-0 pt-16 md:px-8">
             <div className="pointer-events-none absolute left-1/2 -top-28 -z-10 h-[100vh] w-[120vw] -translate-x-1/2 [overflow:clip]">
                 <div className="absolute left-1/2 top-0 h-[60vh] w-[70vw] -translate-x-1/2 rounded-full bg-emerald-300/18 blur-[140px]" />
                 <div className="absolute left-[60%] top-8 h-[35vh] w-[30vw] rounded-full bg-amber-300/12 blur-[120px]" />
