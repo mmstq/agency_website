@@ -2,12 +2,16 @@
 
 ## Current Position
 
-**Date:** 2026-06-25
-**Milestone:** v1.0 Agency Website — Fully Functional (most scope landed)
-**Working on right now:** `/404` is now a full-screen interactive 3D ball-pit (the one sanctioned Three.js exception) — footer hidden, copy + Return Home centered over the pit. No feature work in flight.
+**Date:** 2026-08-07
+**Milestone:** v1.0 Agency Website — Fully Functional
+**Working on right now:** Fixed excessive vertical gap between HomeCTA card and Footer.
 **Next likely:** Replace placeholder social/contact links with real URLs · blog content decision.
 
 ## Most Recent Work (newest first)
+
+- 2026-08-07 (footer spacing) — Resolved ~288px vertical gap above footer. Reduced `HomeCTA.tsx` section bottom padding (`py-24` → `pt-20 pb-4`), `Footer.tsx` top margin (`mt-20` → `mt-6 md:mt-10`), and `MasterLayout.tsx` main bottom padding (`pb-12` → `pb-0`). Verified layout balance via browser screenshot.
+- 2026-08-07 (button design) — Converted "View all projects" button in [`ShowcaseHoverList.tsx`](src/components/showcase-variants/ShowcaseHoverList.tsx) and [`CaseStudyPreviewRow.tsx`](src/components/CaseStudyPreviewRow.tsx) to strictly align with website design system standards (`DESIGN.md` & `AGENTS.md`). Wrapped in `GlassSurface` (`borderRadius={999}`, `backgroundOpacity={0.20}`, `distortionScale={-95}`, `glass-surface--soft-hover`), featuring solid white fill (`bg-white text-[#1a1c1c]`), ambient glow shadow, hover background shift (`hover:bg-[#e2e2e2]`), `active:scale-95`, and directional arrow animation (`group-hover:-translate-y-0.5 group-hover:translate-x-1`). Verified via browser subagent.
+- 2026-08-07 (navbar) — Added scroll-direction detection in [`Navbar.tsx`](src/components/Navbar.tsx). Navbar smoothly translates up (`-translate-y-28 opacity-0`) on scroll down past threshold, and reappears (`translate-y-0 opacity-100`) when scrolling up or at top of page. Keeps active during open mobile menu. Verified via browser automation.
 
 - 2026-06-25 (ballpit) — Added [`Ballpit.jsx`](../src/components/Ballpit.jsx) (vendored React Bits, vanilla three.js) as a **full-screen** interactive background on `/404` — monochrome chrome spheres pile at the bottom, cursor pushes them around; `404`/copy/Return Home centered over the pit with a radial readability scrim. Footer hidden on this page only (scoped `<style>` since `MasterLayout` can't branch on the 404's arbitrary pathname; also zeroes `main` padding). NOTE: vendored physics advances position per-frame (not delta-scaled), so settle speed is frame-rate dependent — fine at 60fps (~1-2s), but headless SwiftShader is too slow to show the settled pile without a long wait. **Deliberate one-time exception to the no-Three.js rule** (user-approved; annotated in AGENTS.md). Installed `three`. Fixed a real shader bug for three 0.185: built-in `vColor` is now `vec4`, so the vendored SSS shader's `* vColor` → `* vColor.rgb` (was failing GLSL compile → blank in every browser). Verified static build + WebGL render via headless CDP. Also: the earlier-flagged untracked `reactbits-preview/` + `reactbits/` scratch were explored as a component preview and then **deleted** (user: "nothing looks good"); only Ballpit kept.
 

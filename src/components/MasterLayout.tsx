@@ -21,7 +21,7 @@ export default function MasterLayout({ children }: { children: React.ReactNode }
 
       {/* Transparent Content Container. Portfolio drops the bottom padding so
           its stacking scroll ends flush at the last pinned card. */}
-      <main className={`relative z-20 w-full bg-transparent ${isPortfolio ? '' : 'pb-12'}`}>
+      <main className="relative z-20 w-full bg-transparent">
         {children}
       </main>
 

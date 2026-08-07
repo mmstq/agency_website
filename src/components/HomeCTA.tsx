@@ -6,7 +6,7 @@ import SplitText from './SplitText';
 
 export default function HomeCTA() {
     return (
-        <section className="py-24 relative">
+        <section className="pt-20 pb-4 relative">
             <div className="w-full px-6 md:px-12">
                 <GlassSurface
                     width="100%"

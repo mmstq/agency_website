@@ -58,7 +58,7 @@ export default function Footer() {
     ];
 
     return (
-        <footer className="relative z-20 mt-20 overflow-hidden bg-transparent pt-16 pb-12">
+        <footer className="relative z-20 mt-6 md:mt-10 overflow-hidden bg-transparent pt-12 md:pt-16 pb-12">
             {/* Rising-bubble field — bubbles seep up from the bottom edge */}
             <BubbleField />
             <div className="relative w-full px-6 md:px-12">

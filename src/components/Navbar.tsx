@@ -24,6 +24,32 @@ export default function Navbar() {
         }
     }, []);
 
+    // Hide/show navbar on scroll
+    const [isVisible, setIsVisible] = useState(true);
+    const lastScrollY = useRef(0);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const currentScrollY = window.scrollY;
+            
+            if (currentScrollY < 50) {
+                setIsVisible(true);
+            } else if (currentScrollY > lastScrollY.current + 5) {
+                // Scrolling down - hide navbar & close dropdown
+                setIsVisible(false);
+                setServicesOpen(false);
+            } else if (currentScrollY < lastScrollY.current - 5) {
+                // Scrolling up - show navbar
+                setIsVisible(true);
+            }
+
+            lastScrollY.current = currentScrollY;
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
     const toggleServices = useCallback(() => {
         setServicesOpen(prev => {
             const next = !prev;
@@ -111,9 +137,11 @@ export default function Navbar() {
         return false;
     };
 
+    const shouldShow = isVisible || mobileOpen;
+
     return (
         <>
-            <div className="site-navbar sticky top-10 md:top-8 z-50 w-full flex justify-center px-6 md:px-24 lg:px-48 pointer-events-none">
+            <div className={`site-navbar sticky top-10 md:top-8 z-50 w-full flex justify-center px-6 md:px-24 lg:px-48 pointer-events-none transition-all duration-300 ease-in-out ${shouldShow ? 'translate-y-0 opacity-100' : '-translate-y-28 opacity-0 pointer-events-none'}`}>
                 <GlassSurface
                     width="100%"
                     height={72}
