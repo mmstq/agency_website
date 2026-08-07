@@ -298,7 +298,7 @@ export default function StackScaleBack({ hero }: { hero?: ReactNode }) {
                 viewports never clip the headline. */}
             {hero && (
                 <div
-                    className="sticky top-0 z-0 flex w-full items-start pt-32"
+                    className="sticky top-0 z-0 flex w-full items-start pt-20 pb-8 md:pt-32"
                     style={{ minHeight: `${HERO_LAYER_VH}svh` }}
                 >
                     {hero}
@@ -319,10 +319,6 @@ export default function StackScaleBack({ hero }: { hero?: ReactNode }) {
                     }}
                     data-index={i}
                     className="sticky top-0 flex h-screen min-h-screen w-full items-center justify-center overflow-hidden bg-black"
-                    // `svh` is the stable mobile viewport (fits on load under the
-                    // iOS toolbar); the h-screen/min-h-screen classes are the vh
-                    // fallback for browsers without svh. Both height + minHeight
-                    // overridden so a leftover 100vh min-height can't win.
                     style={{ zIndex: i + 1, height: '100svh', minHeight: '100svh' }}
                     role="group"
                     aria-roledescription="slide"
@@ -339,14 +335,11 @@ export default function StackScaleBack({ hero }: { hero?: ReactNode }) {
                         className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-[24px] bg-[#161616]"
                         style={{
                             transformOrigin: 'center center',
-                            // Front card lifts above the stack; CSS-transitioned
-                            // (no per-frame box-shadow writes). will-change is set
-                            // imperatively in paint() only while mid-transition.
                             boxShadow: i === frontIndex ? FRONT_SHADOW : BASE_SHADOW,
                             transition: 'box-shadow 0.45s cubic-bezier(0.16,1,0.3,1)',
                         }}
                     >
-                        <div className="w-full px-6 md:px-12">
+                        <div className="w-full px-5 md:px-12">
                             <DetailLayout
                                 project={project}
                                 index={i}
@@ -373,10 +366,7 @@ export default function StackScaleBack({ hero }: { hero?: ReactNode }) {
                     </div>
                 </div>
 
-                {/* Dwell spacer — holds THIS project fully front for a beat
-                    before the next card rises. Hidden behind the opaque pinned
-                    card, so transparent is fine. Not after the last card (it
-                    rests at the end of the page). */}
+                {/* Dwell spacer — holds THIS project fully front before next card rises */}
                 {i < TOTAL - 1 && (
                     <div aria-hidden="true" style={{ height: `${DWELL_VH}svh` }} />
                 )}

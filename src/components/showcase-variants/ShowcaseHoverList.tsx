@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import { projects } from '@/lib/data/projects';
 import SplitText from '../SplitText';
-import GlassSurface from '../GlassSurface';
 
 /**
  * ShowcaseHoverList — editorial hover-reveal list.
@@ -370,21 +369,12 @@ export default function ShowcaseHoverList() {
                         </p>
                     </div>
 
-                    <Link href="/portfolio" className="group shrink-0">
-                        <GlassSurface
-                            width="auto"
-                            height={48}
-                            borderRadius={999}
-                            backgroundOpacity={0.20}
-                            distortionScale={-95}
-                            className="glass-surface--flush glass-surface--soft-hover"
-                            simplified={true}
-                        >
-                            <div className="flex h-full items-center justify-center gap-2.5 rounded-full bg-white px-6 py-2.5 text-sm font-bold text-[#1a1c1c] shadow-[0_0_20px_rgba(255,255,255,0.15)] transition-all duration-300 hover:bg-[#e2e2e2] hover:shadow-[0_0_30px_rgba(255,255,255,0.35)] active:scale-95">
-                                <span>View all projects</span>
-                                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-1" />
-                            </div>
-                        </GlassSurface>
+                    <Link
+                        href="/portfolio"
+                        className="group inline-flex items-center gap-2.5 self-start rounded-full bg-white px-6 py-3 text-sm font-bold text-[#1a1c1c] shadow-[0_0_20px_rgba(255,255,255,0.15)] transition-all duration-300 hover:bg-[#e2e2e2] hover:shadow-[0_0_30px_rgba(255,255,255,0.35)] active:scale-95 shrink-0"
+                    >
+                        <span>View all projects</span>
+                        <ArrowUpRight className="h-4 w-4 transition-transform duration-300 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-1" />
                     </Link>
                 </header>
 
@@ -449,13 +439,13 @@ export default function ShowcaseHoverList() {
                                         <div className="flex min-w-0 flex-1 flex-col gap-4">
                                             <div className="flex min-w-0 items-center gap-4">
                                                 {/* Logo chip */}
-                                                <span className="relative hidden h-11 w-11 shrink-0 overflow-hidden rounded-full bg-[#1a1a1a] ring-1 ring-inset ring-white/[0.08] sm:block">
+                                                <span className="relative hidden h-11 w-11 shrink-0 overflow-hidden rounded-[12px] ring-1 ring-inset ring-white/[0.08] sm:block">
                                                     <Image
                                                         src={project.logo}
                                                         alt=""
                                                         fill
                                                         sizes="44px"
-                                                        className="object-contain p-1.5"
+                                                        className="object-cover"
                                                     />
                                                 </span>
 

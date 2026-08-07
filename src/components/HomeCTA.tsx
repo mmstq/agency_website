@@ -40,19 +40,19 @@ export default function HomeCTA() {
                             Join the ranks of high-performance technical teams who trust Modall for their critical infrastructure.
                         </p>
                         
-                        <div className="flex flex-col sm:flex-row gap-6 w-full sm:w-auto">
-                            <Link href="/contact">
-                                <GlassSurface width={220} height={64} borderRadius={999} backgroundOpacity={0.9} distortionScale={-100} className="glass-surface--flush">
-                                    <div className="flex h-full w-full bg-white text-[#1a1c1c] rounded-full font-black text-lg items-center justify-center gap-3 transition-transform hover:scale-105 active:scale-95">
+                        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto items-center justify-center">
+                            <Link href="/contact" className="w-full sm:w-auto flex justify-center">
+                                <GlassSurface width="100%" height={56} borderRadius={999} backgroundOpacity={0.9} distortionScale={-100} className="glass-surface--flush w-full max-w-[280px] sm:w-[220px] sm:h-[64px]">
+                                    <div className="flex h-full w-full bg-white text-[#1a1c1c] rounded-full font-black text-base sm:text-lg items-center justify-center gap-3 transition-transform hover:scale-105 active:scale-95 px-6 py-3">
                                         Start a Project
                                         <ArrowRight className="w-5 h-5" />
                                     </div>
                                 </GlassSurface>
                             </Link>
                             
-                            <Link href="/portfolio">
-                                <GlassSurface width={220} height={64} borderRadius={999} backgroundOpacity={0.15} distortionScale={-100} className="glass-surface--flush">
-                                    <div className="flex h-full w-full text-white border border-white/10 rounded-full font-bold text-lg items-center justify-center gap-3 hover:bg-white/5 transition-all">
+                            <Link href="/portfolio" className="w-full sm:w-auto flex justify-center">
+                                <GlassSurface width="100%" height={56} borderRadius={999} backgroundOpacity={0.15} distortionScale={-100} className="glass-surface--flush w-full max-w-[280px] sm:w-[220px] sm:h-[64px]">
+                                    <div className="flex h-full w-full text-white border border-white/10 rounded-full font-bold text-base sm:text-lg items-center justify-center gap-3 hover:bg-white/5 transition-all px-6 py-3">
                                         View Portfolio
                                     </div>
                                 </GlassSurface>

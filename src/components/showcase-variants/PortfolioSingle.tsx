@@ -48,11 +48,11 @@ export default function PortfolioSingle({ initialId }: { initialId?: string }) {
     const project = projects[active];
 
     return (
-        <section id="work" className="relative pt-4 pb-8 md:py-0">
-            <div className="w-full px-6 md:px-12">
-                {/* Numbered rail — switches the shown project in place. */}
+        <section id="work" className="relative flex min-h-[100svh] flex-col justify-between py-4 md:h-[100svh] md:overflow-hidden md:py-6">
+            {/* Numbered rail — full width left to right */}
+            <div className="w-full px-6 md:px-12 lg:px-16 shrink-0">
                 <div
-                    className="mb-8 border-t border-white/[0.06] pt-6 md:mb-6"
+                    className="border-b border-white/[0.06] pb-4 md:pb-5"
                     role="group"
                     aria-label="Project navigation"
                     onKeyDown={onRailKeyDown}
@@ -87,16 +87,16 @@ export default function PortfolioSingle({ initialId }: { initialId?: string }) {
                         })}
                     </div>
                 </div>
+            </div>
 
-                {/* Screen-reader announcement for the active project. */}
-                <span className="sr-only" aria-live="polite" aria-atomic="true">
-                    {project.title}, project {active + 1} of {N}
-                </span>
+            {/* Screen-reader announcement for the active project. */}
+            <span className="sr-only" aria-live="polite" aria-atomic="true">
+                {project.title}, project {active + 1} of {N}
+            </span>
 
-                {/* The active project — re-keyed so each swap fades in. */}
-                <div key={active} className="portfolio-single-fade">
-                    <DetailLayout project={project} index={active} active fill />
-                </div>
+            {/* The active project — spread 2-column layout left to right */}
+            <div key={active} className="portfolio-single-fade flex-1 flex items-center justify-center w-full px-6 md:px-12 lg:px-16 my-auto py-6 md:py-0">
+                <DetailLayout project={project} index={active} active fill />
             </div>
 
             <style jsx>{`

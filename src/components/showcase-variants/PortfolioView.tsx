@@ -26,11 +26,7 @@ export default function PortfolioView() {
 
     if (single) {
         return (
-            /* Single project fits in exactly one viewport — no scroll. Centered
-               vertically; the deck scales by viewport height (DetailLayout
-               `fill`). Mobile keeps natural flow (the stacked copy can't fit one
-               screen), so the no-scroll lock only applies at md+. */
-            <div className="flex min-h-[100svh] flex-col pt-8 pb-12 md:h-[100svh] md:justify-center md:overflow-hidden md:py-6">
+            <div className="flex min-h-[100svh] flex-col md:h-[100svh] md:overflow-hidden">
                 <PortfolioSingle key={pid} initialId={pid} />
             </div>
         );
