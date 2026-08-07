@@ -72,11 +72,10 @@ const ENTER_Y = 90; // px — starts lower
 const ENTER_ROT = 6; // deg — starts tilted
 const ENTER_SCALE = 0.1; // starts at scale 0.9
 
-// Soft elevation. The front card sits a touch above the stack (deeper shadow),
-// transitioned by CSS — no per-frame box-shadow writes. The inset ghost ring
-// (~6%) is kept as the top-edge highlight, per the No-Line rule.
-const BASE_SHADOW = '0 -2px 60px rgba(0,0,0,0.55), inset 0 0 0 1px rgba(255,255,255,0.06)';
-const FRONT_SHADOW = '0 -6px 90px rgba(0,0,0,0.62), inset 0 0 0 1px rgba(255,255,255,0.06)';
+// Soft elevation on top edge. The front card sits a touch above the stack
+// with top-only highlight and shadow.
+const BASE_SHADOW = '0 -8px 40px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.08)';
+const FRONT_SHADOW = '0 -14px 60px rgba(0,0,0,0.85), inset 0 1px 0 rgba(255,255,255,0.12)';
 
 // A flat "dwell" inserted between consecutive cards: extra scroll over which
 // the current project stays fully front (cover = 0 → no recede, perfectly
@@ -324,22 +323,19 @@ export default function StackScaleBack({ hero }: { hero?: ReactNode }) {
                     aria-roledescription="slide"
                     aria-label={`${project.title} — ${i + 1} of ${TOTAL}`}
                 >
-                    {/* Inner STAGE: rounded #161616 surface + shadow + content.
-                        scale + dim live here so the recede reads as depth, while
-                        the card's own opaque black bg (above) keeps the cover
-                        seamless. transform + opacity only → 60fps. */}
+                    {/* Inner STAGE: rounded top only + top border only + gradient from #161616 to black */}
                     <div
                         ref={(node) => {
                             stageRefs.current[i] = node;
                         }}
-                        className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-[24px] bg-[#161616]"
+                        className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-t-[28px] sm:rounded-t-[36px] rounded-b-none border-t border-white/[0.12] border-x-0 border-b-0 bg-gradient-to-b from-[#161616] via-[#111111] to-black"
                         style={{
                             transformOrigin: 'center center',
                             boxShadow: i === frontIndex ? FRONT_SHADOW : BASE_SHADOW,
                             transition: 'box-shadow 0.45s cubic-bezier(0.16,1,0.3,1)',
                         }}
                     >
-                        <div className="w-full px-5 md:px-12">
+                        <div className="w-full px-5 pt-7 pb-6 sm:pt-8 md:px-12 md:py-0">
                             <DetailLayout
                                 project={project}
                                 index={i}
@@ -359,7 +355,7 @@ export default function StackScaleBack({ hero }: { hero?: ReactNode }) {
                             ref={(node) => {
                                 dimRefs.current[i] = node;
                             }}
-                            className="pointer-events-none absolute inset-0 rounded-[24px] bg-black"
+                            className="pointer-events-none absolute inset-0 rounded-t-[28px] sm:rounded-t-[36px] bg-black"
                             style={{ opacity: 0 }}
                             aria-hidden="true"
                         />

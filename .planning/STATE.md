@@ -4,10 +4,12 @@
 
 **Date:** 2026-08-08
 **Milestone:** v1.0 Agency Website — Fully Functional
-**Working on right now:** Completed corner-to-corner phone mockup fill with zero horizontal padding.
+**Working on right now:** Implemented top padding above carousel, gradient from #161616 to black, and top-only border.
 **Next likely:** Replace placeholder social/contact links with real URLs · blog content decision.
 
 ## Most Recent Work (newest first)
+
+- 2026-08-08 (top padding, gradient background, top-only borders) — Refined the project card stage visual styling across all stack cards (`StackScaleBack.tsx`, `portfolioShared.tsx`): (1) Added top breathing padding (`pt-7 pb-6 sm:pt-8`) above the phone carousel when opened. (2) Changed card stage background to a vertical gradient from `#161616` at the top to `#000000` (black) at the bottom (`bg-gradient-to-b from-[#161616] via-[#111111] to-black`). (3) Applied top-only rounded corners (`rounded-t-[28px] sm:rounded-t-[36px] rounded-b-none`) and top-only border (`border-t border-white/[0.12] border-x-0 border-b-0`) with top elevation shadows (`BASE_SHADOW` & `FRONT_SHADOW`). Verified via mobile browser screenshots across stacked card transitions.
 
 - 2026-08-08 (corner-to-corner phone screenshot fill) — Removed all horizontal side padding/pillarboxing on the mobile phone mockups (`projectVisuals.tsx`): calibrated container aspect ratio to standard smartphone screen proportions (`aspect-[9/19.5]`) with `object-cover` and rounded bezels (`rounded-[22px] sm:rounded-[26px]`), filling the phone screen corner-to-corner without letterboxing. Verified via mobile browser screenshots.
 

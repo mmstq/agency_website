@@ -119,8 +119,8 @@ export function DetailLayout({
 
     return (
         <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-[1.1fr_1fr] md:gap-12 lg:gap-20 xl:gap-28 w-full">
-            {/* ── Project visual — fanned screenshot deck (order-1 on mobile at top; order-2 on desktop on right) ── */}
-            <div ref={phonesRef} className="order-1 md:order-2 flex justify-center md:justify-end w-full">
+            {/* ── Project visual — fanned screenshot deck (with top breathing room on mobile) ── */}
+            <div ref={phonesRef} className="order-1 md:order-2 flex justify-center md:justify-end w-full pt-4 sm:pt-6 md:pt-0">
                 <FannedDeck screenshots={project.screenshotPaths} active={active} fill={fill} />
             </div>
 
