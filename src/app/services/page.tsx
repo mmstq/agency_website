@@ -5,6 +5,8 @@ import { ArrowRight, Check } from 'lucide-react';
 import { services } from '@/lib/data/services';
 import GlassSurface from '@/components/GlassSurface';
 import SplitText from '@/components/SplitText';
+import WebApplicationsScene from '@/components/services/WebApplicationsScene';
+import ServiceSculptureScene, { type ServiceSculptureVariant } from '@/components/services/ServiceSculptureScene';
 
 export const metadata: Metadata = {
     title: 'Services',
@@ -37,19 +39,21 @@ export default function ServicesPage() {
                 </div>
 
                 {/* Services Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6 mb-24">
                     {services.map((service) => (
-                        <div key={service.id} id={service.slug} className="monolith-card group p-10 flex flex-col scroll-mt-32">
-                            <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center mb-8 transition-transform group-hover:scale-110 group-hover:bg-white/10">
-                                <service.icon className="w-7 h-7 text-white" />
-                            </div>
-                            <h2 className="text-2xl font-bold text-white mb-4 tracking-tight">
+                        <div key={service.id} id={service.slug} className="monolith-card group p-7 md:p-8 flex flex-col h-full scroll-mt-32">
+                            {service.id === 'web-apps' ? (
+                                <WebApplicationsScene />
+                            ) : (
+                                <ServiceSculptureScene variant={service.id as ServiceSculptureVariant} />
+                            )}
+                            <h2 className="text-2xl font-bold text-white mb-3 tracking-tight">
                                 {service.title}
                             </h2>
-                            <p className="text-white/50 text-sm leading-relaxed mb-8 flex-grow">
+                            <p className="text-white/50 text-sm leading-relaxed mb-6">
                                 {service.description}
                             </p>
-                            <ul className="space-y-3 mb-10">
+                            <ul className="space-y-2.5 mb-7">
                                 {service.features.map((feature) => (
                                     <li key={feature} className="flex items-center gap-3 text-[0.6875rem] uppercase tracking-widest font-bold text-white/30">
                                         <Check className="w-3.5 h-3.5 text-emerald-500" />
@@ -57,7 +61,7 @@ export default function ServicesPage() {
                                     </li>
                                 ))}
                             </ul>
-                            <Link href="/contact">
+                            <Link href="/contact" className="mt-auto">
                                 <GlassSurface width="100%" height={48} borderRadius={12} backgroundOpacity={0.1} distortionScale={-80} className="glass-surface--soft-hover" simplified>
                                     <div className="flex h-full w-full items-center justify-center gap-2 text-xs font-bold text-white uppercase tracking-widest">
                                         Inquire

@@ -4,7 +4,7 @@
 > Legend: ✅ done · 🟡 partial / needs polish · ⬜ not started · ❌ removed/reverted
 >
 > Stable knowledge → [PROJECT.md](PROJECT.md) · Current session → [STATE.md](STATE.md)
-> Last reconciled with git: **2026-06-24** (audit + cleanup pass).
+> Last reconciled with git: **2026-08-09** (process-section 3D monolith).
 
 ## Pages / Routes
 
@@ -12,7 +12,7 @@
 |-------|------|--------|-------|
 | `/` Home | `src/app/page.tsx` | ✅ | All sections present |
 | `/about` | `src/app/about/page.tsx` | ✅ | |
-| `/services` | `src/app/services/page.tsx` | ✅ | Anchored sub-sections (`/services#slug`) |
+| `/services` | `src/app/services/page.tsx` | 🟡 | Anchored cards intact; complete six-card procedural 3D system implemented and awaiting visual acceptance |
 | `/portfolio` | `src/app/portfolio/page.tsx` | ✅ | Marquee + showcase variants + single-project views |
 | `/blog` | `src/app/blog/page.tsx` | 🟡 | Page exists; content depth TBD (no CMS — static) |
 | `/contact` | `src/app/contact/page.tsx` | 🟡 | UI done (`ContactForm` + `ContactInfo`); submission backend pending |
@@ -44,9 +44,9 @@
 ## Components (built)
 
 - **Backgrounds:** `CanvasGrid` (dot grid, footer-synced), `BubbleField` (ambient — replaced WaveGrid ❌)
-- **Interactive (3D):** `Ballpit.jsx` (vendored React Bits, vanilla three.js) — `/404` only; the sole sanctioned three.js exception
+- **Interactive (3D):** `Ballpit.jsx` on `/404`; Services now uses six sanctioned procedural micro-scenes (`WebApplicationsScene.tsx` + `ServiceSculptureScene.tsx`) with viewport-paused RAF interaction and static mobile/WebGL fallbacks
 - **Cards/bento:** `VideoCard`, `FeatureCardsStack`, `AnalyticsCard`, `GlassSurface` (universal wrapper)
-- **Home sections:** `HeroSection`, `LogoMarquee`, `IndustriesSection`, `IndustriesTicker`, `ProcessSection`, `TestimonialsSection`, `CaseStudyPreviewRow`, `HomeCTA`, `Footer`
+- **Home sections:** `HeroSection`, `LogoMarquee`, `IndustriesSection`, `IndustriesTicker`, `ProcessSection` (responsive CSS-3D monolith, four active-card-synced micro-scenes, and a custom four-glyph 2D technical icon system), `TestimonialsSection`, `CaseStudyPreviewRow`, `HomeCTA`, `Footer`
 - **Portfolio showcase (`showcase-variants/`):** `PortfolioView`, `PortfolioSingle`, `ShowcaseHoverList`, `StackScaleBack`, `portfolioShared`, `projectVisuals`, `ProjectScreenshotMarquee`
 - **Typography/animation:** `SplitText` (GSAP), `ScrollReveal`, `use-scroll-animation`
 - **Layout/nav:** `MasterLayout`, `Navbar`

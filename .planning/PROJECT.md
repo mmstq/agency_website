@@ -49,7 +49,7 @@ A production-ready agency website that converts high-value B2B leads through pre
 
 ## Context
 
-**Stack:** Next.js 16 (App Router, `output: 'export'` static export), React 19, Tailwind v4, shadcn/ui (on `@base-ui/react`, not Radix), TypeScript. No Framer Motion / Three.js — all animations are RAF + `useRef` DOM mutation + CSS. GSAP is used for `SplitText` typography only.
+**Stack:** Next.js 16 (App Router, `output: 'export'` static export), React 19, Tailwind v4, shadcn/ui (on `@base-ui/react`, not Radix), TypeScript. No Framer Motion; animation is normally RAF + `useRef` DOM mutation + CSS. Three.js is limited to the `/404` Ballpit and user-approved procedural service-card micro-scenes. GSAP is used for `SplitText` typography only.
 
 **Design system:** [DESIGN.md](../DESIGN.md) defines the "Digital Monolith" system: `#131313` background, `#e2e2e2` text, Manrope (headings) / Inter (body), `xl` (24px) radius on all major containers, no 1px solid borders (ghost borders only at 10% opacity), glassmorphism via the universal `GlassSurface` wrapper.
 
@@ -74,7 +74,7 @@ A production-ready agency website that converts high-value B2B leads through pre
 ## Constraints
 
 - **Tech stack**: Next.js App Router + Tailwind v4 + shadcn/ui — no breaking changes, no new heavy deps
-- **Performance**: No Framer Motion or Three.js — animations must stay RAF/CSS (GSAP only for SplitText)
+- **Performance**: No Framer Motion. Three.js is restricted to approved isolated scenes with lazy loading, capped DPR, off-screen pausing, reduced-motion handling, and static fallbacks; all other animation stays RAF/CSS (GSAP only for SplitText).
 - **Design**: All new pages/sections must follow DESIGN.md "Digital Monolith" spec exactly
 - **Export**: Must remain compatible with static export (`output: 'export'`) — no server-only features
 
@@ -89,6 +89,7 @@ A production-ready agency website that converts high-value B2B leads through pre
 | `BubbleField` replaces `WaveGrid` | Lighter, better-fitting ambient background animation | ✓ Good |
 | Modular `showcase-variants/` for portfolio | Reusable showcase layouts shared between home + portfolio; viewport-locked single views | ✓ Good |
 | Static export | No server needed for marketing site; cheaper, faster, simpler | ✓ Good — but constrains forms/newsletter to 3rd-party endpoints |
+| Procedural Three.js service micro-scenes | Give service cards distinctive depth without model downloads or replacing the editorial layout | 🟡 Six distinct card scenes implemented; awaiting final visual acceptance |
 
 ## Evolution
 

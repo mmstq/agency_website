@@ -2,12 +2,28 @@
 
 ## Current Position
 
-**Date:** 2026-08-08
+**Date:** 2026-08-09
 **Milestone:** v1.0 Agency Website — Fully Functional
-**Working on right now:** Implemented top padding above carousel, gradient from #161616 to black, and top-only border.
-**Next likely:** Replace placeholder social/contact links with real URLs · blog content decision.
+**Working on right now:** Portfolio carousel desktop visibility and mobile interaction fix; awaiting visual acceptance.
+**Next likely:** Resume visual acceptance of the completed six-card Services 3D system.
 
 ## Most Recent Work (newest first)
+
+- 2026-08-09 (portfolio carousel visibility and mobile smoothness) — Restored the all-projects phone deck on desktop by giving its absolutely-positioned image container an explicit responsive height instead of allowing it to collapse at `md`. Limited auto-cycling to the visible front project and unified touch/mouse drag handling under pointer events so phone swipes advance once without hidden decks animating. Verified ESLint, a 612px desktop deck, 430px mobile layout with zero horizontal overflow, one-step touch swipe, and no browser errors.
+
+- 2026-08-09 (Services 3D safe framing) — Reframed all six procedural service sculptures with per-object scale and camera-distance adjustments so browser layers, phone bodies, orbital satellites, SaaS modules, cloud rings, and security shields retain visible breathing room during idle drift and pointer tilt instead of clipping against the stage mask.
+
+- 2026-08-09 (complete Services 3D system) — Extended the approved browser-card direction across all six Services cards with five distinct procedural Three.js sculptures: paired mobile devices, an orbital processor, connected SaaS modules, an orbiting database stack, and layered security shields. Added shared lazy initialization, in-viewport RAF pausing, pointer parallax, 1.25 DPR cap, reduced-motion behavior, disposal, WebGL recovery fallback, and matching static SVG sculptures for mobile/non-WebGL devices. Restored equal-height rows now that every card has a visual. Verified all six desktop scenes ready with no page errors, equal 584px card heights, and 430px mobile fallbacks with zero horizontal overflow.
+
+- 2026-08-09 (Services card density) — Reduced the service-card inset from 40px to 28–32px, tightened icon/title/description/feature spacing, removed the description flex spacer, and stopped grid-row stretching from creating false internal padding. Tightened the first Three.js stage-to-title gap to match the denser approved concept.
+
+- 2026-08-09 (Services Three.js prototype) — Replaced only the Web Applications icon tile with a procedural layered-browser sculpture (`WebApplicationsScene.tsx`), then rebuilt it against the approved concept render with four rounded glass/chrome panels, PMREM studio reflections, internal sidebars/charts/content rails, and stronger depth separation. The scene retains pointer parallax, gentle depth drift, viewport/document pausing, DPR capping, reduced-motion handling, and a CSS mobile/WebGL fallback. The other five service cards remain unchanged for visual comparison. Verified ESLint, clean WebGL initialization with no page errors, and a 430px static fallback with zero horizontal overflow.
+
+- 2026-08-09 (custom process glyphs) — Replaced the generic Lucide search, pen, code, and rocket icons with four custom inline-SVG technical glyphs (`ProcessGlyph.tsx`): blueprint discovery, interface design, chip/code infrastructure, and orbital launch. Added a consistent 2D blueprint tile treatment, active-state contrast, and brighter step numbering in `ProcessSection.module.css`; no 3D icon treatment. Verified ESLint, static production build, wide/mobile Chrome renders, 37.6px mobile glyph size, and zero horizontal overflow.
+
+- 2026-08-09 (process-card 3D micro-scenes) — Filled the wide-card whitespace with four coordinated, dependency-free CSS-3D visuals: orbital mapping, stacked interface planes, an engineering cube, and a launch trajectory (`ProcessSection.tsx`, `ProcessSection.module.css`). Scenes brighten and animate with the existing active-card state, pause while inactive, disable under reduced motion, and stay hidden below 1440px to preserve compact-layout readability. Verified ESLint, static production build, wide Chrome render, and 430px layout with zero horizontal overflow.
+
+- 2026-08-09 (process-section 3D monolith) — Added a dependency-free four-layer architectural sculpture beneath the process copy (`ProcessSection.tsx`, `ProcessSection.module.css`). The active slab follows the process card in viewport or under the pointer; the object uses a single RAF pointer tilt, a static reduced-motion mode, and responsive desktop/mobile sizing. Preserved the existing cards/copy and the 404-only Three.js rule. Verified ESLint, static production build, desktop/mobile Chrome renders, and step-02 observer activation.
 
 - 2026-08-08 (top padding, gradient background, top-only borders) — Refined the project card stage visual styling across all stack cards (`StackScaleBack.tsx`, `portfolioShared.tsx`): (1) Added top breathing padding (`pt-7 pb-6 sm:pt-8`) above the phone carousel when opened. (2) Changed card stage background to a vertical gradient from `#161616` at the top to `#000000` (black) at the bottom (`bg-gradient-to-b from-[#161616] via-[#111111] to-black`). (3) Applied top-only rounded corners (`rounded-t-[28px] sm:rounded-t-[36px] rounded-b-none`) and top-only border (`border-t border-white/[0.12] border-x-0 border-b-0`) with top elevation shadows (`BASE_SHADOW` & `FRONT_SHADOW`). Verified via mobile browser screenshots across stacked card transitions.
 
@@ -68,7 +84,7 @@
 
 - Next.js 16 App Router, **static export** (`output: 'export'`) — no server routes; forms/newsletter need 3rd-party or serverless endpoints
 - "Digital Monolith" design system in DESIGN.md — follow exactly for all new work
-- Animations: RAF + `useRef` DOM mutation + CSS only. No Framer Motion / Three.js. GSAP only for `SplitText`
+- Animations: RAF + `useRef` DOM mutation + CSS by default. No Framer Motion. Three.js is restricted to `/404` Ballpit and explicitly approved isolated service scenes. GSAP only for `SplitText`.
 - `GlassSurface` is the universal card wrapper — don't create new card wrappers
 - Scroll reveals must re-trigger on every viewport entry (never `unobserve` after first reveal); honor `prefers-reduced-motion`
 - Newsletter API route is a stub (`console.log` only)

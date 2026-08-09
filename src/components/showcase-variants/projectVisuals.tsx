@@ -40,16 +40,16 @@ const DECK_SLOTS: Slot[] = [
 // Parked behind the deck, invisible — the card mid-cycle between front and back.
 const DECK_HIDDEN: Slot = { transform: 'rotate(0deg) translate(0%,0%) scale(0.9)', filter: 'brightness(0.4)', opacity: 0, z: 0 };
 
-export function FannedDeck({ screenshots, fill = false }: VizProps) {
+export function FannedDeck({ screenshots, active, fill = false }: VizProps) {
     const shots = screenshots.slice(0, 5);
     const n = shots.length;
     const [i, setI] = useState(0);
     const paused = useRef(false);
 
-    // Touch & Pointer gesture tracking
+    // Pointer events cover mouse, pen, and touch without processing a mobile
+    // swipe twice through separate touch and pointer handlers.
     const startX = useRef<number | null>(null);
     const startY = useRef<number | null>(null);
-    const hasSwiped = useRef(false);
 
     const advance = useCallback(() => {
         setI((p) => (p + 1) % n);
@@ -59,58 +59,23 @@ export function FannedDeck({ screenshots, fill = false }: VizProps) {
         setI((p) => (p - 1 + n) % n);
     }, [n]);
 
-    // Always shuffling (paused only on hover or active touch gesture)
+    // Only the front project shuffles. Covered sticky cards stay mounted for
+    // the depth stack, so animating every hidden deck wastes mobile GPU/CPU.
     useEffect(() => {
-        if (n < 2) return;
+        if (!active || n < 2) return;
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
         const id = window.setInterval(() => {
             if (!paused.current) advance();
         }, DECK_TICK_MS);
         return () => window.clearInterval(id);
-    }, [n, advance]);
-
-    // Touch handlers for mobile swipe left / right
-    const handleTouchStart = (e: React.TouchEvent) => {
-        paused.current = true;
-        hasSwiped.current = false;
-        if (e.touches.length > 0) {
-            startX.current = e.touches[0].clientX;
-            startY.current = e.touches[0].clientY;
-        }
-    };
-
-    const handleTouchMove = (e: React.TouchEvent) => {
-        if (startX.current === null || startY.current === null) return;
-        const currentX = e.touches[0].clientX;
-        const currentY = e.touches[0].clientY;
-        const diffX = currentX - startX.current;
-        const diffY = currentY - startY.current;
-
-        // If horizontal movement is prominent, detect swipe
-        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > SWIPE_THRESHOLD_PX && !hasSwiped.current) {
-            hasSwiped.current = true;
-            if (diffX < 0) {
-                // Swipe Left -> next
-                advance();
-            } else {
-                // Swipe Right -> previous
-                retreat();
-            }
-        }
-    };
-
-    const handleTouchEnd = () => {
-        paused.current = false;
-        startX.current = null;
-        startY.current = null;
-    };
+    }, [active, n, advance]);
 
     // Pointer handlers for desktop mouse click/drag & tap support
     const handlePointerDown = (e: React.PointerEvent) => {
         paused.current = true;
         startX.current = e.clientX;
         startY.current = e.clientY;
-        hasSwiped.current = false;
+        e.currentTarget.setPointerCapture(e.pointerId);
     };
 
     const handlePointerUp = (e: React.PointerEvent) => {
@@ -121,7 +86,6 @@ export function FannedDeck({ screenshots, fill = false }: VizProps) {
 
             // If dragged horizontally past threshold
             if (Math.abs(diffX) > SWIPE_THRESHOLD_PX && Math.abs(diffX) > Math.abs(diffY)) {
-                hasSwiped.current = true;
                 if (diffX < 0) {
                     advance();
                 } else {
@@ -136,6 +100,12 @@ export function FannedDeck({ screenshots, fill = false }: VizProps) {
         startY.current = null;
     };
 
+    const handlePointerCancel = () => {
+        paused.current = false;
+        startX.current = null;
+        startY.current = null;
+    };
+
     return (
         <div
             // `fill` (single-project view): size proportionally on mobile without
@@ -143,18 +113,16 @@ export function FannedDeck({ screenshots, fill = false }: VizProps) {
             className={`relative mx-auto select-none touch-pan-y cursor-grab active:cursor-grabbing aspect-[9/19.5] ${
                 fill
                     ? 'w-[230px] max-w-[70vw] sm:w-[280px] md:h-[68svh] md:w-auto md:max-w-full'
-                    : 'h-[300px] max-h-[38svh] sm:h-[380px] sm:max-h-[50svh] md:h-auto md:max-h-[86svh] w-auto max-w-[62vw] sm:max-w-[300px] md:max-w-[400px]'
+                    : 'h-[300px] max-h-[38svh] sm:h-[380px] sm:max-h-[50svh] md:h-[68svh] md:max-h-[76svh] w-auto max-w-[62vw] sm:max-w-[300px] md:max-w-[400px]'
             }`}
             style={{ perspective: '1000px' }}
             role="button"
             tabIndex={0}
             aria-label="Swipe left/right or tap to change screenshot"
             title="Swipe left/right or tap to change screenshot"
-            onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
-            onTouchEnd={handleTouchEnd}
             onPointerDown={handlePointerDown}
             onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerCancel}
             onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowRight' || e.key === 'ArrowDown') {
                     e.preventDefault();
