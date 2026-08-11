@@ -151,6 +151,17 @@ export default function StackScaleBack({ hero }: { hero?: ReactNode }) {
                 rises[i] = r;
             }
 
+            // Mobile uses rise position for front-card ownership. This remains
+            // reliable when the final card grows taller than the viewport (its
+            // IntersectionObserver ratio can never reach 1 like pinned cards).
+            if (window.innerWidth < 768) {
+                let mobileFront = 0;
+                for (let i = 0; i < TOTAL; i++) {
+                    if (rises[i] >= 0.5) mobileFront = i;
+                }
+                setFrontIndex((prev) => (prev === mobileFront ? prev : mobileFront));
+            }
+
             // Phase 2 — WRITE (compositor-only: transform + opacity).
             for (let i = 0; i < TOTAL; i++) {
                 const stage = stageRefs.current[i];
@@ -229,6 +240,10 @@ export default function StackScaleBack({ hero }: { hero?: ReactNode }) {
 
         const io = new IntersectionObserver(
             (entries) => {
+                // Mobile front-card ownership is calculated from scroll rise in
+                // the rAF handler above so the natural-height final card works.
+                if (window.innerWidth < 768) return;
+
                 for (const entry of entries) {
                     const idx = Number((entry.target as HTMLElement).dataset.index ?? '-1');
                     if (idx >= 0) ratios[idx] = entry.intersectionRatio;
@@ -250,6 +265,7 @@ export default function StackScaleBack({ hero }: { hero?: ReactNode }) {
                         best = i;
                     }
                 }
+
                 // State is updated INSIDE the observer callback (not in an
                 // effect body) → no react-hooks/set-state-in-effect violation.
                 setFrontIndex((prev) => (prev === best ? prev : best));
@@ -317,8 +333,12 @@ export default function StackScaleBack({ hero }: { hero?: ReactNode }) {
                         cardRefs.current[i] = node;
                     }}
                     data-index={i}
-                    className="sticky top-0 flex h-screen min-h-screen w-full items-center justify-center overflow-hidden bg-black"
-                    style={{ zIndex: i + 1, height: '100svh', minHeight: '100svh' }}
+                    className={
+                        i === TOTAL - 1
+                            ? 'relative flex min-h-[100svh] w-full items-start justify-center overflow-visible bg-black md:sticky md:top-0 md:h-[100svh] md:items-center md:overflow-hidden'
+                            : 'sticky top-0 flex h-[100svh] min-h-[100svh] w-full items-center justify-center overflow-hidden bg-black'
+                    }
+                    style={{ zIndex: i + 1 }}
                     role="group"
                     aria-roledescription="slide"
                     aria-label={`${project.title} — ${i + 1} of ${TOTAL}`}
@@ -328,14 +348,22 @@ export default function StackScaleBack({ hero }: { hero?: ReactNode }) {
                         ref={(node) => {
                             stageRefs.current[i] = node;
                         }}
-                        className="relative flex h-full w-full items-center justify-center overflow-hidden rounded-t-[28px] sm:rounded-t-[36px] rounded-b-none border-t border-white/[0.12] border-x-0 border-b-0 bg-gradient-to-b from-[#161616] via-[#111111] to-black"
+                        className={`relative flex w-full justify-center rounded-t-[28px] rounded-b-none border-t border-white/[0.12] border-x-0 border-b-0 bg-gradient-to-b from-[#161616] via-[#111111] to-black sm:rounded-t-[36px] ${
+                            i === TOTAL - 1
+                                ? 'min-h-[100svh] items-start overflow-visible md:h-full md:min-h-0 md:items-center md:overflow-hidden'
+                                : 'h-full items-center overflow-hidden'
+                        }`}
                         style={{
                             transformOrigin: 'center center',
                             boxShadow: i === frontIndex ? FRONT_SHADOW : BASE_SHADOW,
                             transition: 'box-shadow 0.45s cubic-bezier(0.16,1,0.3,1)',
                         }}
                     >
-                        <div className="w-full px-5 pt-7 pb-6 sm:pt-8 md:px-12 md:py-0">
+                        <div
+                            className={`w-full px-5 pt-7 sm:pt-8 md:px-12 md:py-0 ${
+                                i === TOTAL - 1 ? 'pb-20 md:pb-0' : 'pb-6'
+                            }`}
+                        >
                             <DetailLayout
                                 project={project}
                                 index={i}
