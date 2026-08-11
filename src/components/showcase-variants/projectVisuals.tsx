@@ -20,7 +20,13 @@ import Image, { StaticImageData } from 'next/image';
    - Hover / Active drag: Pauses auto-cycle.
    ───────────────────────────────────────────────────────────────────────── */
 
-export type VizProps = { screenshots: StaticImageData[]; active: boolean; fill?: boolean };
+export type VizProps = {
+    screenshots: StaticImageData[];
+    active: boolean;
+    fill?: boolean;
+    modal?: boolean;
+    projectTitle?: string;
+};
 
 const EASE = 'cubic-bezier(0.22,1,0.36,1)';
 const DECK_TICK_MS = 3600;
@@ -40,7 +46,7 @@ const DECK_SLOTS: Slot[] = [
 // Parked behind the deck, invisible — the card mid-cycle between front and back.
 const DECK_HIDDEN: Slot = { transform: 'rotate(0deg) translate(0%,0%) scale(0.9)', filter: 'brightness(0.4)', opacity: 0, z: 0 };
 
-export function FannedDeck({ screenshots, active, fill = false }: VizProps) {
+export function FannedDeck({ screenshots, active, fill = false, modal = false, projectTitle }: VizProps) {
     const shots = screenshots.slice(0, 5);
     const n = shots.length;
     const [i, setI] = useState(0);
@@ -111,7 +117,9 @@ export function FannedDeck({ screenshots, active, fill = false }: VizProps) {
             // `fill` (single-project view): size proportionally on mobile without
             // blowing past viewport bounds; height-driven on md+.
             className={`relative mx-auto select-none touch-pan-y cursor-grab active:cursor-grabbing aspect-[9/19.5] ${
-                fill
+                modal
+                    ? 'h-[68dvh] max-h-[640px] w-auto max-w-[78vw]'
+                    : fill
                     ? 'w-[230px] max-w-[70vw] sm:w-[280px] md:h-[68svh] md:w-auto md:max-w-full'
                     : 'h-[300px] max-h-[38svh] sm:h-[380px] sm:max-h-[50svh] md:h-[68svh] md:max-h-[76svh] w-auto max-w-[62vw] sm:max-w-[300px] md:max-w-[400px]'
             }`}
@@ -158,7 +166,7 @@ export function FannedDeck({ screenshots, active, fill = false }: VizProps) {
                     >
                         <Image
                             src={s}
-                            alt=""
+                            alt={projectTitle ? `${projectTitle} app screen ${k + 1}` : ''}
                             fill
                             priority={k === 0}
                             sizes="(max-width: 768px) 260px, 400px"

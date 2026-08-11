@@ -1,9 +1,11 @@
 'use client';
 
+import { useSyncExternalStore } from 'react';
 import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
 import { projects } from '@/lib/data/projects';
 import { FannedDeck } from './projectVisuals';
+import ProjectSignalCapsule from './ProjectSignalCapsule';
 
 /* ─────────────────────────────────────────────────────────────────────────
    Shared building blocks for the /portfolio scroll variants.
@@ -82,6 +84,22 @@ export const SPOTLIGHT: Record<string, Spotlight> = {
     },
 };
 
+const DESKTOP_QUERY = '(min-width: 768px)';
+
+function subscribeToDesktop(callback: () => void) {
+    const media = window.matchMedia(DESKTOP_QUERY);
+    media.addEventListener('change', callback);
+    return () => media.removeEventListener('change', callback);
+}
+
+function getDesktopSnapshot() {
+    return window.matchMedia(DESKTOP_QUERY).matches;
+}
+
+function getServerDesktopSnapshot() {
+    return false;
+}
+
 const STORE_CTA =
     'inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-xs font-black tracking-tight text-[#1a1c1c] shadow-[0_2px_12px_rgba(0,0,0,0.18)] transition-all duration-300 hover:bg-[#e2e2e2] active:scale-95';
 
@@ -116,13 +134,22 @@ export function DetailLayout({
     fill?: boolean;
 }) {
     const meta = SPOTLIGHT[project.id];
+    const isDesktop = useSyncExternalStore(subscribeToDesktop, getDesktopSnapshot, getServerDesktopSnapshot);
+    const showInlineDeck = fill || isDesktop;
 
     return (
         <div className="grid grid-cols-1 items-center gap-10 md:grid-cols-[1.1fr_1fr] md:gap-12 lg:gap-20 xl:gap-28 w-full">
             {/* ── Project visual — fanned screenshot deck (with top breathing room on mobile) ── */}
-            <div ref={phonesRef} className="order-1 md:order-2 flex justify-center md:justify-end w-full pt-4 sm:pt-6 md:pt-0">
-                <FannedDeck screenshots={project.screenshotPaths} active={active} fill={fill} />
-            </div>
+            {showInlineDeck && (
+                <div ref={phonesRef} className="order-1 md:order-2 flex justify-center md:justify-end w-full pt-4 sm:pt-6 md:pt-0">
+                    <FannedDeck
+                        screenshots={project.screenshotPaths}
+                        active={active}
+                        fill={fill}
+                        projectTitle={project.title}
+                    />
+                </div>
+            )}
 
             {/* ── Copy column (order-2 on mobile underneath visual; order-1 on desktop on left) ── */}
             <div ref={copyRef} className="order-2 md:order-1 flex flex-col gap-3.5 sm:gap-6 md:gap-7 w-full max-w-2xl">
@@ -215,6 +242,8 @@ export function DetailLayout({
                         </a>
                     )}
                 </div>
+
+                {!fill && !isDesktop && <ProjectSignalCapsule project={project} active={active} />}
             </div>
         </div>
     );
