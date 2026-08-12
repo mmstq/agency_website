@@ -60,3 +60,10 @@ Each mobile stack card ends with a compact glass Signal Capsule containing the p
 - The mobile single-project route retained its 1 existing inline deck and mounted 0 capsules.
 - At maximum page scroll, the last card aligned to the viewport and its capsule ended at 752px inside the 932px viewport.
 - Physical-device performance and visual acceptance remain pending.
+
+## Real-device viewport correction — 2026-08-12
+
+- Android Chrome screenshots showed that the browser toolbar collapsed from the initial small viewport while stack cards remained locked to `100svh`.
+- The resulting small/large viewport mismatch exposed the page beneath each card and left the final card short of `top: 0` at maximum scroll.
+- Stack cards now use the stable `100lvh` and scroll progress uses the card's measured height instead of Chrome's changing `window.innerHeight`.
+- No final-card spacer is added; the correction keeps one consistent stack model for all projects.

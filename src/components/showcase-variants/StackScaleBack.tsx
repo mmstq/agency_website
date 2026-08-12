@@ -11,7 +11,8 @@
    most of the scale/dim lands while the card is still visible, and the copy /
    phones inside drift at slightly different rates (subtle internal parallax).
    The front card lifts a touch above the stack via a deeper, CSS-transitioned
-   shadow. Cards use `svh` (stable on mobile); buried cards are `inert`.
+   shadow. Cards use `lvh` so they continue filling the screen after mobile
+   browser chrome collapses; buried cards are `inert`.
 
    Between cards sits a DWELL spacer: a flat stretch of scroll where the current
    project holds fully front (no recede) before the next card begins rising — so
@@ -130,7 +131,12 @@ export default function StackScaleBack({ hero }: { hero?: ReactNode }) {
                 return;
             }
 
-            const vh = window.innerHeight || 1;
+            // Use the stack card's stable large-viewport height instead of
+            // window.innerHeight. Android Chrome changes innerHeight while its
+            // toolbar collapses; coupling the stack progress to that changing
+            // value leaves a gap below cards and prevents the final card from
+            // reaching top:0 at the end of the document.
+            const vh = cardRefs.current[0]?.clientHeight || window.innerHeight || 1;
 
             // Phase 1 — READ each card's RISE (no interleaved writes → no forced
             // synchronous layout). rise = how far this card has travelled up:
@@ -318,7 +324,7 @@ export default function StackScaleBack({ hero }: { hero?: ReactNode }) {
                         cardRefs.current[i] = node;
                     }}
                     data-index={i}
-                    className="sticky top-0 flex h-[100svh] min-h-[100svh] w-full items-center justify-center overflow-hidden bg-black"
+                    className="sticky top-0 flex h-[100lvh] min-h-[100lvh] w-full items-center justify-center overflow-hidden bg-black"
                     style={{ zIndex: i + 1 }}
                     role="group"
                     aria-roledescription="slide"
