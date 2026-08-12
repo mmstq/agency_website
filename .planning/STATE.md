@@ -2,12 +2,14 @@
 
 ## Current Position
 
-**Date:** 2026-08-09
+**Date:** 2026-08-12
 **Milestone:** v1.0 Agency Website — Launch Readiness
-**Working on right now:** Repository documentation and agent-context files reconciled with the current implementation.
+**Working on right now:** Process-section copy-to-monolith spacing refined and verified across mobile and desktop.
 **Next likely:** Visually accept the latest Portfolio interaction fixes, then resume acceptance of the six-card Services 3D system.
 
 ## Most Recent Work (newest first)
+
+- 2026-08-12 (process monolith spacing) — Increased the responsive gap between the process introduction copy and the architectural 3D monolith without changing the sculpture size or motion. Browser geometry checks confirmed 20px of visible clearance at 430px, 24px at the supplied 1234px reference width, and 24px at 1440px, with zero horizontal overflow; focused ESLint and TypeScript checks passed.
 
 - 2026-08-09 (documentation and agent-context reconciliation) — Replaced the starter README with project-specific setup, architecture, deployment, validation, and launch-gap guidance. Condensed root agent instructions, synchronized Roo/Claude/Gemini entry points, corrected stale PROJECT/PROGRESS claims, and marked pre-implementation research/design notes as historical. Verified ESLint, TypeScript, and a network-enabled webpack static build (13 generated pages); the default Turbopack build stalled at optimization in the restricted environment, so visual acceptance remains separate.
 

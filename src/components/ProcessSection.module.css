@@ -2,7 +2,7 @@
   position: relative;
   display: grid;
   height: clamp(18rem, 34vw, 25rem);
-  margin-top: 1.25rem;
+  margin-top: clamp(3.5rem, 5vw, 5rem);
   place-items: center;
   perspective: 1100px;
   isolation: isolate;
@@ -635,7 +635,7 @@
   .monolith {
     width: min(100%, 32rem);
     height: 22rem;
-    margin: 1rem auto 0;
+    margin: clamp(3.5rem, 5vw, 5rem) auto 0;
   }
 
   .monolithObject {
