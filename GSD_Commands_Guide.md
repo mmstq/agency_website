@@ -1,5 +1,7 @@
 # 📋 GSD (Get Shit Done) — Complete Command Reference
 
+> Optional workflow reference, not project state. Confirm each command and code-review-graph tool is installed in the active environment. Current repository context lives in `AGENTS.md` and `.planning/`.
+
 > **With code-review-graph active, every command below gets smarter context automatically.**
 > Run `code-review-graph update` before starting any session for freshest results.
 

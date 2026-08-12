@@ -1,5 +1,7 @@
 # Cursor Glow Interactive Background Design
 
+> Historical implementation record. `src/components/CanvasGrid.tsx`, `DESIGN.md`, and `AGENTS.md` are the current authority; details below may not reflect later touch, footer-sync, or performance refinements.
+
 ## Understanding Summary
 - **What is being built:** A dynamic, interactive dot-grid background component.
 - **Why it exists:** To give the website a premium "wow" factor by making the grid dots individually glow, scale, and trail the user's cursor.
@@ -37,4 +39,3 @@ An event listener on the window capturing the mouse coordinates and writing them
 - **Grid Generation:** Loops by pixel intervals (e.g., 24px) to simulate a grid.
 - **Proximity Math:** Calculates the Pythagorean distance between each grid unit and the `mouseRef` + `trailRef` history.
 - **Rendering:** Uses `ctx.arc()` to draw dots. Proximity dictates the `opacity` (base of 0.1 rising up to 0.8) and `radius` (base of 1px scaling to 2.5px).
-

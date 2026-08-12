@@ -1,5 +1,7 @@
 # Architecture Research
 
+> **Historical pre-implementation research (2026-04-30).** The page expansion has since landed and several proposals below were superseded. Do not use this as current architecture or task status; use `../PROJECT.md`, `../STATE.md`, `../PROGRESS.md`, and the repository. The current contact form uses Web3Forms, the newsletter stub was removed, and client-side exposure of a general Resend API key is not an approved pattern.
+
 **Project:** Modall Agency Website — v1.0 page expansion
 **Researched:** 2026-04-30
 **Confidence:** HIGH — verified against Next.js 16.2.2 docs in node_modules

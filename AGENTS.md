@@ -1,69 +1,52 @@
-# AGENTS.md
+# Agent Instructions
 
-This file provides guidance to agents when working with code in this repository.
+## Start Here
 
-## Session Context & Worklog (read first, keep current)
+- Read `.planning/PROJECT.md`, `.planning/STATE.md`, and `.planning/PROGRESS.md` before substantial work.
+- Treat `.planning/STATE.md` as the current handoff, `.planning/PROGRESS.md` as the status board, and `.planning/PROJECT.md` as stable project context.
+- Read `DESIGN.md` before visual work. Historical research and design logs are not current implementation authority.
+- Preserve unrelated worktree changes. Do not create or switch branches unless asked.
+- When meaningful work lands, update `STATE.md`; update `PROGRESS.md` for status changes and `PROJECT.md` only for durable decisions or scope changes.
 
-A persistent worklog lives in [`.planning/`](.planning/) so context survives across chat sessions. This is the source of truth for "what we've been working on."
+## Package Manager
 
-**At the START of a session**, read these to recover context:
-- [`.planning/PROJECT.md`](.planning/PROJECT.md) — stable whole-project knowledge (what it is, stack, design system, decisions). Changes rarely.
-- [`.planning/STATE.md`](.planning/STATE.md) — current position / what's being worked on right now + recent work log.
-- [`.planning/PROGRESS.md`](.planning/PROGRESS.md) — full status board: every page/feature as ✅ done / 🟡 partial / ⬜ not started.
+- Use **npm**; `package-lock.json` is authoritative.
+- Core commands: `npm install`, `npm run dev`, `npm run lint`, `npm run build`.
+- `npm run build` creates the static site in `out/`; Netlify publishes that directory.
 
-**When meaningful work LANDS in a session** (a feature, page, fix, or decision — not trivial edits), update the worklog before finishing, without being asked:
-- `STATE.md` — always: bump the date, refresh the "working on" line, add a "Most Recent Work" entry.
-- `PROGRESS.md` — when a page/feature changes state (e.g. ⬜ → ✅).
-- `PROJECT.md` — only for new architectural decisions, scope changes, or new known issues.
+## Checks
 
-Keep entries terse and factual. Commit worklog updates alongside the related code change.
+| Task | Command |
+|------|---------|
+| Lint one file | `npm exec eslint -- path/to/file.tsx` |
+| Lint repository | `npm run lint` |
+| Typecheck | `npm exec tsc -- --noEmit` |
+| Static export | `npm run build` |
 
-<!-- BEGIN:nextjs-agent-rules -->
-# This is NOT the Next.js you know
+- No automated test framework is installed; distinguish lint/build checks from browser or device acceptance.
 
-This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-<!-- END:nextjs-agent-rules -->
+## Next.js and Architecture
 
-## Non-Obvious Project Rules
+- This is Next.js 16 App Router. Read the relevant guide in `node_modules/next/dist/docs/` before changing framework APIs or conventions.
+- Keep `output: 'export'`; do not add runtime server routes, Server Actions, request-dependent handlers, or server-only redirects/rewrites.
+- Runtime form submission must use a static-host-compatible external service; the contact form currently uses Web3Forms.
+- `src/app/layout.tsx` owns `StyledJsxRegistry` and `MasterLayout`; keep new routes inside that shared layout.
+- Shared content lives in `src/lib/data/`; portfolio UI lives in `src/components/showcase-variants/`; service scenes live in `src/components/services/`.
 
-- **No Framer Motion / broad Three.js usage** — animations normally use `requestAnimationFrame` + `useRef` DOM mutation (see [`AnalyticsCard.tsx`](src/components/AnalyticsCard.tsx:6), [`FeatureCardsStack.tsx`](src/components/FeatureCardsStack.tsx:6), [`CanvasGrid.tsx`](src/components/CanvasGrid.tsx:4)). Do NOT install animation libraries. **Two sanctioned Three.js exceptions:** [`Ballpit.jsx`](src/components/Ballpit.jsx) on `/404`, and lightweight procedural service-card micro-scenes under [`src/components/services/`](src/components/services/) (user-approved; currently the Web Applications prototype). Both must pause off-screen, honor reduced motion, cap DPR, and provide a non-WebGL fallback. Do not use Three.js elsewhere without explicit approval.
-- **Scroll animations must re-trigger on every viewport entry — never one-time.** Reveal-on-scroll effects animate IN when the element enters the viewport AND reset (re-hide) when it leaves, so they replay every time the user scrolls back. Use the `IntersectionObserver` add/remove-class pattern that toggles on both `isIntersecting` states — see [`use-scroll-animation.ts`](src/hooks/use-scroll-animation.ts) / [`ScrollReveal.tsx`](src/components/ScrollReveal.tsx) and the `.sw-reveal` / `.sw-shown` rows in [`ShowcaseHoverList.tsx`](src/components/showcase-variants/ShowcaseHoverList.tsx). NEVER call `observer.unobserve()` after the first reveal, and do NOT use a "triggerOnce" path. Always honor `prefers-reduced-motion` (show everything, no motion).
-- **`GlassSurface`** ([`src/components/GlassSurface.jsx`](src/components/GlassSurface.jsx)) is the universal card wrapper — all major containers use it with `borderRadius={24}`, `backgroundOpacity={0.08}`, `saturation={1.55}`, `distortionScale={-110}`. Do NOT create new card wrappers.
-- **No 1px solid borders** — per [`DESIGN.md`](DESIGN.md:28) "No-Line Rule". Sectioning uses background shifts + vertical spacing only. Ghost borders at 10% opacity are allowed.
-- **`CanvasGrid.tsx`** — interactive dot-grid background with repulsion physics. Works on both desktop and touch devices.
-- **Static export** — [`next.config.ts`](next.config.ts:4) has `output: 'export'`. No server routes, no `getServerSideProps`, no API routes that need a server (newsletter API is a stub).
-- **`recharts` is installed but unused** — [`package.json`](package.json:19) lists it as a dependency but no component imports it. Either use it or remove it.
-- **`@base-ui/react`** — shadcn/ui buttons and inputs use `@base-ui/react` primitives (not Radix). See [`button.tsx`](src/components/ui/button.tsx:3), [`input.tsx`](src/components/ui/input.tsx:2).
-- **`styled-jsx` registry** — [`registry.tsx`](src/app/registry.tsx) wraps the app for styled-jsx SSR support. New pages must be inside `<StyledJsxRegistry>`.
-- **Nav links resolve to real routes** — [`Navbar.tsx`](src/components/Navbar.tsx) links point to `/`, `/services`, `/services#slug`, `/contact` (fixed; previously broken anchor-only links).
-- **Design tokens** — bg `#131313`, text `#e2e2e2`, Manrope for headings, Inter for body. All radii use `xl` (24px). See [`DESIGN.md`](DESIGN.md).
+## Design and Interaction
 
-## Commands
+- Use the existing `GlassSurface` treatment for major glass containers; do not introduce a competing card system.
+- Follow the no-line rule: use spacing/background shifts; ghost borders at roughly 10% opacity are allowed.
+- Use RAF + refs and CSS for motion. Do not add Framer Motion.
+- Three.js is limited to `Ballpit.jsx` and the procedural service scenes. Those scenes must pause off-screen, honor reduced motion, cap DPR, and provide a non-WebGL fallback.
+- Scroll reveals must toggle on every viewport entry and exit; never make them one-shot. Reduced motion shows content without animation.
+- Preserve the `#131313` / `#e2e2e2` palette, Manrope headings, Inter body copy, and 24px major radii defined in `DESIGN.md`.
 
-```bash
-npm run dev      # Next.js dev server
-npm run build    # Static export to out/
-npm run lint     # ESLint (next/core-web-vitals + typescript configs)
-```
+## Repository Tools
 
-## MCP Tools: code-review-graph
+- Prefix shell commands with `rtk` per the global RTK instructions.
+- When code-review-graph tools are callable, use them before direct search for reviews and impact analysis; otherwise state the fallback and inspect the repository directly.
 
-**Always use code-review-graph MCP tools BEFORE Grep/Glob/Read.** The graph auto-updates on file changes.
+## Commit Attribution
 
-| Tool | Use when |
-|------|----------|
-| `detect_changes` | Reviewing code changes — risk-scored analysis |
-| `get_review_context` | Need source snippets for review |
-| `get_impact_radius` | Understanding blast radius of a change |
-| `get_affected_flows` | Finding which execution paths are impacted |
-| `query_graph` | Tracing callers, callees, imports, tests, dependencies |
-| `semantic_search_nodes` | Finding functions/classes by name or keyword |
-| `get_architecture_overview` | Understanding high-level codebase structure |
-| `refactor_tool` | Planning renames, finding dead code |
-
-### Workflow
-
-1. Graph auto-updates on file changes (via hooks).
-2. Use `detect_changes` for code review.
-3. Use `get_affected_flows` to understand impact.
-4. Use `query_graph` pattern="tests_for" to check coverage.
+- AI-authored commits must include `Co-Authored-By: <agent name> <agent email>` using the acting agent's own identity.

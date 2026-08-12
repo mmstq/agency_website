@@ -1,5 +1,7 @@
 # AnalyticsCard Animation Design & Decision Log
 
+> Historical implementation record. The behavior described here is implemented in `src/components/AnalyticsCard.tsx`; use the component, `DESIGN.md`, and `AGENTS.md` as current authority.
+
 ## Understanding Summary
 * **What is being built:** A dynamic, continuous physics-like rotation animation for the inner rings in `AnalyticsCard.tsx`.
 * **Why it exists:** To give the card an engaging, interactive "living" feel rather than a rigid stop-and-start animation.
@@ -29,7 +31,7 @@
 * **Alternatives considered:** Leaving it running infinitely in the background with a 0 delta.
 * **Why this option was chosen:** Leaving invisible frame loops running drains laptop/mobile batteries. The loop will only be active when an animation is visually happening.
 
-## Final Design (Implementation Plan)
+## Implemented Design
 1. Remove all `transition-transform` and `group-hover:rotate` classes from the inner rings in `AnalyticsCard.tsx`.
 2. Attach `useRef<HTMLDivElement>` to the two inner rings that need spinning, and a speed reference `const speed = useRef(0)`.
 3. Configure physics constants: `FAST_SPEED`, `SLOW_SPEED`, `DECELERATION_RATE`.

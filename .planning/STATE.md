@@ -3,11 +3,13 @@
 ## Current Position
 
 **Date:** 2026-08-09
-**Milestone:** v1.0 Agency Website — Fully Functional
-**Working on right now:** Portfolio carousel desktop visibility and mobile interaction fix; awaiting visual acceptance.
-**Next likely:** Resume visual acceptance of the completed six-card Services 3D system.
+**Milestone:** v1.0 Agency Website — Launch Readiness
+**Working on right now:** Repository documentation and agent-context files reconciled with the current implementation.
+**Next likely:** Visually accept the latest Portfolio interaction fixes, then resume acceptance of the six-card Services 3D system.
 
 ## Most Recent Work (newest first)
+
+- 2026-08-09 (documentation and agent-context reconciliation) — Replaced the starter README with project-specific setup, architecture, deployment, validation, and launch-gap guidance. Condensed root agent instructions, synchronized Roo/Claude/Gemini entry points, corrected stale PROJECT/PROGRESS claims, and marked pre-implementation research/design notes as historical. Verified ESLint, TypeScript, and a network-enabled webpack static build (13 generated pages); the default Turbopack build stalled at optimization in the restricted environment, so visual acceptance remains separate.
 
 - 2026-08-09 (portfolio carousel visibility and mobile smoothness) — Restored the all-projects phone deck on desktop by giving its absolutely-positioned image container an explicit responsive height instead of allowing it to collapse at `md`. Limited auto-cycling to the visible front project and unified touch/mouse drag handling under pointer events so phone swipes advance once without hidden decks animating. Verified ESLint, a 612px desktop deck, 430px mobile layout with zero horizontal overflow, one-step touch swipe, and no browser errors.
 
@@ -87,8 +89,10 @@
 - Animations: RAF + `useRef` DOM mutation + CSS by default. No Framer Motion. Three.js is restricted to `/404` Ballpit and explicitly approved isolated service scenes. GSAP only for `SplitText`.
 - `GlassSurface` is the universal card wrapper — don't create new card wrappers
 - Scroll reveals must re-trigger on every viewport entry (never `unobserve` after first reveal); honor `prefers-reduced-motion`
-- Newsletter API route is a stub (`console.log` only)
-- `recharts` installed but unused — remove or use
+- Contact submission uses Web3Forms; the public key is expected in client code, but dashboard domain locking is not verifiable from the repository
+- Newsletter UI and its dead API stub were removed; do not describe a newsletter as active unless it is deliberately reintroduced
+- ContactInfo and Footer still contain placeholder/generic social destinations that must be replaced before launch
+- No automated test framework is installed; lint/build/typecheck are not browser, touch, reduced-motion, or visual acceptance
 
 ---
 *Update this file each working session: bump the date, move the "working on" line to "Most Recent Work," set the new focus.*

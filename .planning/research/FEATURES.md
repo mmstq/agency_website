@@ -1,5 +1,7 @@
 # Features Research
 
+> **Historical discovery research (2026-04-30).** It records the rationale used before the multi-page site was built, not the current feature inventory. Use `../PROJECT.md`, `../STATE.md`, and `../PROGRESS.md` for current implementation and launch status.
+
 **Project:** Modall — B2B Tech Agency Website
 **Domain:** Premium B2B Technology Agency (custom web/mobile/AI/SaaS builds)
 **Researched:** 2026-04-30
