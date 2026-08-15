@@ -1,6 +1,6 @@
-# Modall Agency Website
+# Falcons Agency Website
 
-The marketing site for Modall, a B2B technology agency focused on web applications, mobile products, AI integrations, SaaS, infrastructure, and security. The visual direction is the near-black, glass-led “Digital Monolith” system documented in [`DESIGN.md`](DESIGN.md).
+The marketing site for Falcons, a B2B technology agency focused on web applications, mobile products, AI integrations, SaaS, infrastructure, and security. The visual direction is the near-black, glass-led “Digital Monolith” system documented in [`DESIGN.md`](DESIGN.md).
 
 The site is a Next.js 16 App Router project that exports to static HTML. All core routes are implemented; final visual acceptance remains open for the Services 3D system and the latest Portfolio interaction work.
 

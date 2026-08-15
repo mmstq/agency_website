@@ -1,13 +1,15 @@
-# State: Modall Agency Website
+# State: Falcons Agency Website
 
 ## Current Position
 
-**Date:** 2026-08-12
+**Date:** 2026-08-15
 **Milestone:** v1.0 Agency Website — Launch Readiness
-**Working on right now:** Process-section copy-to-monolith spacing refined and verified across mobile and desktop.
+**Working on right now:** Renamed agency and website brand identity from Modall to Falcons.
 **Next likely:** Visually accept the latest Portfolio interaction fixes, then resume acceptance of the six-card Services 3D system.
 
 ## Most Recent Work (newest first)
+
+- 2026-08-15 (agency brand rename to Falcons) — Renamed website identity and agency name from Modall to Falcons across package.json, metadata (title, OpenGraph, siteName, URLs), legal pages (terms, privacy), sitemap, robots, layout, navbar, footer, contact, hero, CTA, video card, testimonials, and planning documentation. Verified ESLint and static build export (`npm run build`).
 
 - 2026-08-12 (process monolith spacing) — Increased the responsive gap between the process introduction copy and the architectural 3D monolith without changing the sculpture size or motion. Browser geometry checks confirmed 20px of visible clearance at 430px, 24px at the supplied 1234px reference width, and 24px at 1440px, with zero horizontal overflow; focused ESLint and TypeScript checks passed.
 

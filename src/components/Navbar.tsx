@@ -166,7 +166,7 @@ export default function Navbar() {
                                     <line x1="4" y1="22" x2="4" y2="15"></line>
                                 </svg>
                             </div>
-                            <span className="text-xl font-bold tracking-tighter text-white">Modall</span>
+                            <span className="text-xl font-bold tracking-tighter text-white">Falcons</span>
                         </Link>
 
                         {/* Desktop Navigation Links */}

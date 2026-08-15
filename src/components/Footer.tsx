@@ -73,7 +73,7 @@ export default function Footer() {
                                     <line x1="4" y1="22" x2="4" y2="15"></line>
                                 </svg>
                             </div>
-                            <span className="text-2xl font-bold tracking-tighter text-white">Modall</span>
+                            <span className="text-2xl font-bold tracking-tighter text-white">Falcons</span>
                         </Link>
                         <p className="text-white/50 text-sm leading-relaxed max-w-sm mb-8">
                             High-end technology infrastructure for the next generation of enterprise applications. We build digital monoliths that stand the test of time.
@@ -117,7 +117,7 @@ export default function Footer() {
                 {/* Bottom Bar */}
                 <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
                     <p className="text-white/30 text-xs font-medium uppercase tracking-widest">
-                        © {currentYear} Modall Agency. All rights reserved.
+                        © {currentYear} Falcons Agency. All rights reserved.
                     </p>
                     <div className="flex items-center gap-8">
                         <Link href="/privacy" className="text-white/30 hover:text-white transition-colors text-[10px] uppercase tracking-[0.15em] font-bold">

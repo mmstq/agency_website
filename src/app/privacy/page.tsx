@@ -6,7 +6,7 @@ import ScrollReveal from '@/components/ScrollReveal';
 
 export const metadata: Metadata = {
     title: 'Privacy Policy',
-    description: 'How Modall collects, uses and protects your information.',
+    description: 'How Falcons collects, uses and protects your information.',
 };
 
 /* Legal page layout matches the rest of the site: animated SplitText hero,
@@ -139,10 +139,10 @@ export default function PrivacyPage() {
                                     <p className="text-white/50 text-base leading-relaxed">
                                         Questions about this policy or your data? Email{' '}
                                         <a
-                                            href="mailto:hello@modall.agency"
+                                            href="mailto:hello@falcons.agency"
                                             className="text-white/80 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white"
                                         >
-                                            hello@modall.agency
+                                            hello@falcons.agency
                                         </a>{' '}
                                         or reach us through the{' '}
                                         <Link

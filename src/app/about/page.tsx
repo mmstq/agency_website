@@ -7,7 +7,7 @@ import SplitText from '@/components/SplitText';
 
 export const metadata: Metadata = {
     title: 'About Us',
-    description: 'Learn about Modall, a high-end B2B infrastructure agency built on technical authority.',
+    description: 'Learn about Falcons, a high-end B2B infrastructure agency built on technical authority.',
 };
 
 const VALUES = [
@@ -75,7 +75,7 @@ export default function AboutPage() {
                     </h1>
                     <ScrollReveal delay="delay-100">
                         <p className="text-white/50 text-xl md:text-3xl font-medium leading-tight">
-                            Modall was founded on a simple premise: B2B infrastructure should be as high-fidelity and performant as the world&apos;s best consumer experiences.
+                            Falcons was founded on a simple premise: B2B infrastructure should be as high-fidelity and performant as the world&apos;s best consumer experiences.
                         </p>
                     </ScrollReveal>
                 </div>
@@ -107,7 +107,7 @@ export default function AboutPage() {
                         <div className="relative aspect-square md:aspect-auto rounded-[32px] overflow-hidden h-full">
                             <Image 
                                 src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2940&auto=format&fit=crop"
-                                alt="Modall Headquarters"
+                                alt="Falcons Headquarters"
                                 fill
                                 className="object-cover grayscale"
                             />

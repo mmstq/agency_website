@@ -7,7 +7,7 @@ import type { MetadataRoute } from 'next';
 // Required by output: 'export' — the route is rendered once at build time.
 export const dynamic = 'force-static';
 
-const BASE = 'https://modall.agency';
+const BASE = 'https://falcons.agency';
 
 export default function sitemap(): MetadataRoute.Sitemap {
     const lastModified = new Date();
