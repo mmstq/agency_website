@@ -37,7 +37,7 @@ export default function HomeCTA() {
                             />
                         </h2>
                         <p className="text-white/50 text-xl md:text-2xl max-w-2xl mb-12 font-medium">
-                            Join the ranks of high-performance technical teams who trust Modall for their critical infrastructure.
+                            Join the ranks of high-performance technical teams who trust Falcons for their critical infrastructure.
                         </p>
                         
                         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 w-full sm:w-auto items-center justify-center">

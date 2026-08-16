@@ -15,20 +15,20 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://modall.agency'),
+  metadataBase: new URL('https://falcons.agency'),
   title: {
-    default: "Modall | Digital Monolith Infrastructure",
-    template: "%s | Modall"
+    default: "Falcons | Digital Monolith Infrastructure",
+    template: "%s | Falcons"
   },
   description: "High-end B2B technology infrastructure agency building custom web applications, mobile solutions, and AI integrations.",
   icons: {
     icon: [{ url: '/images/modall-falcon-logo.jpeg', type: 'image/jpeg' }],
   },
   openGraph: {
-    title: "Modall | Digital Monolith Infrastructure",
+    title: "Falcons | Digital Monolith Infrastructure",
     description: "High-end B2B technology infrastructure agency.",
-    url: "https://modall.agency",
-    siteName: "Modall",
+    url: "https://falcons.agency",
+    siteName: "Falcons",
     locale: "en_US",
     type: "website",
   },

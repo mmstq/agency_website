@@ -6,7 +6,7 @@ import SplitText from '@/components/SplitText';
 
 export const metadata: Metadata = {
     title: 'Contact',
-    description: 'Connect with Modall for high-end technology infrastructure and custom digital monoliths.',
+    description: 'Connect with Falcons for high-end technology infrastructure and custom digital monoliths.',
 };
 
 export default function ContactPage() {

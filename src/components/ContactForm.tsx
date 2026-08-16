@@ -51,8 +51,8 @@ export default function ContactForm() {
                 },
                 body: JSON.stringify({
                     access_key: WEB3FORMS_ACCESS_KEY,
-                    subject: `New project brief — ${formData.name || 'Modall website'}`,
-                    from_name: 'Modall Website',
+                    subject: `New project brief — ${formData.name || 'Falcons website'}`,
+                    from_name: 'Falcons Website',
                     replyto: formData.email, // hitting Reply reaches the prospect, not the site inbox
                     name: formData.name,
                     email: formData.email,

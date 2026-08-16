@@ -6,14 +6,14 @@ export default function ContactInfo() {
         {
             icon: Mail,
             label: 'Email us',
-            value: 'hello@modall.agency',
-            href: 'mailto:hello@modall.agency',
+            value: 'hello@falcons.agency',
+            href: 'mailto:hello@falcons.agency',
             desc: 'For general inquiries and project briefs.',
         },
         {
             icon: Calendar,
             label: 'Schedule a call',
-            value: 'Calendly / Modall',
+            value: 'Calendly / Falcons',
             href: '#',
             desc: 'Book a 15-minute technical discovery session.',
         },

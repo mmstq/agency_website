@@ -160,7 +160,7 @@ export default function Navbar() {
                                     className="object-cover"
                                 />
                             </div>
-                            <span className="text-xl font-bold tracking-tighter text-white">Modall</span>
+                            <span className="text-xl font-bold tracking-tighter text-white">Falcons</span>
                         </Link>
 
                         {/* Desktop Navigation Links */}

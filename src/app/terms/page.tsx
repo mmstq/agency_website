@@ -6,7 +6,7 @@ import ScrollReveal from '@/components/ScrollReveal';
 
 export const metadata: Metadata = {
     title: 'Terms of Service',
-    description: 'The terms that govern your use of the Modall website and services.',
+    description: 'The terms that govern your use of the Falcons website and services.',
 };
 
 /* Legal page layout matches the rest of the site: animated SplitText hero,
@@ -32,7 +32,7 @@ const SECTIONS = [
         n: '03',
         title: 'Intellectual property',
         body: [
-            'All content on this site — copy, design, code, imagery and case-study material — belongs to Modall or its clients and is protected by copyright. Client work is shown with permission and remains the property of the respective client where so agreed.',
+            'All content on this site — copy, design, code, imagery and case-study material — belongs to Falcons or its clients and is protected by copyright. Client work is shown with permission and remains the property of the respective client where so agreed.',
         ],
     },
     {
@@ -53,7 +53,7 @@ const SECTIONS = [
         n: '06',
         title: 'Limitation of liability',
         body: [
-            'To the maximum extent permitted by law, Modall is not liable for any indirect or consequential loss arising from your use of this website. Your statutory rights are unaffected.',
+            'To the maximum extent permitted by law, Falcons is not liable for any indirect or consequential loss arising from your use of this website. Your statutory rights are unaffected.',
         ],
     },
     {
@@ -145,10 +145,10 @@ export default function TermsPage() {
                                     <p className="text-white/50 text-base leading-relaxed">
                                         Questions about these terms? Email{' '}
                                         <a
-                                            href="mailto:hello@modall.agency"
+                                            href="mailto:hello@falcons.agency"
                                             className="text-white/80 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white"
                                         >
-                                            hello@modall.agency
+                                            hello@falcons.agency
                                         </a>{' '}
                                         or reach us through the{' '}
                                         <Link

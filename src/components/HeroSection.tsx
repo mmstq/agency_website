@@ -55,7 +55,7 @@ export default function HeroSection() {
 
                     <ScrollReveal delay="delay-200">
                         <p className="mt-7 max-w-3xl text-center text-base leading-8 text-white/62 md:text-xl">
-                            Modall designs and ships high-performance React websites with sharp storytelling, elegant motion, and conversion systems clients can feel immediately.
+                            Falcons designs and ships high-performance React websites with sharp storytelling, elegant motion, and conversion systems clients can feel immediately.
                         </p>
                     </ScrollReveal>
 

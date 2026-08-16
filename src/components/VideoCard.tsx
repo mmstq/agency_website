@@ -2,9 +2,9 @@
 import React, { useRef, useState, useEffect } from 'react';
 import GlassSurface from './GlassSurface';
 
-const ModallIcon = ({ className = "" }: { className?: string }) => (
+const FalconsIcon = ({ className = "" }: { className?: string }) => (
     <svg viewBox="0 0 32 32" fill="currentColor" className={className}>
-        <path d="M6 26V9.16l8.8 11.2a1 1 0 0 0 1.6 0L26 9.16V26h4V6h-4.8l-9.2 11.7L6.8 6H2v20h4z" />
+        <path d="M6 26V6h18v4H10v6h12v4H10v6H6z" />
     </svg>
 );
 
@@ -95,10 +95,10 @@ export default function VideoCard() {
             {/* Header Layer */}
             <div className="absolute top-0 left-0 w-full flex justify-between items-start p-8 z-10">
                 <h2 className="font-bold font-serif text-[32px] leading-[1.1] tracking-tight text-white max-w-[150px]">
-                    Modall Explained
+                    Falcons Explained
                 </h2>
                 <div className="w-12 h-12 flex items-center justify-center opacity-40">
-                    <ModallIcon className="text-white w-8 h-8" />
+                    <FalconsIcon className="text-white w-8 h-8" />
                 </div>
             </div>
 
