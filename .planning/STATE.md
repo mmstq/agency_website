@@ -2,12 +2,18 @@
 
 ## Current Position
 
-**Date:** 2026-08-12
+**Date:** 2026-08-16
 **Milestone:** v1.0 Agency Website — Launch Readiness
-**Working on right now:** Process-section copy-to-monolith spacing refined and verified across mobile and desktop.
+**Working on right now:** Falcon artwork adopted as the global Modall brand mark.
 **Next likely:** Visually accept the latest Portfolio interaction fixes, then resume acceptance of the six-card Services 3D system.
 
 ## Most Recent Work (newest first)
+
+- 2026-08-16 (Falcon brand mark) — Replaced the temporary flag glyph with the supplied Falcon artwork in the navbar and footer brand lockups, and registered the same asset as the browser icon without changing the Modall wordmark or layout.
+
+- 2026-08-16 (adaptive sticky navbar) — Removed scroll-direction hiding. The navbar now starts as the original inset rounded glass pill, then transitions into an always-visible, fully opaque `#1f1f1f` full-width bar at the top of the viewport with square outer corners and no hard border once the page scrolls, while preserving the Services dropdown and mobile drawer.
+
+- 2026-08-15 (portfolio navbar restored) — Restored the global navbar across both all-project and single-project Portfolio views while keeping the Portfolio footer suppressed. Adjusted the single-project viewport height and top clearance so its navigation rail remains below the sticky navbar.
 
 - 2026-08-12 (process monolith spacing) — Increased the responsive gap between the process introduction copy and the architectural 3D monolith without changing the sculpture size or motion. Browser geometry checks confirmed 20px of visible clearance at 430px, 24px at the supplied 1234px reference width, and 24px at 1440px, with zero horizontal overflow; focused ESLint and TypeScript checks passed.
 

@@ -1,5 +1,6 @@
 'use client';
 import React from 'react';
+import Image from 'next/image';
 import Link from 'next/link';
 import BubbleField from './BubbleField';
 
@@ -67,11 +68,14 @@ export default function Footer() {
                     {/* Brand Column */}
                     <div className="lg:col-span-2">
                         <Link href="/" className="flex items-center gap-3 mb-6 group">
-                            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center transition-transform group-hover:scale-105">
-                                <svg suppressHydrationWarning xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1c1c" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
-                                    <line x1="4" y1="22" x2="4" y2="15"></line>
-                                </svg>
+                            <div className="relative h-10 w-10 overflow-hidden rounded-xl bg-[#f7f7f2] transition-transform group-hover:scale-105">
+                                <Image
+                                    src="/images/modall-falcon-logo.jpeg"
+                                    alt=""
+                                    fill
+                                    sizes="40px"
+                                    className="object-cover"
+                                />
                             </div>
                             <span className="text-2xl font-bold tracking-tighter text-white">Modall</span>
                         </Link>

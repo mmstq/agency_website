@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
+import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import GlassSurface from './GlassSurface';
@@ -15,6 +16,15 @@ export default function Navbar() {
     const servicesBtnRef = useRef<HTMLButtonElement>(null);
     const dropdownPanelRef = useRef<HTMLDivElement>(null);
     const mobileMenuRef = useRef<HTMLDivElement>(null);
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const updateNavbarState = () => setIsScrolled(window.scrollY > 8);
+
+        updateNavbarState();
+        window.addEventListener('scroll', updateNavbarState, { passive: true });
+        return () => window.removeEventListener('scroll', updateNavbarState);
+    }, []);
 
     // Anchor the portal dropdown beneath the Services button
     const updateDropdownPos = useCallback(() => {
@@ -22,32 +32,6 @@ export default function Navbar() {
         if (rect) {
             setDropdownPos({ top: rect.bottom + 12, left: rect.left + rect.width / 2 });
         }
-    }, []);
-
-    // Hide/show navbar on scroll
-    const [isVisible, setIsVisible] = useState(true);
-    const lastScrollY = useRef(0);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            const currentScrollY = window.scrollY;
-            
-            if (currentScrollY < 50) {
-                setIsVisible(true);
-            } else if (currentScrollY > lastScrollY.current + 5) {
-                // Scrolling down - hide navbar & close dropdown
-                setIsVisible(false);
-                setServicesOpen(false);
-            } else if (currentScrollY < lastScrollY.current - 5) {
-                // Scrolling up - show navbar
-                setIsVisible(true);
-            }
-
-            lastScrollY.current = currentScrollY;
-        };
-
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     const toggleServices = useCallback(() => {
@@ -137,22 +121,28 @@ export default function Navbar() {
         return false;
     };
 
-    const shouldShow = isVisible || mobileOpen;
-
     return (
         <>
-            <div className={`site-navbar sticky top-10 md:top-8 z-50 w-full flex justify-center px-6 md:px-24 lg:px-48 pointer-events-none transition-all duration-300 ease-in-out ${shouldShow ? 'translate-y-0 opacity-100' : '-translate-y-28 opacity-0 pointer-events-none'}`}>
+            <div className={`site-navbar sticky z-50 flex w-full justify-center pointer-events-none transition-all duration-300 ease-out ${isScrolled ? 'top-0 px-0' : 'top-10 px-6 md:top-8 md:px-24 lg:px-48'}`}>
                 <GlassSurface
                     width="100%"
                     height={72}
-                    borderRadius={999}
+                    borderRadius={isScrolled ? 0 : 999}
                     backgroundOpacity={0.18}
                     saturation={1.65}
                     distortionScale={-120}
                     blur={12}
                     brightness={58}
                     opacity={0.88}
-                    className="pointer-events-auto w-full"
+                    className={`${isScrolled ? 'glass-surface--flush' : ''} pointer-events-auto w-full`}
+                    style={{
+                        background: isScrolled ? '#1f1f1f' : undefined,
+                        backdropFilter: isScrolled ? 'none' : undefined,
+                        WebkitBackdropFilter: isScrolled ? 'none' : undefined,
+                        border: isScrolled ? 'none' : undefined,
+                        boxShadow: isScrolled ? '0 12px 32px rgba(0, 0, 0, 0.28)' : undefined,
+                        transition: 'border-radius 300ms ease-out, background-color 300ms ease-out, box-shadow 300ms ease-out',
+                    }}
                     simplified={true}
                 >
 
@@ -160,11 +150,15 @@ export default function Navbar() {
 
                         {/* Brand Identity */}
                         <Link href="/" className="flex items-center gap-3 group" onClick={closeAll}>
-                            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center transition-transform group-hover:scale-105">
-                                <svg suppressHydrationWarning xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1a1c1c" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                    <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"></path>
-                                    <line x1="4" y1="22" x2="4" y2="15"></line>
-                                </svg>
+                            <div className="relative h-8 w-8 overflow-hidden rounded-lg bg-[#f7f7f2] transition-transform group-hover:scale-105">
+                                <Image
+                                    src="/images/modall-falcon-logo.jpeg"
+                                    alt=""
+                                    fill
+                                    priority
+                                    sizes="32px"
+                                    className="object-cover"
+                                />
                             </div>
                             <span className="text-xl font-bold tracking-tighter text-white">Modall</span>
                         </Link>

@@ -48,7 +48,7 @@ export default function PortfolioSingle({ initialId }: { initialId?: string }) {
     const project = projects[active];
 
     return (
-        <section id="work" className="relative flex min-h-[100svh] flex-col justify-between py-4 md:h-[100svh] md:overflow-hidden md:py-6">
+        <section id="work" className="relative flex min-h-[calc(100svh-4.5rem)] flex-col justify-between pb-4 pt-12 md:h-[calc(100svh-4.5rem)] md:overflow-hidden md:pb-6 md:pt-10">
             {/* Numbered rail — full width left to right */}
             <div className="w-full px-6 md:px-12 lg:px-16 shrink-0">
                 <div

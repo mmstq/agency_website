@@ -21,6 +21,9 @@ export const metadata: Metadata = {
     template: "%s | Modall"
   },
   description: "High-end B2B technology infrastructure agency building custom web applications, mobile solutions, and AI integrations.",
+  icons: {
+    icon: [{ url: '/images/modall-falcon-logo.jpeg', type: 'image/jpeg' }],
+  },
   openGraph: {
     title: "Modall | Digital Monolith Infrastructure",
     description: "High-end B2B technology infrastructure agency.",

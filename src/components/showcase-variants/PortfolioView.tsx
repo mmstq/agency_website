@@ -17,7 +17,8 @@ import { projects } from '@/lib/data/projects';
    - `?p=koor` (from a homepage hover-list row) → single-project mode
      (one project + the numbered rail), keyed so a new project remounts cleanly.
 
-   The navbar is hidden on /portfolio (see MasterLayout).
+   The global navbar remains available on /portfolio; only the footer is hidden
+   by MasterLayout so visitors keep a clear route back into the site.
    ───────────────────────────────────────────────────────────────────────── */
 
 export default function PortfolioView() {
@@ -26,7 +27,7 @@ export default function PortfolioView() {
 
     if (single) {
         return (
-            <div className="flex min-h-[100svh] flex-col md:h-[100svh] md:overflow-hidden">
+            <div className="flex min-h-[calc(100svh-4.5rem)] flex-col md:h-[calc(100svh-4.5rem)] md:overflow-hidden">
                 <PortfolioSingle key={pid} initialId={pid} />
             </div>
         );
@@ -35,7 +36,7 @@ export default function PortfolioView() {
     return (
         // No bottom padding: the stack must end exactly where the last card
         // pins, so there's no dead scroll / empty space past it (the footer is
-        // also hidden on /portfolio — see MasterLayout).
+        // hidden on /portfolio — see MasterLayout).
         <div>
             {/* Hero is passed into the stack so it becomes the pinned bottom
                 layer — project 1 rises up and covers it on scroll (see

@@ -24,7 +24,7 @@
 
 | Feature | Status | Current state |
 |---------|--------|---------------|
-| Navbar and mobile drawer | ✅ | Real routes, Services dropdown, active states, scroll-hide behavior |
+| Navbar and mobile drawer | ✅ | Floating glass pill at page top; always-visible opaque, borderless full-width sticky bar after scrolling |
 | Project/contact CTAs | ✅ | Navbar, Services, and Home CTA paths resolve to `/contact` |
 | Contact submission | ✅ | Web3Forms, honeypot, reply-to, success and error states |
 | Scroll reveals | ✅ | Replay on viewport re-entry and honor reduced motion |
