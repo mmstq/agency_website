@@ -30,9 +30,9 @@ A credible, conversion-focused agency site that shows Falcons's capabilities and
 - [x] Static Netlify export from `out/`
 - [~] Six Services procedural scenes implemented; final visual acceptance pending
 - [~] Portfolio stack/deck and mobile gesture work implemented; final visual acceptance pending
-- [~] Contact page implemented; placeholder HQ/social destinations still need real details
+- [~] Contact page implemented; verified social profiles are live, while Calendly/HQ destinations still need real details
 - [~] Blog route implemented; content depth and source remain undecided
-- [ ] Replace Footer root social URLs with real Modall profiles
+- [x] Replace Footer root social URLs with verified Falcons profiles
 - [ ] Decide whether Case Studies remain inside Portfolio or gain dedicated routes
 - [ ] Add browser-level regression coverage after interaction design stabilizes
 
@@ -65,8 +65,7 @@ A credible, conversion-focused agency site that shows Falcons's capabilities and
 
 ## Known Issues and Debt
 
-- `ContactInfo` still contains placeholder `#` destinations and generic location/social labels.
-- Footer social links point to the service homepages rather than Modall profiles.
+- `ContactInfo` still contains placeholder `#` destinations for Calendly and Infrastructure HQ.
 - The Web3Forms public key is intentionally client-visible; dashboard domain-lock status is not verified in-repo.
 - Blog content is shallow and has no finalized content workflow.
 - There is no automated test or browser-regression suite.

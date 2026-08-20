@@ -14,7 +14,7 @@
 | `/services` | 🟡 | Six procedural scenes and fallbacks implemented; final visual acceptance pending |
 | `/portfolio` | 🟡 | Showcase variants and latest deck/gesture fixes implemented; final visual acceptance pending |
 | `/blog` | 🟡 | Route exists; content depth/source undecided |
-| `/contact` | 🟡 | Web3Forms submission works; ContactInfo still contains placeholder destinations |
+| `/contact` | 🟡 | Web3Forms, email, and social profiles are live; Calendly and HQ destinations remain placeholders |
 | `/privacy` | ✅ | Native Digital Monolith layout |
 | `/terms` | ✅ | Native Digital Monolith layout |
 | 404 | ✅ | Interactive Three.js Ballpit with readability fallback |
@@ -55,8 +55,8 @@
 ## Launch Debt
 
 - 🟡 Complete visual acceptance for Services and the latest Portfolio changes.
-- 🟡 Replace `ContactInfo` placeholder `#` links and generic HQ/social labels.
-- 🟡 Replace Footer root URLs (`x.com`, `linkedin.com`, `github.com`) with real Modall profiles.
+- 🟡 Replace the remaining `ContactInfo` placeholder Calendly and HQ destinations.
+- ✅ Footer and Contact social links use the verified Falcons Instagram and LinkedIn profiles.
 - 🟡 Confirm Web3Forms domain locking in its dashboard; this cannot be verified from the repository.
 - 🟡 Decide Blog content depth and ownership.
 - ⬜ Decide whether dedicated Case Studies routes are needed.
@@ -74,7 +74,7 @@
 
 1. Visually accept or revise the Portfolio desktop/mobile behavior.
 2. Visually accept or revise all six Services scenes and fallbacks.
-3. Replace placeholder contact and social destinations.
+3. Replace the remaining placeholder Calendly and HQ destinations.
 4. Decide Blog and dedicated Case Studies scope.
 5. Add browser regression coverage once interaction design is accepted.
 

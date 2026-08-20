@@ -40,10 +40,10 @@
        (transform + opacity only → 60fps, no layout thrash).
 
    Front-card detection: one IntersectionObserver watches all six cards and
-   keeps the index with the largest visible ratio. That index is committed to
-   React state INSIDE the observer callback (never synchronously in an effect
-   body) and passed as `active` to each DetailLayout, so only the front card's
-   phone carousel cycles.
+   picks the highest-index card that has crossed a small activation line near
+   the top of the viewport. That index is committed to React state INSIDE the
+   observer callback (never synchronously in an effect body) and passed as
+   `active` to each DetailLayout, so only the front card's phone carousel cycles.
 
    SSR-safe: all window/document/IO access lives inside effects and is cleaned
    up on unmount. prefers-reduced-motion keeps the cards stacked but disables
@@ -231,30 +231,25 @@ export default function StackScaleBack({ hero }: { hero?: ReactNode }) {
 
     // ── Front-card detection via IntersectionObserver ────────────────────────
     useEffect(() => {
-        const ratios = new Array<number>(TOTAL).fill(0);
-
         const io = new IntersectionObserver(
-            (entries) => {
-                for (const entry of entries) {
-                    const idx = Number((entry.target as HTMLElement).dataset.index ?? '-1');
-                    if (idx >= 0) ratios[idx] = entry.intersectionRatio;
-                }
-                // Pick the FRONT-MOST card of the stack. Every card is
-                // `position: sticky; top:0; height:100svh`, so once the next card
-                // rises and covers the current one, BOTH are pinned to the full
-                // viewport and report intersectionRatio ≈ 1.0 at the same time
-                // (IO measures viewport intersection, not occlusion). The visible
-                // front is the TOPMOST of those — the HIGHEST index tied at the
-                // max ratio — so `>=` lets later cards win the tie. A strict `>`
-                // would always keep index 0, freezing `active` on project 1 so
-                // only its phone carousel ever cycles.
+            () => {
+                // Intersection ratios are not reliable tie-breakers for this
+                // sticky stack: a fully pinned card commonly reports 0.9999 and
+                // never crosses the observer's `1` threshold. That left the final
+                // project visually on top while project 5 remained `active`, so
+                // project 6 stayed inert and its deck could neither tick nor click.
+                //
+                // Instead, choose the highest-index card that has reached the
+                // top activation band. Covered cards also sit at top:0, so the
+                // highest qualifying index is deterministically the visible one.
+                const cardHeight = cardRefs.current[0]?.clientHeight || window.innerHeight || 1;
+                const activationLine = cardHeight * 0.12;
                 let best = 0;
-                let bestRatio = -1;
                 for (let i = 0; i < TOTAL; i++) {
-                    if (ratios[i] >= bestRatio) {
-                        bestRatio = ratios[i];
-                        best = i;
-                    }
+                    const card = cardRefs.current[i];
+                    if (!card) continue;
+                    const rect = card.getBoundingClientRect();
+                    if (rect.bottom > 0 && rect.top <= activationLine) best = i;
                 }
 
                 // State is updated INSIDE the observer callback (not in an

@@ -1,13 +1,14 @@
 import React from 'react';
-import { Mail, Calendar, MapPin, Globe, Cpu, Zap } from 'lucide-react';
+import { Mail, Calendar, MapPin } from 'lucide-react';
+import { InstagramIcon, LinkedInIcon } from './BrandIcons';
 
 export default function ContactInfo() {
     const contactMethods = [
         {
             icon: Mail,
             label: 'Email us',
-            value: 'hello@falcons.agency',
-            href: 'mailto:hello@falcons.agency',
+            value: 'info@teamfalcon.in',
+            href: 'mailto:info@teamfalcon.in',
             desc: 'For general inquiries and project briefs.',
         },
         {
@@ -27,9 +28,8 @@ export default function ContactInfo() {
     ];
 
     const socials = [
-        { icon: Globe, href: '#', label: 'Network' },
-        { icon: Cpu, href: '#', label: 'Systems' },
-        { icon: Zap, href: '#', label: 'Speed' },
+        { icon: InstagramIcon, href: 'https://www.instagram.com/teamfalconhq/', label: 'Instagram' },
+        { icon: LinkedInIcon, href: 'https://www.linkedin.com/company/weasagency/?viewAsMember=true', label: 'LinkedIn' },
     ];
 
     return (
@@ -67,6 +67,8 @@ export default function ContactInfo() {
                         <a
                             key={social.label}
                             href={social.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:border-white/20 hover:bg-white/10 transition-all"
                             aria-label={social.label}
                         >

@@ -26,9 +26,7 @@ export default function Home() {
       <ShowcaseHoverList />
 
       {/* 6. Process Section */}
-      <ScrollReveal variant="from-right">
-        <ProcessSection />
-      </ScrollReveal>
+      <ProcessSection />
 
       {/* 7. Testimonials Section */}
       <ScrollReveal>

@@ -96,6 +96,7 @@ function ProcessCardVisual({ index }: { index: number }) {
 }
 
 export default function ProcessSection() {
+    const sectionRef = useRef<HTMLElement>(null);
     const monolithRef = useRef<HTMLDivElement>(null);
     const objectRef = useRef<HTMLDivElement>(null);
     const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
@@ -108,6 +109,26 @@ export default function ProcessSection() {
         layerRefs.current.forEach((layer, index) => {
             layer?.classList.toggle(styles.activeLayer, index === activeIndex);
         });
+    }, []);
+
+    useEffect(() => {
+        const section = sectionRef.current;
+        if (!section) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                section.classList.toggle(styles.motionActive, entry.isIntersecting);
+            },
+            {
+                // Warm the small compositor layers shortly before they enter the
+                // viewport, then pause them again once the section is well away.
+                rootMargin: '240px 0px',
+                threshold: 0,
+            },
+        );
+
+        observer.observe(section);
+        return () => observer.disconnect();
     }, []);
 
     useEffect(() => {
@@ -199,7 +220,7 @@ export default function ProcessSection() {
     }, []);
 
     return (
-        <section id="process" className="py-24 relative overflow-hidden scroll-mt-24">
+        <section ref={sectionRef} id="process" className="py-24 relative overflow-hidden scroll-mt-24">
             <div className="w-full px-6 md:px-12">
                 <div className="flex flex-col lg:flex-row gap-16 items-start">
                     <div className="lg:sticky lg:top-28 lg:w-1/3">

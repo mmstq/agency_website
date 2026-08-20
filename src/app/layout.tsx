@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   },
   description: "High-end B2B technology infrastructure agency building custom web applications, mobile solutions, and AI integrations.",
   icons: {
-    icon: [{ url: '/images/modall-falcon-logo.jpeg', type: 'image/jpeg' }],
+    icon: [{ url: '/images/modall-falcon-favicon.png', type: 'image/png' }],
   },
   openGraph: {
     title: "Falcons | Digital Monolith Infrastructure",

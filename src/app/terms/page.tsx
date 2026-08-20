@@ -145,10 +145,10 @@ export default function TermsPage() {
                                     <p className="text-white/50 text-base leading-relaxed">
                                         Questions about these terms? Email{' '}
                                         <a
-                                            href="mailto:hello@falcons.agency"
+                                            href="mailto:info@teamfalcon.in"
                                             className="text-white/80 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white"
                                         >
-                                            hello@falcons.agency
+                                            info@teamfalcon.in
                                         </a>{' '}
                                         or reach us through the{' '}
                                         <Link

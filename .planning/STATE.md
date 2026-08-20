@@ -2,12 +2,30 @@
 
 ## Current Position
 
-**Date:** 2026-08-16
+**Date:** 2026-08-19
 **Milestone:** v1.0 Agency Website — Launch Readiness
-**Working on right now:** Falcon artwork adopted as the global Modall brand mark.
-**Next likely:** Visually accept the latest Portfolio interaction fixes, then resume acceptance of the six-card Services 3D system.
+**Working on right now:** Home Selected Work hover carousel repaired and visually checked on desktop.
+**Next likely:** Get visual acceptance on the latest Portfolio and Process interaction fixes, then resume acceptance of the six-card Services 3D system.
 
 ## Most Recent Work (newest first)
+
+- 2026-08-19 (Selected Work linear deceleration) — Replaced the hover train's easing-shaped arrival with true constant deceleration inside the existing continuous RAF loop. The train now starts substantially faster, slows at a uniform rate instead of lingering near a stop, and reaches a slightly quicker 52px/s marquee velocity without a phase boundary. Live 1440px frame sampling confirmed a steady velocity progression from roughly 1,478px/s through 1,247, 857, 462, and 189px/s into a continuous 52px/s loop with no direction change; focused ESLint and TypeScript checks passed.
+
+- 2026-08-18 (home Selected Work hover carousel) — Updated the displayed work period to 2025 / 2026, removed the cursor-following screenshot panel and all active-row opacity dimming, then replaced the temporary two-image crossfade with a full-gallery screenshot train. On hover the complete train enters quickly from beyond the right edge and progressively decelerates into the slow seamless right-to-left marquee. One continuous RAF-driven Hermite motion curve now owns both phases, removing the perceptible stop caused by switching CSS animations. The train measures each runway and renders enough repeated gallery sets to stay continuously filled on ultra-wide screens, shifting by exactly one gallery per infinite cycle; reduced motion holds it static and the existing mobile tap-to-expand strip remains unchanged. Focused ESLint, TypeScript, the 13-page static production build, live 1440px frame sampling across the former stop point, a 5000px loop-coverage check, and a 430px zero-overflow check passed.
+
+- 2026-08-17 (final project carousel activation) — Replaced fragile sticky-card intersection-ratio tie-breaking with a deterministic top activation band. The final SSC Ai card now becomes the true active card instead of leaving Spotted active underneath, so it is no longer inert and both its automatic screenshot cycle and click/tap advance work. Verified desktop auto-cycle screen 1→2 and click screen 2→3, plus mobile SSC activation and gallery opening; focused ESLint and TypeScript checks passed.
+
+- 2026-08-17 (process cold-entry performance) — Removed the oversized whole-section ScrollReveal transform, replaced the monolith's large blur filters with equivalent gradients, removed filter transitions from the stacked slabs/card scenes, and paused process motion outside a 240px viewport margin. Preserved the split heading, 3D monolith, active-step behavior, and wide-card micro-scenes. Focused ESLint, TypeScript, static production build, desktop/mobile browser renders, and zero-overflow checks passed; three cold-entry runs at each breakpoint recorded no frame gap above 32ms (worst observed 9.4ms).
+
+- 2026-08-17 (compact sticky navbar) — Reduced only the full-width scrolled navbar from 72px to 60px with a smooth height transition. The original 72px floating pill and its Portfolio clearance remain unchanged.
+
+- 2026-08-17 (mobile navigation repair) — Moved the mobile menu into a body-level portal so shared glass positioning cannot push it into page flow, then presented it as a compact 80vw/320px-capped right-side drawer over a dimmed page. Added Home as the first mobile-only route so the active state correctly represents `/`, replaced overlapping controls with one compact Menu header and close button, condensed service entries into navigation rows, and added contained scrolling, body scroll lock, focus return, Escape handling, dialog semantics, and reduced-motion support.
+
+- 2026-08-17 (mobile footer columns) — Kept the brand/social block full-width while placing Solutions and Company side by side on mobile, with Solutions left-aligned and Company anchored to the right edge; desktop alignment remains unchanged.
+
+- 2026-08-17 (contact and social profiles) — Replaced Footer and Contact placeholder social links/icons with the verified Falcons Instagram and LinkedIn profiles, and changed the public contact email to `info@teamfalcon.in` across Contact, Privacy, and Terms.
+
+- 2026-08-17 (Falcon favicon polish) — Replaced the raw square JPEG browser icon with a transparent Falcon favicon and matching multi-size ICO, removing the white tile while preserving the supplied navbar and footer artwork.
 
 - 2026-08-16 (Falcon brand mark) — Replaced the temporary flag glyph with the supplied Falcon artwork in the navbar and footer brand lockups, and registered the same asset as the browser icon without changing the Modall wordmark or layout.
 
@@ -99,7 +117,7 @@
 - Scroll reveals must re-trigger on every viewport entry (never `unobserve` after first reveal); honor `prefers-reduced-motion`
 - Contact submission uses Web3Forms; the public key is expected in client code, but dashboard domain locking is not verifiable from the repository
 - Newsletter UI and its dead API stub were removed; do not describe a newsletter as active unless it is deliberately reintroduced
-- ContactInfo and Footer still contain placeholder/generic social destinations that must be replaced before launch
+- ContactInfo still contains placeholder Calendly and Infrastructure HQ destinations that must be replaced before launch
 - No automated test framework is installed; lint/build/typecheck are not browser, touch, reduced-motion, or visual acceptance
 
 ---

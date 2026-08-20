@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ArrowUpRight } from 'lucide-react';
@@ -10,69 +10,47 @@ import SplitText from '../SplitText';
 /**
  * ShowcaseHoverList — editorial hover-reveal list.
  *
- * Big project titles stacked as rows (01–06). Hovering a row dims the others and
- * brightens the active one, while a floating preview panel reveals that
- * project's screenshots and smoothly tracks toward the cursor via a rAF lerp
- * (the parallax pattern reused from CaseStudyPreviewRow.tsx).
+ * Big project titles are stacked as rows (01–06). Hovering a desktop row sends
+ * its full screenshot train quickly in from the right, eases it into the space
+ * beside the project copy, then keeps it moving right-to-left as a slow seamless
+ * marquee. The other projects keep their full visual weight.
  *
- * Touch / no-hover fallback: the floating panel is hidden; tapping a row toggles
- * an inline screenshot strip, and a gentle auto-cycle keeps one row highlighted
- * so the work is never invisible on mobile. All driven by refs + direct DOM
- * mutation — no setState-in-effect, no animation libraries (per AGENTS.md).
+ * Touch / no-hover fallback: the middle carousel stays hidden and tapping a row
+ * toggles the existing inline screenshot strip. No automatic row emphasis is
+ * applied, so every project retains the same visual weight.
  */
 
 // Editorial metadata per project. Copy is sourced from real, verifiable proof
 // points — never invented numbers.
 interface Meta {
-    client: string;
     category: string;
     proof: string;
-    metric: string;
-    metricLabel: string;
 }
 
 const META: Record<string, Meta> = {
     marhaba: {
-        client: 'Marhaba Auctions · Dubai',
         category: 'Enterprise Auctions',
         proof: 'Real-time WebSocket bidding, an in-app wallet and a full payment gateway across the entire vehicle lifecycle — sell, buy and ship.',
-        metric: 'Live',
-        metricLabel: 'WebSocket bidding',
     },
     koor: {
-        client: 'Koor · Gulf',
         category: 'PropTech Marketplace',
         proof: '10K+ downloads in the first month with zero marketing spend, sustained at a 4.5★ rating — multilingual, offline-first, AI-moderated.',
-        metric: '10K+',
-        metricLabel: 'First-month installs',
     },
     movermate: {
-        client: 'MoverMate · Australia',
         category: 'Logistics Platform',
         proof: 'Stripe Tap-to-Pay at the door, Radar-powered navigation and geofencing, with live crew tracking and in-app scheduling.',
-        metric: 'Tap',
-        metricLabel: 'Stripe in-person pay',
     },
     counsellor_app: {
-        client: 'SwiftAMS Business',
         category: 'Field-Sales CRM',
         proof: 'An on-device dialer with call logging and recording, wired to live lead pipelines for a mobile sales force.',
-        metric: 'CRM',
-        metricLabel: 'Mobile sales suite',
     },
     spotted: {
-        client: 'Spotted · India',
         category: 'Fintech · Scan-Pay-Earn',
         proof: 'Scan a QR, pay through any UPI app, and earn instant cashback to an in-app wallet — with a real-time social feed and chat.',
-        metric: 'UPI',
-        metricLabel: 'Scan · pay · earn',
     },
     ssc_ai: {
-        client: 'SSC Ai · India',
         category: 'AI Exam Prep',
         proof: 'Gemini explains every question, an AI tutor generates papers and notes, and previous-year questions are extracted by a local Phi-4 LLM.',
-        metric: 'AI',
-        metricLabel: 'Gemini + local Phi-4',
     },
 };
 
@@ -88,31 +66,22 @@ function availability(p: (typeof projects)[number]): string {
 const EASE = 'cubic-bezier(0.16,1,0.3,1)';
 
 export default function ShowcaseHoverList() {
-    const sectionRef = useRef<HTMLElement>(null);
-    const panelRef = useRef<HTMLDivElement>(null);
-    const listRef = useRef<HTMLUListElement>(null);
     const headerRef = useRef<HTMLElement>(null);
-
-    // Per-project image stacks inside the floating panel (cross-faded).
-    const imageStackRefs = useRef<(HTMLDivElement | null)[]>([]);
-    // Per-row <li> elements so hover / auto-cycle can mutate their styling.
+    // Per-row <li> elements support the restrained active-row nudge.
     const rowRefs = useRef<(HTMLLIElement | null)[]>([]);
+    const carouselRefs = useRef<(HTMLDivElement | null)[]>([]);
     // Inner reveal wrappers (one per row) used for the staggered scroll reveal,
     // kept off the <li> so the reveal never collides with hover emphasis.
     const revealRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-    // Cursor-follow lerp state.
-    const targetRef = useRef({ x: 0, y: 0 });
-    const currentRef = useRef({ x: 0, y: 0 });
-    const seededRef = useRef(false);
-    const rafRef = useRef(0);
-
     // Active row index (-1 = none). Held in a ref to avoid setState-in-effect.
     const activeRef = useRef(-1);
+    const [activeIndex, setActiveIndex] = useState(-1);
+    const [trainCopyCount, setTrainCopyCount] = useState(2);
     // Defaults to true so SSR / first paint treats clicks as plain navigation.
     const hoverCapableRef = useRef(true);
 
-    // Apply hover emphasis to every row and cross-fade the floating panel image.
+    // Keep the small active-row nudge without changing any row's opacity.
     const applyActive = (next: number) => {
         if (activeRef.current === next) return;
         activeRef.current = next;
@@ -120,19 +89,8 @@ export default function ShowcaseHoverList() {
         rowRefs.current.forEach((row, i) => {
             if (!row) return;
             const isActive = i === next;
-            const dimmed = next !== -1 && !isActive;
-            row.style.opacity = dimmed ? '0.32' : '1';
             row.style.transform = isActive ? 'translateX(12px)' : 'translateX(0px)';
         });
-
-        imageStackRefs.current.forEach((stack, i) => {
-            if (!stack) return;
-            stack.style.opacity = i === next ? '1' : '0';
-            stack.style.transform = i === next ? 'scale(1)' : 'scale(1.05)';
-        });
-
-        const panel = panelRef.current;
-        if (panel) panel.style.opacity = next === -1 ? '0' : '1';
     };
 
     // ---------------- STAGGERED SCROLL REVEAL ----------------
@@ -184,116 +142,92 @@ export default function ShowcaseHoverList() {
             window.matchMedia('(hover: hover) and (pointer: fine)').matches;
         hoverCapableRef.current = hoverCapable;
 
-        const reduceMotion = window.matchMedia(
-            '(prefers-reduced-motion: reduce)',
-        ).matches;
+        const handleResize = () => {
+            const active = activeRef.current;
+            const lane = carouselRefs.current[active];
+            const shotCount = projects[active]?.screenshotPaths.length ?? 0;
+            if (!lane || !shotCount) return;
 
-        // ---------------- TOUCH / NO-HOVER FALLBACK ----------------
-        // No floating panel and no horizontal nudge. Gently auto-cycle which row
-        // reads as "active" so the work is always surfaced; tap-to-expand (the
-        // onClick below) reveals the inline screenshot strip.
-        if (!hoverCapable) {
-            const setEmphasis = (active: number) => {
-                rowRefs.current.forEach((row, i) => {
-                    if (!row) return;
-                    row.style.opacity = i === active ? '1' : '0.42';
-                });
-            };
-            setEmphasis(0);
-            if (reduceMotion) return; // hold the first row, no cycling
-
-            // Track which rows are actually on-screen — excluding the band
-            // under the sticky navbar — so the cycle only ever highlights a
-            // row the user can actually see, never one hidden behind the nav.
-            const visible = new Set<number>();
-            const io = new IntersectionObserver(
-                (entries) => {
-                    for (const entry of entries) {
-                        const i = rowRefs.current.indexOf(entry.target as HTMLLIElement);
-                        if (i === -1) continue;
-                        if (entry.isIntersecting) visible.add(i);
-                        else visible.delete(i);
-                    }
-                },
-                { rootMargin: '-110px 0px -20% 0px', threshold: 0.3 },
+            const setDistance = shotCount * 90;
+            setTrainCopyCount(
+                Math.max(3, Math.ceil(lane.clientWidth / setDistance) + 2),
             );
-            rowRefs.current.forEach((row) => row && io.observe(row));
+        };
 
-            let lastActive = 0;
-            const id = window.setInterval(() => {
-                if (!visible.size) return; // nothing visible — hold last state
-                const sorted = [...visible].sort((a, b) => a - b);
-                const next = sorted.find((i) => i > lastActive) ?? sorted[0];
-                lastActive = next;
-                setEmphasis(next);
-            }, 2600);
-            return () => {
-                window.clearInterval(id);
-                io.disconnect();
-            };
+        window.addEventListener('resize', handleResize, { passive: true });
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    // One continuous motion function owns both the fast arrival and the slow
+    // marquee. The arrival uses constant deceleration (not an ease-out tail),
+    // then reaches the loop at the exact same velocity on the following frame.
+    useEffect(() => {
+        if (activeIndex < 0) return;
+
+        const train = carouselRefs.current[activeIndex]?.querySelector<HTMLDivElement>(
+            '.sw-image-train',
+        );
+        const shotCount = projects[activeIndex]?.screenshotPaths.length ?? 0;
+        if (!train || !shotCount) return;
+
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            train.style.transform = 'translate3d(0, -50%, 0)';
+            return;
         }
 
-        // ---------------- DESKTOP / HOVER ----------------
-        const section = sectionRef.current;
-        const list = listRef.current;
-        const panel = panelRef.current;
-        if (!section || !list || !panel) return;
+        const arrivalDuration = 1200;
+        const entryOffset = Math.min(window.innerWidth * 0.7, 1200);
+        const loopDistance = shotCount * 90;
+        const cruiseVelocity = -0.052;
+        const initialVelocity =
+            (-2 * entryOffset) / arrivalDuration - cruiseVelocity;
+        const deceleration =
+            (cruiseVelocity - initialVelocity) / arrivalDuration;
+        let rafId = 0;
+        let startTime = 0;
 
-        const onMove = (e: MouseEvent) => {
-            const sr = section.getBoundingClientRect();
-            const lr = list.getBoundingClientRect();
-            const panelW = panel.offsetWidth;
-            const panelH = panel.offsetHeight;
-            // Float the panel to the right of the cursor, clamped to the section
-            // width and — crucially — to the LIST's vertical band, so the preview
-            // never drifts up into the header or below the last row.
-            const rawX = e.clientX - sr.left + 28;
-            const maxX = Math.max(0, sr.width - panelW - 8);
-            targetRef.current.x = Math.min(rawX, maxX);
-            const minY = Math.max(8, lr.top - sr.top);
-            const maxY = Math.max(minY, lr.bottom - sr.top - panelH - 8);
-            targetRef.current.y = Math.min(
-                Math.max(e.clientY - sr.top - panelH / 2, minY),
-                maxY,
-            );
-        };
+        const frame = (time: number) => {
+            if (!startTime) startTime = time;
+            const elapsed = time - startTime;
+            let x = 0;
 
-        const onLeave = () => {
-            applyActive(-1);
-            // Reset the lerp seed so the next entry snaps fresh instead of
-            // sliding in from a stale position.
-            seededRef.current = false;
-        };
-
-        const loop = () => {
-            const t = targetRef.current;
-            const c = currentRef.current;
-            if (!seededRef.current && (t.x !== 0 || t.y !== 0)) {
-                c.x = t.x;
-                c.y = t.y;
-                seededRef.current = true;
+            if (elapsed < arrivalDuration) {
+                x =
+                    entryOffset +
+                    initialVelocity * elapsed +
+                    0.5 * deceleration * elapsed * elapsed;
+            } else {
+                x =
+                    (cruiseVelocity * (elapsed - arrivalDuration)) % loopDistance;
             }
-            const k = reduceMotion ? 1 : 0.12;
-            c.x += (t.x - c.x) * k;
-            c.y += (t.y - c.y) * k;
-            panel.style.transform = `translate3d(${c.x.toFixed(2)}px, ${c.y.toFixed(2)}px, 0)`;
-            rafRef.current = requestAnimationFrame(loop);
+
+            train.style.transform = `translate3d(${x.toFixed(3)}px, -50%, 0)`;
+            rafId = requestAnimationFrame(frame);
         };
 
-        list.addEventListener('mousemove', onMove);
-        list.addEventListener('mouseleave', onLeave);
-        rafRef.current = requestAnimationFrame(loop);
-
-        return () => {
-            list.removeEventListener('mousemove', onMove);
-            list.removeEventListener('mouseleave', onLeave);
-            cancelAnimationFrame(rafRef.current);
-        };
-    }, []);
+        rafId = requestAnimationFrame(frame);
+        return () => cancelAnimationFrame(rafId);
+    }, [activeIndex]);
 
     const handleEnter = (i: number) => {
         if (!hoverCapableRef.current) return;
+        const lane = carouselRefs.current[i];
+        const shotCount = projects[i]?.screenshotPaths.length ?? 0;
+        if (lane && shotCount) {
+            const setDistance = shotCount * 90;
+            setTrainCopyCount(
+                Math.max(3, Math.ceil(lane.clientWidth / setDistance) + 2),
+            );
+        }
         applyActive(i);
+        setActiveIndex(i);
+    };
+
+    const handleLeave = (i: number) => {
+        if (activeRef.current !== i) return;
+        applyActive(-1);
+        setActiveIndex(-1);
+        setTrainCopyCount(2);
     };
 
     // Tap-to-expand inline panel toggle for touch devices.
@@ -325,7 +259,6 @@ export default function ShowcaseHoverList() {
 
     return (
         <section
-            ref={sectionRef}
             id="case-studies"
             className="relative scroll-mt-24 overflow-hidden py-28 md:py-36"
         >
@@ -337,7 +270,7 @@ export default function ShowcaseHoverList() {
                 >
                     <div className="max-w-2xl">
                         <p className="mb-6 text-[0.6875rem] font-bold uppercase tracking-[0.32em] text-white/30">
-                            Selected Work — 2024 / 2025
+                            Selected Work — 2025 / 2026
                         </p>
                         <h2 className="perspective-1000 text-[2.75rem] font-black leading-[0.92] tracking-tighter text-white sm:text-6xl md:text-7xl">
                             <SplitText
@@ -379,7 +312,7 @@ export default function ShowcaseHoverList() {
                 </header>
 
                 {/* ── The List ─────────────────────────────────────────────── */}
-                <ul ref={listRef} className="relative flex flex-col">
+                <ul className="relative flex flex-col">
                     {projects.map((project, idx) => {
                         const meta = META[project.id];
                         const isLast = idx === projects.length - 1;
@@ -392,10 +325,11 @@ export default function ShowcaseHoverList() {
                                     rowRefs.current[idx] = el;
                                 }}
                                 onMouseEnter={() => handleEnter(idx)}
-                                className="group/row relative transition-[opacity,transform] duration-500"
+                                onMouseLeave={() => handleLeave(idx)}
+                                className="group/row relative transition-transform duration-500"
                                 style={{
                                     transitionTimingFunction: EASE,
-                                    willChange: 'opacity, transform',
+                                    willChange: 'transform',
                                 }}
                             >
                               <div
@@ -436,7 +370,7 @@ export default function ShowcaseHoverList() {
                                         </span>
 
                                         {/* Title + meta */}
-                                        <div className="flex min-w-0 flex-1 flex-col gap-4">
+                                        <div className="sw-project-copy flex min-w-0 flex-1 flex-col gap-4">
                                             <div className="flex min-w-0 items-center gap-4">
                                                 {/* Logo chip */}
                                                 <span className="relative hidden h-11 w-11 shrink-0 overflow-hidden rounded-[12px] ring-1 ring-inset ring-white/[0.08] sm:block">
@@ -477,8 +411,56 @@ export default function ShowcaseHoverList() {
                                             </div>
                                         </div>
 
+                                        {/* Hover-only full gallery train in the middle runway */}
+                                        <div
+                                            ref={(el) => {
+                                                carouselRefs.current[idx] = el;
+                                            }}
+                                            aria-hidden="true"
+                                            className="sw-hover-carousel relative hidden h-[190px] min-w-0 flex-1 overflow-hidden"
+                                        >
+                                            <div
+                                                className={`sw-image-train absolute left-0 top-1/2 ${
+                                                    activeIndex === idx
+                                                        ? 'sw-image-train--active'
+                                                        : ''
+                                                }`}
+                                            >
+                                                {Array.from({
+                                                    length:
+                                                        activeIndex === idx
+                                                            ? trainCopyCount
+                                                            : 2,
+                                                }).map((_, copy) => (
+                                                    <div
+                                                        key={copy}
+                                                        className="sw-image-set flex shrink-0 items-center gap-3"
+                                                    >
+                                                        {project.screenshotPaths.map((shot, shotIdx) => (
+                                                            <div
+                                                                key={`${copy}-${shotIdx}`}
+                                                                className={`relative h-[164px] w-[78px] shrink-0 overflow-hidden rounded-[14px] bg-[#121212] ring-1 ring-inset ring-white/[0.08] shadow-[0_18px_35px_rgba(0,0,0,0.35)] ${
+                                                                    shotIdx % 2 === 0
+                                                                        ? '-translate-y-1'
+                                                                        : 'translate-y-3'
+                                                                }`}
+                                                            >
+                                                                <Image
+                                                                    src={shot}
+                                                                    alt=""
+                                                                    fill
+                                                                    sizes="78px"
+                                                                    className="object-cover"
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+
                                         {/* Tech (first 3) — desktop only */}
-                                        <div className="hidden shrink-0 flex-col items-end gap-2 lg:flex">
+                                        <div className="hidden shrink-0 flex-col items-end gap-2 xl:flex">
                                             {project.tech.slice(0, 3).map((t) => (
                                                 <span
                                                     key={t}
@@ -530,71 +512,52 @@ export default function ShowcaseHoverList() {
                 </ul>
             </div>
 
-            {/* ── Floating cursor-tracking preview panel (DESKTOP / HOVER) ──── */}
-            <div
-                ref={panelRef}
-                aria-hidden="true"
-                className="pointer-events-none absolute left-0 top-0 z-30 hidden md:block"
-                style={{
-                    opacity: 0,
-                    transition: `opacity 0.45s ${EASE}`,
-                    willChange: 'transform, opacity',
-                }}
-            >
-                <div className="relative h-[380px] w-[300px] overflow-hidden rounded-[24px] bg-[#1a1a1a] shadow-[0_30px_70px_rgba(0,0,0,0.6)] ring-1 ring-inset ring-white/[0.08]">
-                    {projects.map((project, idx) => {
-                        const meta = META[project.id];
-                        return (
-                            <div
-                                key={project.id}
-                                ref={(el) => {
-                                    imageStackRefs.current[idx] = el;
-                                }}
-                                className="absolute inset-0"
-                                style={{
-                                    opacity: 0,
-                                    transform: 'scale(1.05)',
-                                    transition: `opacity 0.5s ${EASE}, transform 0.7s ${EASE}`,
-                                    willChange: 'opacity, transform',
-                                }}
-                            >
-                                {/* Two screenshots side-by-side for a richer hero */}
-                                <div className="flex h-full items-start justify-center gap-3 px-5 pt-2">
-                                    {project.screenshotPaths.slice(0, 2).map((shot, sIdx) => (
-                                        <div
-                                            key={sIdx}
-                                            className="relative aspect-[9/19] h-[300px] shrink-0 overflow-hidden rounded-[16px] bg-[#121212] ring-1 ring-inset ring-white/[0.08]"
-                                        >
-                                            <Image
-                                                src={shot}
-                                                alt=""
-                                                fill
-                                                sizes="150px"
-                                                className="object-cover"
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
+            <style jsx>{`
+                .sw-image-train {
+                    display: flex;
+                    width: max-content;
+                    gap: 0.75rem;
+                    opacity: 0;
+                    transform: translate3d(min(70vw, 1200px), -50%, 0);
+                    transition: opacity 220ms ease-out;
+                    will-change: transform, opacity;
+                }
 
-                                {/* Caption with a real metric */}
-                                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent px-5 pb-5 pt-14">
-                                    <p className="text-[0.625rem] font-bold uppercase tracking-[0.22em] text-white/45">
-                                        {meta?.client}
-                                    </p>
-                                    <div className="mt-1.5 flex items-baseline gap-2.5">
-                                        <span className="font-black leading-none tracking-tighter text-white text-2xl">
-                                            {meta?.metric}
-                                        </span>
-                                        <span className="text-[0.625rem] font-bold uppercase tracking-[0.18em] text-white/40">
-                                            {meta?.metricLabel}
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
+                .sw-image-train--active {
+                    opacity: 1;
+                }
+
+                @media (min-width: 1100px) and (hover: hover) and (pointer: fine) {
+                    .sw-project-copy {
+                        flex: 0 0 min(46%, 620px);
+                    }
+
+                    .sw-hover-carousel {
+                        display: block;
+                        -webkit-mask-image: linear-gradient(
+                            to right,
+                            transparent,
+                            black 8%,
+                            black 94%,
+                            transparent
                         );
-                    })}
-                </div>
-            </div>
+                        mask-image: linear-gradient(
+                            to right,
+                            transparent,
+                            black 8%,
+                            black 94%,
+                            transparent
+                        );
+                    }
+                }
+
+                @media (prefers-reduced-motion: reduce) {
+                    .sw-image-train--active {
+                        opacity: 1;
+                        transform: translate3d(0, -50%, 0);
+                    }
+                }
+            `}</style>
         </section>
     );
 }
