@@ -2,12 +2,22 @@
 
 ## Current Position
 
-**Date:** 2026-08-19
+**Date:** 2026-08-23
 **Milestone:** v1.0 Agency Website — Launch Readiness
-**Working on right now:** Home Selected Work hover carousel repaired and visually checked on desktop.
+**Working on right now:** Selected Work project titles now stay fully visible across phone, tablet, and desktop widths.
 **Next likely:** Get visual acceptance on the latest Portfolio and Process interaction fixes, then resume acceptance of the six-card Services 3D system.
 
 ## Most Recent Work (newest first)
+
+- 2026-08-23 (Selected Work title clipping) — Replaced the abrupt responsive title-size jumps with fluid phone/tablet sizing and widened the desktop copy allocation before the hover-carousel runway. Marhaba Auctions and Counsellor App now remain fully visible at every sampled width from 320px through 1517px while preserving the existing title scale at wide desktop sizes, the hover runway from 1100px, and zero document overflow. Focused ESLint, TypeScript, diff checks, and the 13-page static production build passed.
+
+- 2026-08-20 (Process card scroll reveals) — Added independent per-card entrance wrappers so the Process cards visibly fade, rise 56px, and settle with a slight scale as they enter the viewport without competing with the existing active-card transform. Reveals reset after exit and replay on re-entry, use a short batch stagger, and show immediately under reduced motion. Live 1440px and 430px frame sampling confirmed hidden, transitioning, settled, and reset states with zero horizontal overflow; focused ESLint, TypeScript, diff checks, and the static production build passed.
+
+- 2026-08-20 (compact mobile Process cards) — Reorganized each phone card into a compact header with the technical icon on the left, title beside it, and a small muted step index aligned at the far right. Reduced phone padding, gaps, and body type while preserving the established desktop composition. Live 430px rendering confirmed 182–208px card heights, all four titles and indices remain readable, and the document has no horizontal overflow; focused ESLint, TypeScript, diff checks, and the 13-page production build passed.
+
+- 2026-08-20 (Process monolith removed on mobile) — Hidden the decorative 3D Process monolith below 640px while preserving the surrounding introduction, process cards, and tablet/desktop rendering. Focused ESLint, TypeScript, diff checks, and the 13-page static production build passed.
+
+- 2026-08-20 (Selected Work mobile project logos) — Removed the mobile-only hiding rule from each project logo chip. Logos now remain visible at a compact 32px beside project titles below 640px and retain the existing 44px desktop size; the mobile title gap and corner radius scale with the chip. A live 430px Chrome render confirmed all six logos display, every project title remains unclipped, and document width stays at 430px with no overflow; focused ESLint and TypeScript checks passed.
 
 - 2026-08-19 (Selected Work linear deceleration) — Replaced the hover train's easing-shaped arrival with true constant deceleration inside the existing continuous RAF loop. The train now starts substantially faster, slows at a uniform rate instead of lingering near a stop, and reaches a slightly quicker 52px/s marquee velocity without a phase boundary. Live 1440px frame sampling confirmed a steady velocity progression from roughly 1,478px/s through 1,247, 857, 462, and 189px/s into a continuous 52px/s loop with no direction change; focused ESLint and TypeScript checks passed.
 

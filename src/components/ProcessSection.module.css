@@ -206,6 +206,20 @@
   transform: translateX(-0.35rem);
 }
 
+.processReveal {
+  opacity: 0;
+  transform: translateY(3.5rem) scale(0.985);
+  transition:
+    opacity 650ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 800ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.processRevealVisible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
 .cardContent {
   position: relative;
   z-index: 2;
@@ -653,9 +667,15 @@
   }
 }
 
+@media (max-width: 767px) {
+  .processIdentity .processIconTile {
+    margin-bottom: 0;
+  }
+}
+
 @media (max-width: 639px) {
   .monolith {
-    height: 19rem;
+    display: none;
   }
 
   .monolithObject {
@@ -668,6 +688,12 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .processReveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
   .floatWrap {
     animation: none;
   }

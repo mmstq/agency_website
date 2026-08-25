@@ -100,6 +100,7 @@ export default function ProcessSection() {
     const monolithRef = useRef<HTMLDivElement>(null);
     const objectRef = useRef<HTMLDivElement>(null);
     const cardRefs = useRef<Array<HTMLDivElement | null>>([]);
+    const revealRefs = useRef<Array<HTMLDivElement | null>>([]);
     const layerRefs = useRef<Array<HTMLDivElement | null>>([]);
 
     const activateStep = useCallback((activeIndex: number) => {
@@ -162,6 +163,41 @@ export default function ProcessSection() {
 
         return () => observer.disconnect();
     }, [activateStep]);
+
+    useEffect(() => {
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        const targets = revealRefs.current.filter(
+            (target): target is HTMLDivElement => target !== null,
+        );
+        if (!targets.length) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => {
+                let batchIndex = 0;
+
+                entries.forEach((entry) => {
+                    const target = entry.target as HTMLDivElement;
+
+                    if (entry.isIntersecting) {
+                        target.style.transitionDelay = `${batchIndex * 90}ms`;
+                        target.classList.add(styles.processRevealVisible);
+                        batchIndex += 1;
+                    } else {
+                        target.style.transitionDelay = '0ms';
+                        target.classList.remove(styles.processRevealVisible);
+                    }
+                });
+            },
+            {
+                threshold: 0.14,
+                rootMargin: '0px 0px -10% 0px',
+            },
+        );
+
+        targets.forEach((target) => observer.observe(target));
+        return () => observer.disconnect();
+    }, []);
 
     useEffect(() => {
         const monolith = monolithRef.current;
@@ -275,27 +311,37 @@ export default function ProcessSection() {
                             <div
                                 key={step.title}
                                 ref={(element) => {
-                                    cardRefs.current[index] = element;
+                                    revealRefs.current[index] = element;
                                 }}
-                                onPointerEnter={() => activateStep(index)}
-                                className={`monolith-card group p-10 flex flex-col md:flex-row gap-8 items-start ${styles.processCard} ${index === 0 ? styles.activeCard : ''}`}
+                                className={styles.processReveal}
                             >
-                                <div className={`flex-shrink-0 flex flex-col items-center ${styles.cardContent}`}>
-                                    <div className={styles.processIconTile}>
-                                        <span className={styles.iconGrid} />
-                                        <ProcessGlyph index={index} className={styles.processGlyph} />
+                                <div
+                                    ref={(element) => {
+                                        cardRefs.current[index] = element;
+                                    }}
+                                    onPointerEnter={() => activateStep(index)}
+                                    className={`monolith-card group p-6 sm:p-8 md:p-10 flex flex-col md:flex-row gap-5 md:gap-8 items-start ${styles.processCard} ${index === 0 ? styles.activeCard : ''}`}
+                                >
+                                    <div className={`w-full md:w-auto flex-shrink-0 flex flex-row md:flex-col items-center gap-4 md:gap-0 ${styles.cardContent} ${styles.processIdentity}`}>
+                                        <div className={styles.processIconTile}>
+                                            <span className={styles.iconGrid} />
+                                            <ProcessGlyph index={index} className={styles.processGlyph} />
+                                        </div>
+                                        <h3 className="min-w-0 flex-1 text-xl sm:text-2xl font-bold text-white tracking-tight md:hidden">
+                                            {step.title}
+                                        </h3>
+                                        <span className={`${styles.stepNumber} ml-auto md:ml-0 text-base md:text-2xl font-black italic`}>0{index + 1}</span>
                                     </div>
-                                    <span className={`${styles.stepNumber} text-2xl font-black italic`}>0{index + 1}</span>
+                                    <div className={`w-full md:w-auto ${styles.cardContent}`}>
+                                        <h3 className="hidden md:block text-2xl font-bold text-white mb-4 tracking-tight">
+                                            {step.title}
+                                        </h3>
+                                        <p className="text-white/40 text-base sm:text-lg leading-relaxed max-w-xl">
+                                            {step.desc}
+                                        </p>
+                                    </div>
+                                    <ProcessCardVisual index={index} />
                                 </div>
-                                <div className={styles.cardContent}>
-                                    <h3 className="text-2xl font-bold text-white mb-4 tracking-tight">
-                                        {step.title}
-                                    </h3>
-                                    <p className="text-white/40 text-lg leading-relaxed max-w-xl">
-                                        {step.desc}
-                                    </p>
-                                </div>
-                                <ProcessCardVisual index={index} />
                             </div>
                         ))}
                     </div>

@@ -371,19 +371,19 @@ export default function ShowcaseHoverList() {
 
                                         {/* Title + meta */}
                                         <div className="sw-project-copy flex min-w-0 flex-1 flex-col gap-4">
-                                            <div className="flex min-w-0 items-center gap-4">
+                                            <div className="flex min-w-0 items-center gap-3 sm:gap-4">
                                                 {/* Logo chip */}
-                                                <span className="relative hidden h-11 w-11 shrink-0 overflow-hidden rounded-[12px] ring-1 ring-inset ring-white/[0.08] sm:block">
+                                                <span className="relative h-8 w-8 shrink-0 overflow-hidden rounded-[9px] ring-1 ring-inset ring-white/[0.08] sm:h-11 sm:w-11 sm:rounded-[12px]">
                                                     <Image
                                                         src={project.logo}
                                                         alt=""
                                                         fill
-                                                        sizes="44px"
+                                                        sizes="(max-width: 639px) 32px, 44px"
                                                         className="object-cover"
                                                     />
                                                 </span>
 
-                                                <h3 className="truncate font-black leading-[0.9] tracking-tighter text-white text-[2.25rem] sm:text-[2.75rem] md:text-[3.75rem]">
+                                                <h3 className="truncate font-black leading-[0.9] tracking-tighter text-white text-[clamp(1.5rem,8.2vw,2.25rem)] sm:text-[2.75rem] md:text-[clamp(2.75rem,6.4vw,3.75rem)]">
                                                     {project.title}
                                                 </h3>
                                             </div>
@@ -529,7 +529,7 @@ export default function ShowcaseHoverList() {
 
                 @media (min-width: 1100px) and (hover: hover) and (pointer: fine) {
                     .sw-project-copy {
-                        flex: 0 0 min(46%, 620px);
+                        flex: 0 0 min(58%, 620px);
                     }
 
                     .sw-hover-carousel {
